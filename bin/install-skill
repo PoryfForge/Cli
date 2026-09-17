@@ -1,0 +1,181 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * 把本库的 Agent skill 安装到你的 Agent 的 skills 目录。
+ *
+ * 关键动作：把 SKILL.md 里的 {{CLI_CAP_ROOT}} 占位符替换成本仓库在你机器上的
+ * 真实绝对路径 —— 所以无论你把仓库 clone 到哪里，装出来的 skill 都指向正确位置。
+ *
+ * 用法：
+ *   bin/install-skill                     装到自动探测到的目录
+ *   bin/install-skill --target claude     指定目标（workbuddy | claude | 任意路径）
+ *   bin/install-skill --dry-run           只看会做什么，不落盘
+ *   bin/install-skill --uninstall         从目标目录移除
+ *   bin/install-skill --list              看探测到了哪些 Agent 目录
+ */
+
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+const ROOT = path.resolve(__dirname, '..');
+const SKILL_NAME = 'cli-capability-lookup';
+const SRC = path.join(ROOT, 'skills', SKILL_NAME, 'SKILL.md');
+const PLACEHOLDER = '{{CLI_CAP_ROOT}}';
+
+const TARGETS = [
+  { key: 'workbuddy', label: 'WorkBuddy', dir: path.join(os.homedir(), '.workbuddy', 'skills') },
+  { key: 'claude', label: 'Claude Code', dir: path.join(os.homedir(), '.claude', 'skills') },
+];
+
+function usage(code) {
+  const lines = [
+    '',
+    '用法：bin/install-skill [选项]',
+    '',
+    '  --target <名字|路径>  安装目标。名字可选 ' + TARGETS.map((t) => t.key).join(' / ') +
+      '，',
+    '                        也可以直接给一个绝对路径（如 ./.claude/skills）。',
+    '  --dry-run             只打印将要执行的动作，不写任何文件。',
+    '  --uninstall           从目标目录移除已安装的 skill。',
+    '  --list                列出探测到的 Agent 目录及其存在与否。',
+    '  -h, --help            显示本帮助。',
+    '',
+    '不带 --target 时，自动选择「已经装了这个 Agent」的那个目录；',
+    '都探测不到就默认 WorkBuddy。',
+    '',
+  ];
+  process.stdout.write(lines.join('\n'));
+  process.exit(code);
+}
+
+function parseArgs(argv) {
+  const opts = { target: null, dryRun: false, uninstall: false, list: false };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '-h' || a === '--help') usage(0);
+    else if (a === '--dry-run') opts.dryRun = true;
+    else if (a === '--uninstall') opts.uninstall = true;
+    else if (a === '--list') opts.list = true;
+    else if (a === '--target') {
+      if (!argv[i + 1]) fail('--target 后面要跟一个值');
+      opts.target = argv[++i];
+    } else if (a.startsWith('--target=')) opts.target = a.slice('--target='.length);
+    else fail('无法识别的参数：' + a + '（用 --help 看用法）');
+  }
+  return opts;
+}
+
+function fail(msg) {
+  process.stderr.write('install-skill: ' + msg + '\n');
+  process.exit(1);
+}
+
+function exists(p) {
+  try { fs.statSync(p); return true; } catch { return false; }
+}
+
+function isDir(p) {
+  try { return fs.statSync(p).isDirectory(); } catch { return false; }
+}
+
+/** 把 --target 的值解析成一个目录。 */
+function resolveTarget(value) {
+  if (!value) {
+    const detected = TARGETS.filter((t) => isDir(t.dir));
+    if (detected.length === 1) return { dir: detected[0].dir, via: detected[0].label + '（自动探测）' };
+    if (detected.length > 1) {
+      // 装了多个 Agent：选第一个，但明确告诉用户还有哪些。
+      const rest = detected.slice(1).map((t) => t.label + ' → ' + t.dir).join('、');
+      return {
+        dir: detected[0].dir,
+        via: detected[0].label + '（自动探测，但本机还装了 ' + rest +
+          '；要装到那边请显式加 --target）',
+      };
+    }
+    return {
+      dir: TARGETS[0].dir,
+      via: '默认（没探测到任何已安装的 Agent，按 WorkBuddy 处理）',
+    };
+  }
+  const named = TARGETS.find((t) => t.key === value);
+  if (named) return { dir: named.dir, via: named.label + '（显式指定）' };
+  if (value.startsWith('~')) return { dir: path.join(os.homedir(), value.slice(1)), via: '自定义路径' };
+  return { dir: path.resolve(value), via: '自定义路径' };
+}
+
+function main() {
+  const opts = parseArgs(process.argv.slice(2));
+
+  if (opts.list) {
+    process.stdout.write('\nAgent skills 目录探测：\n');
+    for (const t of TARGETS) {
+      const mark = isDir(t.dir) ? '✓ 存在  ' : '· 不存在';
+      process.stdout.write('  ' + mark + '  ' + t.label + '  ' + t.dir + '\n');
+    }
+    process.stdout.write('\n仓库根目录（将写入 skill 的）：' + ROOT + '\n\n');
+    return;
+  }
+
+  if (!exists(SRC)) fail('找不到源文件：' + SRC + '\n（是不是没在完整的仓库副本里运行？）');
+
+  const { dir, via } = resolveTarget(opts.target);
+  const destDir = path.join(dir, SKILL_NAME);
+  const dest = path.join(destDir, 'SKILL.md');
+
+  if (opts.uninstall) {
+    if (!exists(destDir)) {
+      process.stdout.write('\n没有需要移除的：' + destDir + ' 不存在\n\n');
+      return;
+    }
+    if (opts.dryRun) {
+      process.stdout.write('\n[dry-run] 会删除：' + destDir + '\n\n');
+      return;
+    }
+    fs.rmSync(destDir, { recursive: true, force: true });
+    process.stdout.write('\n已移除：' + destDir + '\n');
+    process.stdout.write('（Agent 下次启动即不再加载该 skill）\n\n');
+    return;
+  }
+
+  const tpl = fs.readFileSync(SRC, 'utf8');
+  if (!tpl.includes(PLACEHOLDER)) {
+    fail('源文件里没有 ' + PLACEHOLDER + ' 占位符，模板可能被改坏了：' + SRC);
+  }
+  // 占位符替换成本机真实路径；同时剥掉「只在未渲染时才有意义」的说明块 ——
+  // 那段话是写给在 GitHub 上直接读模板的人的，装完之后就是自相矛盾的废话。
+  const BLOCK = /<!-- unrendered-only:start -->[\s\S]*?<!-- unrendered-only:end -->\n?/;
+  let rendered = tpl.split(PLACEHOLDER).join(ROOT);
+  const stripped = BLOCK.test(rendered);
+  rendered = rendered.replace(BLOCK, '');
+  if (/{{[A-Z_]+}}/.test(rendered)) {
+    fail('渲染后仍有未替换的占位符，模板可能被改坏了：' + SRC);
+  }
+
+  process.stdout.write('\n安装 ' + SKILL_NAME + '\n');
+  process.stdout.write('  源文件    ' + SRC + '\n');
+  process.stdout.write('  目标目录  ' + destDir + '\n');
+  process.stdout.write('  目标选择  ' + via + '\n');
+  process.stdout.write('  填入根路径 ' + ROOT + '\n');
+  process.stdout.write('  模板说明块 ' + (stripped ? '已剥离' : '未找到（跳过）') + '\n');
+
+  if (opts.dryRun) {
+    process.stdout.write('\n[dry-run] 以上动作未实际执行。去掉 --dry-run 即生效。\n\n');
+    return;
+  }
+
+  const existed = exists(dest);
+  fs.mkdirSync(destDir, { recursive: true });
+  if (existed) {
+    fs.copyFileSync(dest, dest + '.bak');
+    process.stdout.write('  已存在   是 —— 旧版本备份到 SKILL.md.bak\n');
+  }
+  fs.writeFileSync(dest, rendered, 'utf8');
+  process.stdout.write('\n完成。\n\n');
+  process.stdout.write('验证方式：新开一个 Agent 会话，问一句「飞书 CLI 能干什么」、\n');
+  process.stdout.write('或直接说「发条飞书消息」，看它是否会先来查这个库。\n\n');
+  process.stdout.write('以后把仓库挪了位置，重跑一次 bin/install-skill 覆盖即可。\n\n');
+}
+
+main();

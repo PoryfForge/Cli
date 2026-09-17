@@ -14,6 +14,12 @@
 **收录范围**：厂商提供的 SaaS 能力型 CLI（飞书 / 企业微信 / WPS 365 / 即梦）。
 系统自带工具（`git` / `curl`）、包管理器（`brew` / `npm`）、数据库客户端**不在范围内**。
 
+> **想让 Agent 自动来查，而不是每次靠人提醒？**
+> 跑一次 `bin/install-skill`，它会把 `skills/cli-capability-lookup/` 装进本机的
+> Agent skills 目录（`~/.workbuddy/skills/` 或 `~/.claude/skills/`），
+> **并把本库的绝对路径写进去** —— 所以仓库 clone 到哪儿都行。
+> `--list` 看探测结果，`--dry-run` 预演，`--uninstall` 移除。
+
 ---
 
 ## 动手前的强制流程
@@ -159,7 +165,10 @@ bin/cli-cap remember <名字> \
 ├── bin/
 │   ├── cli-cap            # scan / list / index / search / show / remember
 │   ├── skill-digest       # 按清单采集（skill-repo / release-bin / local-bin）
-│   └── refresh            # 一键刷新：读 clis.json，全刷 + 重建索引
+│   ├── refresh            # 一键刷新：读 clis.json，全刷 + 重建索引
+│   └── install-skill      # 把 skills/ 装进本机 Agent 目录（自动填入库路径）
+├── skills/
+│   └── cli-capability-lookup/SKILL.md   # Agent 自动来查的入口（含路径占位符）
 ├── lib/
 │   ├── capmodel.js        # 统一能力模型 → 统一渲染成 CAPABILITY.md
 │   └── fetchsource.js     # 取源：下载源码 / 取 release 可执行文件

@@ -46,10 +46,55 @@ Agent 用命令行工具时的典型失败模式有两种：
 
 ---
 
+## 三种用法
+
+### ① 只是想查某个 CLI 能干什么 —— 什么都不用装
+
+直接在 GitHub 上读：`INDEX.md` 的「按需求找方案」表，以及
+`registry/<名字>/CAPABILITY.md`。快照都入库了，不 clone 也能看。
+
+### ② 想让自己的 Agent 每次都先来查 —— clone 一次，装一次 skill（推荐）
+
+```bash
+git clone https://github.com/PoryfForge/Cli.git && cd Cli
+bin/install-skill
+```
+
+`bin/install-skill` 会探测本机装了哪个 Agent，把 `skills/cli-capability-lookup/`
+装进对应的 skills 目录（WorkBuddy 是 `~/.workbuddy/skills/`，Claude Code 是
+`~/.claude/skills/`），**并把里面的路径换成你的 clone 位置** —— 所以仓库放哪儿都行。
+
+```bash
+bin/install-skill --list                    # 看探测到哪些 Agent 目录
+bin/install-skill --target claude           # 显式指定目标
+bin/install-skill --target ./my-agent/skills  # 或直接给路径
+bin/install-skill --dry-run                 # 只看会做什么
+bin/install-skill --uninstall               # 移除
+```
+
+装完之后，Agent 遇到飞书 / 企业微信 / WPS 365 / 即梦 相关任务时会**先查库**，
+而不是现翻 `--help`、更不是凭印象编命令。想验证：新开一个会话，问「飞书 CLI 能干什么」。
+
+> 用 **Codex** 这类读 `AGENTS.md` 的 Agent：库根的 `AGENTS.md` 就是写给它的 ——
+> 把本仓库作为工作目录的上下文即可；或把 `AGENTS.md` 的内容并进你的全局指令文件。
+
+### ③ 当成程序的数据源 —— 读结构化文件，别解析 markdown
+
+| 文件 | 内容 |
+|---|---|
+| `index.json` | 全部 CLI 的索引：各业务域计数、采集方式、能力文档路径 |
+| `registry/<名字>/capability.json` | 单个 CLI 的完整能力树（域 → 命令 → 参数） |
+| `registry/<名字>/capability.meta.json` | 快照元数据：版本、commit、采集时间 |
+| `routes.json` | 中文意图路由表：「想做什么 → 用哪条命令」 |
+
+---
+
 ## 快速开始
 
 ```bash
-git clone <this-repo> && cd cli-capability-library
+git clone https://github.com/PoryfForge/Cli.git && cd Cli
+
+bin/install-skill                         # 接进你的 Agent（见上文第 ② 种用法）
 
 bin/cli-cap list                          # 看收录了什么
 bin/cli-cap search 日程                    # 不知道用哪个 CLI 时先跨库搜
@@ -110,7 +155,10 @@ npm test                    # 清单体检 + 渲染契约 + 检索测试
 ├── bin/
 │   ├── cli-cap            # scan / list / index / search / show / remember
 │   ├── skill-digest       # 按清单采集
-│   └── refresh            # 一键刷新
+│   ├── refresh            # 一键刷新
+│   └── install-skill      # 把 skills/ 装进你本机的 Agent 目录
+├── skills/                # 给 Agent 的 skill 模板（含路径占位符，安装时填入）
+│   └── cli-capability-lookup/
 ├── lib/
 │   ├── capmodel.js        # 统一能力模型 → 统一渲染
 │   └── fetchsource.js     # 取源（源码 / release 二进制）
