@@ -1,0 +1,29 @@
+查询指定日历下的日程列表，支持按时间区间筛选与增量同步。
+
+Usage:
+  wps365-cli calendar event list <calendar-id> [flags]
+
+Examples:
+wps365-cli calendar event list primary
+wps365-cli calendar event list primary --start "2024-01-01T00:00:00+08:00" --end "2024-01-31T23:59:59+08:00"
+wps365-cli calendar event list primary --page-size 50
+
+Flags:
+      --anchor-time string   锚点时间，RFC3339 格式
+      --end string           结束时间，RFC3339 格式
+  -h, --help                 help for list
+      --page-size int        每页数量，1–100，默认 30 (default 30)
+      --page-token string    分页标记
+      --start string         起始时间，RFC3339 格式，与 --end 配合使用，区间不超过 31 天
+      --sync-token string    增量同步 token
+      --token-type string    authentication identity: delegated|app
+      --with-cancelled       增量同步时是否包含已取消的日程
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

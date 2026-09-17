@@ -1,0 +1,20 @@
+为指定日程创建会议纪要，纪要以文档形式展示，成功创建后会返回纪要文档 URL。日程内至少需要有 1 个参与人。
+
+Usage:
+  wps365-cli calendar event-minutes create <calendar-id> <event-id> [flags]
+
+Examples:
+wps365-cli calendar event-minutes create primary "evt_xxx"
+
+Flags:
+  -h, --help                help for create
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

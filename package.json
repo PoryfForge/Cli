@@ -1,0 +1,36 @@
+{
+  "name": "cli-capability-library",
+  "version": "1.0.0",
+  "private": true,
+  "description": "把厂商 SaaS 能力型 CLI 的能力面固化成本地文档，让 AI Agent 不用每次现翻 --help",
+  "keywords": ["cli", "ai-agent", "capability", "documentation", "lark", "wecom", "wps365"],
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "refresh": "node bin/refresh",
+    "index": "node bin/cli-cap index",
+    "list": "node bin/cli-cap list",
+    "test": "node tests/run.js"
+  },
+  "bin": {
+    "cli-cap": "bin/cli-cap",
+    "skill-digest": "bin/skill-digest",
+    "cli-refresh": "bin/refresh"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "profiles/",
+    "registry/",
+    "clis.json",
+    "routes.json",
+    "INDEX.md",
+    "index.json",
+    "AGENTS.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {}
+}

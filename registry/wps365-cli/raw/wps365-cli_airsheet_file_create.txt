@@ -1,0 +1,24 @@
+在指定云盘中创建 .ksheet 智能表格文件。
+
+Usage:
+  wps365-cli airsheet file create [flags]
+
+Examples:
+wps365-cli airsheet file create --drive-id dr_1 --name "项目跟踪表" --parent-id 0
+
+Flags:
+      --drive-id string           (required) 盘 ID
+  -h, --help                      help for create
+      --name string               (required) 表格名称
+      --on-name-conflict string   同名冲突策略
+      --parent-id string          父目录 ID（根目录为 0）
+      --token-type string         authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

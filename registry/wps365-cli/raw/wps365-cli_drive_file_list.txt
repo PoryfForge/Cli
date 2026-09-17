@@ -1,0 +1,29 @@
+列出指定父目录下的子文件与文件夹，支持排序与过滤。
+
+Usage:
+  wps365-cli drive file list <drive-id> <parent-id> [flags]
+
+Examples:
+wps365-cli drive file list dr_1 0 --page-size 50
+
+Flags:
+      --filter-exts string   按扩展名过滤
+      --filter-type string   按类型过滤
+  -h, --help                 help for list
+      --id-type string       ID 类型
+      --order string         排序方向
+      --order-by string      排序字段
+      --page-size int        分页大小
+      --page-token string    分页标记
+      --token-type string    authentication identity: delegated|app
+      --with-ext-attrs       是否返回扩展属性
+      --with-permission      是否返回权限信息
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

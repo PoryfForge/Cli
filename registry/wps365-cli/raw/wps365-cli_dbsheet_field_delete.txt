@@ -1,0 +1,21 @@
+删除指定数据表中的字段。
+
+Usage:
+  wps365-cli dbsheet field delete <file-id> <sheet-id> [flags]
+
+Examples:
+wps365-cli dbsheet field delete f_abc123 12345 --fields "fld_xxx,fld_yyy"
+
+Flags:
+      --fields string       (required) 待删除字段 ID 列表，多个用逗号分隔
+  -h, --help                help for delete
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

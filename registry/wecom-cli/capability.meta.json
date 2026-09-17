@@ -1,0 +1,25 @@
+{
+  "name": "wecom-cli",
+  "command": "wecom-cli",
+  "title": "企业微信 CLI",
+  "version": "1.3.0",
+  "description": "企业微信官方 CLI（Rust 实现，经 npm 包 @wecom/cli 分发），覆盖消息、邮件、在线文档、在线表格、智能表格、智能文档、待办、日程、会议、微盘、通讯录等办公能力。命令树由服务端 discovery 动态下发，随附 14 个官方 Agent Skills。",
+  "repo": "https://github.com/WecomTeam/wecom-cli",
+  "license": "MIT",
+  "install": "npm install -g @wecom/cli",
+  "scannedAt": "2026-09-17 06:52:39",
+  "source": "skill-repo",
+  "commit": "dcf6929884b5",
+  "stats": {
+    "技能域": 12,
+    "文档内命令": 93,
+    "参考文档": 51
+  },
+  "domains": 12,
+  "extras": 2,
+  "commands": 93,
+  "apiMethods": 0,
+  "refs": 51,
+  "nodes": 93,
+  "manual": true
+}

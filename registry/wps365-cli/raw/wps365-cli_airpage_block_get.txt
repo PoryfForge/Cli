@@ -1,0 +1,23 @@
+使用 v2 结构化 JSON 查询块（POST /v7/airpage/v2/{file_id}/blocks）。
+--block-id 默认 doc，返回整篇文档内容树。这不是 v1 不透明 arg，也不是 Markdown 写回。
+
+Usage:
+  wps365-cli airpage block get <file-id> [flags]
+
+Examples:
+wps365-cli airpage block get f_001
+wps365-cli airpage block get f_001 --block-id title
+
+Flags:
+      --block-id string     要查询的块 ID；doc 表示文档根，title 表示标题块 (default "doc")
+  -h, --help                help for get
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,22 @@
+为文件开启分享链接并指定角色与范围。
+
+Usage:
+  wps365-cli drive link open <drive-id> <file-id> [flags]
+
+Examples:
+wps365-cli drive link open dr_1 f_001 --role-id r_viewer --scope org
+
+Flags:
+  -h, --help                help for open
+      --role-id string      (required) 角色 ID
+      --scope string        (required) 分享范围
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

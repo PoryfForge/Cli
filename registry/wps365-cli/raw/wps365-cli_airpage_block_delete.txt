@@ -1,0 +1,24 @@
+使用 v2 结构化 JSON 从父块的子块列表中按索引删除（POST /v7/airpage/v2/{file_id}/blocks/delete）。
+--start-index 包含，--end-index 不包含。默认父块为文档根（block-id=doc）。
+
+Usage:
+  wps365-cli airpage block delete <file-id> [flags]
+
+Examples:
+wps365-cli airpage block delete f_001 --start-index 0 --end-index 1
+
+Flags:
+      --block-id string     父块 ID；doc 表示从文档根下删除子块 (default "doc")
+      --end-index int       (required) 删除范围结束索引（不包含），必须大于 start-index
+  -h, --help                help for delete
+      --start-index int     (required) 删除范围起始索引（包含），从 0 开始
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,27 @@
+# 采集用的缓存：源码压缩包、解出来的源码、下载的 release 二进制。
+# 全部可以用 bin/refresh 重新生成，不进版本库。
+.cache/
+
+# 本机 Agent 的工作记忆（项目约定、踩坑日志）。留在本地，不随仓库公开 ——
+# 里面有本机绝对路径，且设计取舍已写进 README 的「设计取舍」与「已知限制」。
+# 想公开这份记录就删掉下面这行。
+.workbuddy/
+
+# 各 CLI 的原始 help 留档。
+# 保留与否是个取舍：留着能溯源、能离线比对两次采集的差异；但量大且随版本变。
+# 默认入库（小体积、可读性强），若仓库变大再打开下面这行。
+# registry/*/raw/
+
+# OS / 编辑器
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node
+node_modules/
+npm-debug.log*
+.npm/
+.env
+.env.*

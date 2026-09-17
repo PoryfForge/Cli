@@ -1,0 +1,21 @@
+批量获取指定用户的主日历信息，最多 20 个用户。
+
+Usage:
+  wps365-cli calendar primary batch-get [flags]
+
+Examples:
+wps365-cli calendar primary batch-get --user-ids "u1,u2,u3"
+
+Flags:
+  -h, --help                help for batch-get
+      --token-type string   authentication identity: delegated|app
+      --user-ids string     (required) 用户 ID，多个用逗号分隔，最多 20 个
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

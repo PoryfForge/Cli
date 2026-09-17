@@ -1,0 +1,26 @@
+在指定云盘目录下创建智能文档（.otl）。
+template-id 传空字符串表示空白文档。这不是内部 CLI 的 Markdown 写回。
+
+Usage:
+  wps365-cli airpage create [flags]
+
+Examples:
+wps365-cli airpage create --drive-id dr_1 --parent-id 0 --name "会议纪要" --template-id "" --on-name-conflict rename
+
+Flags:
+      --drive-id string           (required) 盘 ID
+  -h, --help                      help for create
+      --name string               (required) 文档名称
+      --on-name-conflict string   (required) 同名冲突策略（rename / fail / overwrite） (default "rename")
+      --parent-id string          (required) 父目录 ID（根目录为 0）
+      --template-id string        模板 ID；空白文档传空字符串
+      --token-type string         authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

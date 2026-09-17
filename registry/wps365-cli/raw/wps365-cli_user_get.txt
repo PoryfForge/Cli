@@ -1,0 +1,29 @@
+基于不同标识查询用户信息，仅支持应用身份。
+默认按 user_id 查询（GET），可通过 --type 切换为按邮箱、手机号或外部 ID 批量查询（POST）。
+
+Usage:
+  wps365-cli user get <identifier> [flags]
+
+Examples:
+wps365-cli user get u123456
+wps365-cli user get u123456 --with-dept
+wps365-cli user get "zhang@example.com,li@example.com" --type email --status active
+wps365-cli user get "13800138000,13900139000" --type phone --status active
+wps365-cli user get "ext1,ext2" --type external-id --status active
+
+Flags:
+  -h, --help                help for get
+      --id-type string      ID 类型
+      --status string       用户状态过滤，多个用逗号分隔，可选值：active、notactive、disabled
+      --token-type string   authentication identity: delegated|app
+      --type string         查询类型：id（默认）、email、phone、external-id (default "id")
+      --with-dept           是否返回部门信息
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,21 @@
+向工作表追加行。range_data 用 JSON 传入，不使用内部 CLI 的 build_row_values。
+
+Usage:
+  wps365-cli airsheet row create <file-id> <worksheet-id> [flags]
+
+Examples:
+wps365-cli airsheet row create f_001 1 --range-data-body '[{"op_type":"cell_operation_type_formula","formula":"a"}]'
+
+Flags:
+  -h, --help                     help for create
+      --range-data-body string   (required) range_data JSON 数组
+      --token-type string        authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,27 @@
+日程的增删改查与搜索
+
+Usage:
+  wps365-cli calendar event [command]
+
+Available Commands:
+  create      创建日程
+  delete      删除日程
+  get         查询日程
+  list        查询日程列表
+  respond     答复日程邀请
+  search      搜索日程
+  update      修改日程
+
+Flags:
+  -h, --help   help for event
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)
+
+Use "wps365-cli calendar event [command] --help" for more information about a command.

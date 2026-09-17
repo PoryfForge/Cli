@@ -1,0 +1,24 @@
+删除指定日程。对于重复日程，可通过 --mod-type 指定删除范围。
+
+Usage:
+  wps365-cli calendar event delete <calendar-id> <event-id> [flags]
+
+Examples:
+wps365-cli calendar event delete primary "evt_xxx"
+wps365-cli calendar event delete primary "evt_xxx" --mod-type all
+
+Flags:
+  -h, --help                    help for delete
+      --mod-type string         重复日程删除范围，可选 one 或 all
+      --no-notification         不向参与者发通知
+      --token-type string       authentication identity: delegated|app
+      --which-day-time string   重复日程中要删的那一天的开始时间（毫秒时间戳），mod-type=one 时必填
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,77 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * refresh — 一键刷新能力库。
+ *
+ * 采集配方不在这里定义，而是读 clis.json（收录清单）。
+ * 所以「新增一个 CLI」永远只改 clis.json，这个脚本不用动。
+ *
+ * 用法:
+ *   bin/refresh                 刷新全部 CLI，并重建索引
+ *   bin/refresh wecom-cli       只刷一个
+ *   bin/refresh --list          看看清单里有什么
+ *   bin/refresh --index-only    只重建索引
+ *   bin/refresh --force         强制重新下载源码 / 二进制
+ */
+
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const ROOT = path.resolve(__dirname, '..');
+const MANIFEST = path.join(ROOT, 'clis.json');
+
+function run(args, label) {
+  process.stdout.write(`\n${label}\n`);
+  const r = spawnSync(process.execPath, args, { stdio: 'inherit', cwd: ROOT });
+  if (r.status !== 0) {
+    process.stderr.write(`✗ 失败：node ${args.map((a) => path.relative(ROOT, a) || a).join(' ')}\n`);
+    return false;
+  }
+  return true;
+}
+
+function main() {
+  const argv = process.argv.slice(2);
+
+  if (!fs.existsSync(MANIFEST)) {
+    process.stderr.write(`✗ 找不到收录清单 ${MANIFEST}\n`);
+    process.exit(1);
+  }
+  const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
+  const names = manifest.clis.map((c) => c.name);
+
+  if (argv.includes('--list')) {
+    for (const c of manifest.clis) {
+      process.stdout.write(`  ${c.name.padEnd(14)} ${String(c.acquire.kind).padEnd(12)} ${c.title}\n`);
+    }
+    return;
+  }
+
+  const targets = argv.filter((a) => !a.startsWith('--'));
+  for (const t of targets) {
+    if (!names.includes(t)) {
+      process.stderr.write(`✗ 清单里没有 ${t}。现有：${names.join(', ')}\n`);
+      process.exit(1);
+    }
+  }
+
+  const needFetch = argv.includes('--force') || argv.includes('--fetch');
+
+  if (!argv.includes('--index-only')) {
+    const digestArgs = [path.join(ROOT, 'bin', 'skill-digest')];
+    digestArgs.push(...(targets.length ? targets : ['--all']));
+    if (needFetch) digestArgs.push('--fetch');
+    if (!run(digestArgs, '── 采集能力快照 ──────────────────────────')) process.exit(1);
+  }
+
+  if (!run([path.join(ROOT, 'bin', 'cli-cap'), 'index'], '── 重建索引 ──────────────────────────────')) {
+    process.exit(1);
+  }
+
+  const n = targets.length || manifest.clis.length;
+  process.stdout.write(`\n✓ 能力库已刷新（${n} 个 CLI）。\n`);
+}
+
+main();

@@ -1,0 +1,22 @@
+获取用户会话列表，支持分页。
+
+Usage:
+  wps365-cli im chat list [flags]
+
+Examples:
+wps365-cli im chat list --page-size 20
+
+Flags:
+  -h, --help                help for list
+      --page-size int       每页数量，1–100
+      --page-token string   分页标记
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

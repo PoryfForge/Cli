@@ -1,0 +1,21 @@
+Save client_id and client_secret
+
+Usage:
+  wps365-cli auth setup [flags]
+
+Flags:
+      --api-base string        API base URL, e.g. https://open.wps.cn
+      --api-key string         API key（仅外部 provider 的 provider-exec <name> auth setup 使用）
+      --client-id string       OAuth client_id
+      --client-secret string   OAuth client_secret
+  -h, --help                   help for setup
+      --redirect-uri string    optional, pre-registered local callback URL, e.g. http://localhost:18365/callback
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

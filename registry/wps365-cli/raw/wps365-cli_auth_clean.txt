@@ -1,0 +1,17 @@
+Remove all encrypted token files, credential files, the auto-generated keyring key, keychain entries, and clear client_id/redirect_uri from config.json. Use --force to skip confirmation.
+
+Usage:
+  wps365-cli auth clean [flags]
+
+Flags:
+      --force   skip confirmation prompt
+  -h, --help    help for clean
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

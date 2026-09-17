@@ -1,0 +1,20 @@
+将草稿箱中的指定邮件发出。
+
+Usage:
+  wps365-cli mail draft send <mailbox-id> <message-id> [flags]
+
+Examples:
+wps365-cli mail draft send "mbx_xxx" "msg_xxx"
+
+Flags:
+  -h, --help                help for send
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

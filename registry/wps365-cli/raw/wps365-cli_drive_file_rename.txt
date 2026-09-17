@@ -1,0 +1,22 @@
+修改指定文件或文件夹的名称。
+
+Usage:
+  wps365-cli drive file rename <drive-id> <file-id> [flags]
+
+Examples:
+wps365-cli drive file rename dr_1 f_001 --name "重命名后"
+
+Flags:
+  -h, --help                help for rename
+      --id-type string      ID 类型
+      --name string         (required) 新名称
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

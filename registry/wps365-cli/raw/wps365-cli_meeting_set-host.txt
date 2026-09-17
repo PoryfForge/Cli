@@ -1,0 +1,22 @@
+设置会议的主持人。
+
+Usage:
+  wps365-cli meeting set-host <meeting-id> [flags]
+
+Examples:
+wps365-cli meeting set-host mtg_abc123 --host-user-id u_xyz789
+
+Flags:
+  -h, --help                  help for set-host
+      --host-user-id string   (required) 新主持人用户 ID
+      --id-type string        用户 ID 类型
+      --token-type string     authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

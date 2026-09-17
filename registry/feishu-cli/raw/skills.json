@@ -1,0 +1,2765 @@
+[
+  {
+    "dir": "lark-approval",
+    "name": "lark-approval",
+    "version": "1.2.0",
+    "description": "飞书审批：查询和处理审批待办/已办/实例，搜索可发起审批定义、查看定义详情并发起原生审批实例。当用户要处理审批任务、查看审批实例、搜索或发起审批时使用。审批待办不是飞书任务；非审批类待办走 lark-task。不负责创建审批定义；三方审批定义不走原生提单。",
+    "cliHelp": "lark-cli approval --help",
+    "prefixes": [
+      "approval"
+    ],
+    "domPrefix": "approval",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 16,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-apps",
+    "name": "lark-apps",
+    "version": "1.0.0",
+    "description": "妙搭（Spark/Miaoda）应用开发与托管：应用创建、本地全栈开发、云端生成迭代、创意设计（UI mockup / 可交互原型 / 线框图 / 落地页 / 仪表盘 / 幻灯片 deck / 视觉探索）、AI相关能力和飞书平台能力或者其他外部能力集成、日志/Trace/监控指标/PV/UV 查询、环境变量管理、应用协作者与协作权限设置、应用角色与成员管理、自动化触发器（定时/记录变更/Webhook/飞书审批）。当用户要开发/新建一个系统·工具·平台·应用，或要本地开发 / 云端开发 / 修改 / 部署 / 发布 / 上线 / 拿可分享链接，或用 HTML 做页面·网站·部署到妙搭，或要设计 / design / mockup / prototype / wireframe / 做 PPT / deck / 视觉探索，或提到妙搭/Spark/Miaoda（应用运行时域名形如 *.aiforce.cloud）、应用数据库、应用文件存储、开放 API Key、可见范围、应用协作者/开发权限、应用角色/角色成员、线上日志、接口请求量、错误量、延迟、访问量、环境变量、给妙搭应用配自动化任务/定时触发/审批通过后自动触发时使用。不负责普通云盘文件上传（lark-drive）、飞书文档编辑（lark-doc）、原生幻灯片创建（lark-slides）。",
+    "cliHelp": "lark-cli apps --help; lark-cli apps +<cmd> --help",
+    "prefixes": [
+      "apps",
+      "apps"
+    ],
+    "domPrefix": "apps",
+    "shortcuts": [
+      {
+        "name": "+access-scope-get",
+        "desc": "设置或查看运行时可见范围",
+        "ref": ""
+      },
+      {
+        "name": "+access-scope-set",
+        "desc": "设置或查看运行时可见范围",
+        "ref": ""
+      },
+      {
+        "name": "+analytics-list",
+        "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+        "ref": ""
+      },
+      {
+        "name": "+automation-list",
+        "desc": "管理妙搭应用自动化触发器（定时/记录变更/Webhook/飞书审批四类触发器的查询/创建/更新/启停；Webhook URL·Token 一次性回显、不落盘）",
+        "ref": ""
+      },
+      {
+        "name": "+cache-clear",
+        "desc": "调试应用运行时缓存：查看/删除单个业务 key、清空指定环境缓存",
+        "ref": ""
+      },
+      {
+        "name": "+cache-delete",
+        "desc": "调试应用运行时缓存：查看/删除单个业务 key、清空指定环境缓存",
+        "ref": ""
+      },
+      {
+        "name": "+cache-get",
+        "desc": "调试应用运行时缓存：查看/删除单个业务 key、清空指定环境缓存",
+        "ref": ""
+      },
+      {
+        "name": "+chat",
+        "desc": "云端 Agent 生成/迭代应用（开发方式已定为云端后）",
+        "ref": ""
+      },
+      {
+        "name": "+create",
+        "desc": "创建新应用资产、拿 app_id",
+        "ref": ""
+      },
+      {
+        "name": "+db-audit-disable",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-audit-enable",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-audit-list",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-audit-status",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-changelog-list",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-data-export",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-data-import",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-env-create",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-env-diff",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-env-migrate",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-execute",
+        "desc": "逐条执行 SQL（SELECT / DML / DDL）；建表 / 改表 / 写 SQL 的平台规范",
+        "ref": ""
+      },
+      {
+        "name": "+db-quota-get",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-recovery-apply",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-recovery-diff",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-table-get",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+db-table-list",
+        "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+        "ref": ""
+      },
+      {
+        "name": "+env-delete",
+        "desc": "管理应用环境变量（查看/设置/删除）",
+        "ref": ""
+      },
+      {
+        "name": "+env-list",
+        "desc": "管理应用环境变量（查看/设置/删除）",
+        "ref": ""
+      },
+      {
+        "name": "+env-pull",
+        "desc": "本地开发时 .env.local 损坏/丢失，重新拉取启动期环境变量",
+        "ref": ""
+      },
+      {
+        "name": "+env-set",
+        "desc": "管理应用环境变量（查看/设置/删除）",
+        "ref": ""
+      },
+      {
+        "name": "+export",
+        "desc": "只要一份源码快照、不做本地开发；或要取别人分享给你的应用源码（你对其仓库无权限）",
+        "ref": ""
+      },
+      {
+        "name": "+file-delete",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+file-download",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+file-get",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+file-list",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+file-quota-get",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+file-sign",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+file-upload",
+        "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+        "ref": ""
+      },
+      {
+        "name": "+get",
+        "desc": "查单个应用详情（类型、名称、发布状态等）",
+        "ref": ""
+      },
+      {
+        "name": "+git-credential-init",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+html-publish",
+        "desc": "旧版存量 HTML 应用（无 Git 管理）继续上传已有静态产物",
+        "ref": ""
+      },
+      {
+        "name": "+init",
+        "desc": "只要一份源码快照、不做本地开发；或要取别人分享给你的应用源码（你对其仓库无权限）",
+        "ref": ""
+      },
+      {
+        "name": "+list",
+        "desc": "找已有 app_id、按名字过滤应用",
+        "ref": ""
+      },
+      {
+        "name": "+log-get",
+        "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+        "ref": ""
+      },
+      {
+        "name": "+log-list",
+        "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+        "ref": ""
+      },
+      {
+        "name": "+member-add",
+        "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+        "ref": ""
+      },
+      {
+        "name": "+member-list",
+        "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+        "ref": ""
+      },
+      {
+        "name": "+member-remove",
+        "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+        "ref": ""
+      },
+      {
+        "name": "+member-settings-get",
+        "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+        "ref": ""
+      },
+      {
+        "name": "+member-settings-set",
+        "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+        "ref": ""
+      },
+      {
+        "name": "+member-update",
+        "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+        "ref": ""
+      },
+      {
+        "name": "+metric-list",
+        "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+        "ref": ""
+      },
+      {
+        "name": "+openapi-key-list",
+        "desc": "管理妙搭应用开放 API Key（创建/查看/启停/重置/删除凭证；密钥仅 create/reset 一次性返回）",
+        "ref": ""
+      },
+      {
+        "name": "+plugin-install",
+        "desc": "外部能力(AI模型能力和飞书平台能力)集成/插件/Plugin/Capability",
+        "ref": ""
+      },
+      {
+        "name": "+plugin-list",
+        "desc": "外部能力(AI模型能力和飞书平台能力)集成/插件/Plugin/Capability",
+        "ref": ""
+      },
+      {
+        "name": "+plugin-uninstall",
+        "desc": "外部能力(AI模型能力和飞书平台能力)集成/插件/Plugin/Capability",
+        "ref": ""
+      },
+      {
+        "name": "+release-create",
+        "desc": "部署/上线应用（\"部署\"\"上线\"\"推上去并部署\"\"发布到云端\"）；查发布状态/历史",
+        "ref": ""
+      },
+      {
+        "name": "+release-get",
+        "desc": "部署/上线应用（\"部署\"\"上线\"\"推上去并部署\"\"发布到云端\"）；查发布状态/历史",
+        "ref": ""
+      },
+      {
+        "name": "+release-list",
+        "desc": "部署/上线应用（\"部署\"\"上线\"\"推上去并部署\"\"发布到云端\"）；查发布状态/历史",
+        "ref": ""
+      },
+      {
+        "name": "+role",
+        "desc": "apps",
+        "ref": ""
+      },
+      {
+        "name": "+role-",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+role-list",
+        "desc": "管理 app_... 应用内角色、角色成员，或查询用户匹配角色",
+        "ref": ""
+      },
+      {
+        "name": "+role-match-list",
+        "desc": "管理 app_... 应用内角色、角色成员，或查询用户匹配角色",
+        "ref": ""
+      },
+      {
+        "name": "+role-member-list",
+        "desc": "管理 app_... 应用内角色、角色成员，或查询用户匹配角色",
+        "ref": ""
+      },
+      {
+        "name": "+session-create",
+        "desc": "云端 Agent 生成/迭代应用（开发方式已定为云端后）",
+        "ref": ""
+      },
+      {
+        "name": "+session-get",
+        "desc": "查看某次会话某一轮（turn）的回复消息（含仍在生成中的本轮）/ 导出上一轮模型回复（\"这一轮回复了什么\"\"上一轮的回复\"\"导出某轮消息\"）",
+        "ref": ""
+      },
+      {
+        "name": "+session-messages-list",
+        "desc": "查看某次会话某一轮（turn）的回复消息（含仍在生成中的本轮）/ 导出上一轮模型回复（\"这一轮回复了什么\"\"上一轮的回复\"\"导出某轮消息\"）",
+        "ref": ""
+      },
+      {
+        "name": "+trace-get",
+        "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+        "ref": ""
+      },
+      {
+        "name": "+trace-list",
+        "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "改应用名或描述",
+        "ref": ""
+      },
+      {
+        "name": "+user-id-convert",
+        "desc": "把一批 ID 在妙搭 user_id ↔ 飞书 open_id / union_id / 飞书 user_id 之间互转（例如拿到 open_id 但下游要 user_id）",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 30,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-attendance",
+    "name": "lark-attendance",
+    "version": "1.0.0",
+    "description": "飞书考勤打卡：查询自己的考勤打卡记录",
+    "cliHelp": "lark-cli attendance --help",
+    "prefixes": [
+      "attendance"
+    ],
+    "domPrefix": "attendance",
+    "shortcuts": [],
+    "apis": [
+      {
+        "resource": "user_tasks",
+        "method": "query",
+        "desc": "查询用户考勤打卡记录"
+      }
+    ],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-base",
+    "name": "lark-base",
+    "version": "1.2.23",
+    "description": "飞书多维表格（Base）操作：建表、字段、记录、视图、统计、公式/lookup、表单、仪表盘、应用模式（BaseApp/AppMode 页面与组件）、Workspace 目录、workflow、角色权限、模板中心（多维表格模板分类/列表/搜索）；遇到 Base/多维表格/bitable、BaseApp/AppMode、/base/ 或 /app/ 链接时使用。BaseApp 不走 lark-apps；文件导入/导出转 lark-drive，认证/授权转 lark-shared。",
+    "cliHelp": "lark-cli base --help",
+    "prefixes": [
+      "base"
+    ],
+    "domPrefix": "base",
+    "shortcuts": [
+      {
+        "name": "+app-page-list",
+        "desc": "3. 页面： 使用",
+        "ref": ""
+      },
+      {
+        "name": "+base-get",
+        "desc": "读取 Base： Base 信息用",
+        "ref": ""
+      },
+      {
+        "name": "+dashboard-block-get-data",
+        "desc": "3. 读取内容：",
+        "ref": ""
+      },
+      {
+        "name": "+record-batch-create",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+record-batch-update",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+record-get",
+        "desc": "已知若干个 record_id：",
+        "ref": ""
+      },
+      {
+        "name": "+record-list",
+        "desc": "其余读取：",
+        "ref": ""
+      },
+      {
+        "name": "+record-search",
+        "desc": "关键词搜索：",
+        "ref": ""
+      },
+      {
+        "name": "+search",
+        "desc": "最近访问：lark-cli drive",
+        "ref": ""
+      },
+      {
+        "name": "+title-resolve",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+url-resolve",
+        "desc": "",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 26,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-calendar",
+    "name": "lark-calendar",
+    "version": "1.0.0",
+    "description": "飞书日历：管理日历日程和会议室。查看/搜索日程、创建/更新日程、管理参会人、查询忙闲和推荐时段、预定会议室。当用户需要查看日程安排、创建/修改会议、查询/预定会议室时使用。不负责：查询过去的视频会议记录（走 lark-meeting）、待办任务（走 lark-task）。",
+    "cliHelp": "lark-cli calendar --help",
+    "prefixes": [
+      "calendar"
+    ],
+    "domPrefix": "calendar",
+    "shortcuts": [
+      {
+        "name": "+agenda",
+        "desc": "查看日程安排（默认今天）",
+        "ref": ""
+      },
+      {
+        "name": "+chat-search",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+create",
+        "desc": "创建日程并邀请参会人（ISO 8601 时间）",
+        "ref": ""
+      },
+      {
+        "name": "+delete",
+        "desc": "删除日程；重复性日程/例外必须传 --apply-to（详见 重复性日程操作规范）",
+        "ref": ""
+      },
+      {
+        "name": "+detail",
+        "desc": "从日程进一步拿 AI 智能纪要 / 逐字稿 / 妙记产物",
+        "ref": ""
+      },
+      {
+        "name": "+freebusy",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+get",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+join-event",
+        "desc": "凭分享 token 加入日程（分享链接/二维码/分享卡片/RSVP 卡片）",
+        "ref": ""
+      },
+      {
+        "name": "+list-attendees",
+        "desc": "列出日程的参与人和会议室（支持按 --type 过滤：user / resource / chat / third_party）",
+        "ref": ""
+      },
+      {
+        "name": "+meeting",
+        "desc": "从日程获取关联的视频会议 ID 或用户绑定的会议纪要文档",
+        "ref": ""
+      },
+      {
+        "name": "+room-find",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+rsvp",
+        "desc": "回复日程（接受/拒绝/待定）",
+        "ref": ""
+      },
+      {
+        "name": "+search-event",
+        "desc": "按关键词搜索日程",
+        "ref": ""
+      },
+      {
+        "name": "+search-user",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+suggestion",
+        "desc": "根据非明确时间或一段时间范围，推荐多个可用时间块方案",
+        "ref": ""
+      },
+      {
+        "name": "+transfer",
+        "desc": "转让日程组织者（「把这个日程交给 XX」「组织者改成 XX」「这个会转给我」「bot 建完还给我」）",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "更新既有日程字段，或独立增量添加/移除参会人和会议室；重复性日程/例外必须传 --apply-to（详见 重复性日程操作规范）",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 14,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-contact",
+    "name": "lark-contact",
+    "version": "1.0.0",
+    "description": "飞书 / Lark 通讯录:按姓名 / 邮箱解析成 open_id,或按 open_id 反查姓名 / 部门 / 邮箱 / 联系方式 / 个人状态 / 签名,以及按关键词搜索当前用户可见的机器人 / 智能体(agent)。当用户提到一个名字要下一步发消息 / 排日程,或拿到 open_id 想查具体信息时使用。不负责部门树遍历、按部门列员工、组织架构图,这类需求走原生 OpenAPI。",
+    "cliHelp": "lark-cli contact --help",
+    "prefixes": [
+      "contact"
+    ],
+    "domPrefix": "contact",
+    "shortcuts": [
+      {
+        "name": "+get-user",
+        "desc": "已知 open_id 取他人资料",
+        "ref": ""
+      },
+      {
+        "name": "+messages-send",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+search-bot",
+        "desc": "按关键词搜索当前用户可见的机器人 / 智能体",
+        "ref": ""
+      },
+      {
+        "name": "+search-user",
+        "desc": "按姓名 / 邮箱搜员工拿 open_id",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 3,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-doc",
+    "name": "lark-doc",
+    "version": "",
+    "description": "飞书云文档（Docx / Wiki）内容操作：读取、创建、编辑文档，插入或下载图片附件，以及操作思维笔记。用户提供文档 URL/token（包括 doubao.com 的 /docx/、/wiki/）时使用；按 URL 路径/token 而非域名路由。文档内嵌资源按读取参考中的统一规则分流。独立评论操作走 lark-drive；随正文读取评论使用 docs +fetch。表格或 Base 内部数据操作不在本 skill。",
+    "cliHelp": "lark-cli docs --help;lark-cli mindnotes --help",
+    "prefixes": [
+      "docs",
+      "mindnotes"
+    ],
+    "domPrefix": "docs",
+    "shortcuts": [
+      {
+        "name": "+create",
+        "desc": "导入 / 空文档",
+        "ref": ""
+      },
+      {
+        "name": "+fetch",
+        "desc": "读取 / 摘要",
+        "ref": ""
+      },
+      {
+        "name": "+media-download",
+        "desc": "下载素材",
+        "ref": ""
+      },
+      {
+        "name": "+media-insert",
+        "desc": "插入本地素材",
+        "ref": ""
+      },
+      {
+        "name": "+media-preview",
+        "desc": "预览素材",
+        "ref": ""
+      },
+      {
+        "name": "+script",
+        "desc": "草稿初始化、解析与统计",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "编辑 / block 直达链接",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 43,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-drive",
+    "name": "lark-drive",
+    "version": "1.0.0",
+    "description": "飞书云空间（云盘/云存储）：管理 Drive 文件和文件夹，包含上传/下载、创建文件夹、复制/移动/删除、查看元数据、查询权限设置、评论/权限/订阅、标题、版本、飞书文档密级标签（secure labels）和本地文件导入。用户需要整理云盘目录、处理云空间资源 URL/token、判断链接类型/真实 token/标题，或导入 Word/Markdown/Excel/CSV/PPTX/.base 为 docx/sheet/bitable/slides 时使用；doubao.com 云空间 URL/token 也按资源路径和 token 路由，不回退 WebFetch。不负责：文档内容编辑（走 lark-doc）、表格/Base 表内数据操作（走 lark-sheets/lark-base）、知识空间节点/成员管理（走 lark-wiki）、原生 Markdown 文件读写/patch/diff（走 lark-markdown）。",
+    "cliHelp": "lark-cli drive --help",
+    "prefixes": [
+      "drive"
+    ],
+    "domPrefix": "drive",
+    "shortcuts": [
+      {
+        "name": "+add-comment",
+        "desc": "给 doc/docx/file/sheet/slides/base(bitable) 添加全文/局部评论；不支持妙搭 apps。",
+        "ref": ""
+      },
+      {
+        "name": "+add-reply",
+        "desc": "给已有评论添加回复。",
+        "ref": ""
+      },
+      {
+        "name": "+apply-permission",
+        "desc": "以 user 身份向文档 owner 申请访问权限。",
+        "ref": ""
+      },
+      {
+        "name": "+batch-query-comments",
+        "desc": "按评论 ID 批量获取评论。",
+        "ref": ""
+      },
+      {
+        "name": "+copy",
+        "desc": "copy — 复制文件；优先使用 [drive",
+        "ref": ""
+      },
+      {
+        "name": "+cover",
+        "desc": "查看或下载文件封面图规格。",
+        "ref": ""
+      },
+      {
+        "name": "+create-folder",
+        "desc": "新建 Drive 文件夹，支持父文件夹与 bot 创建后自动授权。",
+        "ref": ""
+      },
+      {
+        "name": "+create-shortcut",
+        "desc": "在另一个文件夹里创建现有 Drive 文件的快捷方式。",
+        "ref": ""
+      },
+      {
+        "name": "+delete",
+        "desc": "删除 Drive 文件或文件夹，文件夹删除会轮询异步任务。",
+        "ref": ""
+      },
+      {
+        "name": "+delete-reply",
+        "desc": "删除评论下的某条回复（高风险，需 --yes）。",
+        "ref": ""
+      },
+      {
+        "name": "+download",
+        "desc": "下载 Drive 文件到本地。",
+        "ref": ""
+      },
+      {
+        "name": "+export",
+        "desc": "将 doc/docx/sheet/bitable/slides 导出为本地文件。",
+        "ref": ""
+      },
+      {
+        "name": "+export-download",
+        "desc": "根据导出产物的 file_token 下载文件。",
+        "ref": ""
+      },
+      {
+        "name": "+fetch",
+        "desc": "读取文档内容",
+        "ref": ""
+      },
+      {
+        "name": "+import",
+        "desc": "将本地文件导入为飞书在线文档、表格、多维表格或幻灯片。",
+        "ref": ""
+      },
+      {
+        "name": "+inspect",
+        "desc": "检视 URL 的类型、标题和 canonical token；wiki URL 会自动解包到底层文档。",
+        "ref": ""
+      },
+      {
+        "name": "+list-comments",
+        "desc": "分页获取评论列表。",
+        "ref": ""
+      },
+      {
+        "name": "+list-replies",
+        "desc": "分页获取某条评论下的回复。",
+        "ref": ""
+      },
+      {
+        "name": "+member-add",
+        "desc": "添加一个或最多 10 个 Drive 文档、文件、文件夹或 wiki 节点协作者/授权成员；封装 Drive permission member create/batch_create，真实写入需要 --yes。",
+        "ref": ""
+      },
+      {
+        "name": "+member-list",
+        "desc": "查询 Drive 文档、文件、文件夹或 wiki 节点的协作者/授权成员列表。",
+        "ref": ""
+      },
+      {
+        "name": "+member-remove",
+        "desc": "移除一个 Drive 文档、文件、文件夹或 wiki 节点协作者；封装 Drive permission member delete，真实写入需要 --yes。",
+        "ref": ""
+      },
+      {
+        "name": "+move",
+        "desc": "移动 Drive 文件或文件夹；Wiki 层级移动走 lark-wiki。",
+        "ref": ""
+      },
+      {
+        "name": "+node-copy",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+permission-get-setting",
+        "desc": "查询文件、文件夹或云文档自身的公开访问、分享、协作者管理、安全与评论权限设置；支持 URL 或裸 token + --type；不递归读取文件夹子文档权限。",
+        "ref": ""
+      },
+      {
+        "name": "+preview",
+        "desc": "查看或下载文件内容，或者查看文件可用预览格式并获取 PDF / HTML / 文本 / 图片等转换预览产物。",
+        "ref": ""
+      },
+      {
+        "name": "+pull",
+        "desc": "从 Drive 拉取文件到本地目录，支持重复远端路径处理和增量模式。",
+        "ref": ""
+      },
+      {
+        "name": "+push",
+        "desc": "将本地目录推送到 Drive 文件夹，支持 skip / smart / overwrite 与确认后删除远端。",
+        "ref": ""
+      },
+      {
+        "name": "+react-reply",
+        "desc": "给回复加/删表情回应。",
+        "ref": ""
+      },
+      {
+        "name": "+resolve-comment",
+        "desc": "把评论标记为已解决（is_solved=true）。",
+        "ref": ""
+      },
+      {
+        "name": "+restore-comment",
+        "desc": "恢复/重新打开已解决评论（is_solved=false）。",
+        "ref": ""
+      },
+      {
+        "name": "+search",
+        "desc": "搜索文档、Wiki、表格、文件夹等云空间对象；支持 --edited-since、--created-by-me、--mine、--doc-types 等扁平 flag；区分 original creator 与 owner 语义。",
+        "ref": ""
+      },
+      {
+        "name": "+secure-label-list",
+        "desc": "列出当前用户可用的密级标签。",
+        "ref": ""
+      },
+      {
+        "name": "+secure-label-update",
+        "desc": "更新 Drive 文件或文档的密级标签。",
+        "ref": ""
+      },
+      {
+        "name": "+status",
+        "desc": "比较本地目录与 Drive 文件夹差异；默认按 SHA-256 精确比较，--quick 使用修改时间近似比较。",
+        "ref": ""
+      },
+      {
+        "name": "+sync",
+        "desc": "双向同步本地目录与 Drive 文件夹：拉取 new_remote、推送 new_local，modified 按 --on-conflict=remote-wins\\|local-wins\\|keep-both\\|ask 处理；--quick 用修改时间近似比较；--on-duplicate-remote 支持 fail / newest / oldest；只同步 type=file，跳过在线文档和 shortcut，且不会删除两端多余文件。",
+        "ref": ""
+      },
+      {
+        "name": "+task",
+        "desc": "查询 import/export/move/delete 等异步任务结果。",
+        "ref": ""
+      },
+      {
+        "name": "+update-reply",
+        "desc": "整体替换某条回复的内容。",
+        "ref": ""
+      },
+      {
+        "name": "+update-title",
+        "desc": "重命名文件、文件夹、在线文档或知识库。",
+        "ref": ""
+      },
+      {
+        "name": "+upload",
+        "desc": "上传本地文件到 Drive 文件夹或 wiki 节点；修改/重写/更新已有文件时优先覆盖上传，而不是直接上传一个新文件。",
+        "ref": ""
+      },
+      {
+        "name": "+version-delete",
+        "desc": "删除指定历史版本。",
+        "ref": ""
+      },
+      {
+        "name": "+version-get",
+        "desc": "下载指定历史版本。",
+        "ref": ""
+      },
+      {
+        "name": "+version-history",
+        "desc": "查看文件历史版本。",
+        "ref": ""
+      },
+      {
+        "name": "+version-revert",
+        "desc": "回滚到指定历史版本。",
+        "ref": ""
+      }
+    ],
+    "apis": [
+      {
+        "resource": "files",
+        "method": "copy",
+        "desc": "复制文件；优先使用 [`drive +copy`](references/lark-drive-copy.md)"
+      },
+      {
+        "resource": "files",
+        "method": "create_folder",
+        "desc": "新建文件夹"
+      },
+      {
+        "resource": "files",
+        "method": "list",
+        "desc": "获取文件夹下的清单；使用前阅读 [`references/lark-drive-files-list.md`](references/lark-drive-files-list.md)"
+      },
+      {
+        "resource": "files",
+        "method": "patch",
+        "desc": "修改文件标题；优先使用 [`drive +update-title`](references/lark-drive-update-title.md) shortcut"
+      },
+      {
+        "resource": "permission.members",
+        "method": "auth",
+        "desc": " "
+      },
+      {
+        "resource": "permission.members",
+        "method": "create",
+        "desc": "增加协作者权限"
+      },
+      {
+        "resource": "permission.members",
+        "method": "transfer_owner",
+        "desc": " "
+      },
+      {
+        "resource": "metas",
+        "method": "batch_query",
+        "desc": "获取文档元数据"
+      },
+      {
+        "resource": "user",
+        "method": "remove_subscription",
+        "desc": "取消订阅用户、应用维度事件"
+      },
+      {
+        "resource": "user",
+        "method": "subscription",
+        "desc": "订阅用户、应用维度事件（本次开放评论添加事件）"
+      },
+      {
+        "resource": "user",
+        "method": "subscription_status",
+        "desc": "查询用户、应用对指定事件的订阅状态"
+      },
+      {
+        "resource": "file.statistics",
+        "method": "get",
+        "desc": "获取文件统计信息"
+      },
+      {
+        "resource": "file.view_records",
+        "method": "list",
+        "desc": "获取文档的访问者记录"
+      },
+      {
+        "resource": "file.comment.reply.reactions",
+        "method": "update_reaction",
+        "desc": "添加/删除 reaction；优先使用 `drive +react-reply`"
+      },
+      {
+        "resource": "quota_details",
+        "method": "get",
+        "desc": "获取当前用户的容量信息，包含各业务使用量、租户配额是否超限、用户配额、所在部门配额"
+      }
+    ],
+    "refs": 60,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-event",
+    "name": "lark-event",
+    "version": "1.0.0",
+    "description": "Lark/Feishu real-time event listening / subscribing / consuming: stream events as NDJSON via `lark-cli event consume <EventKey>` (covers IM messages/reactions/chat changes, Approval status changes, Task updates, VC meeting started/joined/ended, Minutes generated, Whiteboard updated, etc.). Use for Lark bots, real-time message processing, long-running subscribers, streaming webhook/push handlers. Supports `--max-events` / `--timeout` bounded runs and a stderr ready-marker contract — designed for AI agents running as subprocesses.",
+    "cliHelp": "lark-cli event --help",
+    "prefixes": [
+      "event"
+    ],
+    "domPrefix": "event",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 7,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-im",
+    "name": "lark-im",
+    "version": "1.0.0",
+    "description": "飞书即时通讯：收发消息和管理群聊。发送和回复消息、搜索聊天记录、管理群聊成员、上传下载图片和文件、管理表情回复、发送应用内/短信/电话加急、发送和处理交互卡片（Interactive Card）、监听卡片按钮回调（card.action.trigger）。当用户需要发消息、查看或搜索聊天记录、下载聊天中的文件、查看群成员、搜索群、创建群聊或话题群、管理标记数据、管理 Feed 置顶（添加/移除/查询置顶会话）、管理标签数据、处理卡片回调时使用。",
+    "cliHelp": "lark-cli im --help",
+    "prefixes": [
+      "im"
+    ],
+    "domPrefix": "im",
+    "shortcuts": [
+      {
+        "name": "+chat-create",
+        "desc": "Create a group chat or topic chat; user/bot; --chat-mode group|topic; private/public; invites users/bots; optionally sets bot manager",
+        "ref": ""
+      },
+      {
+        "name": "+chat-list",
+        "desc": "List chats the current user/bot is a member of; defaults to groups; pass --types=p2p,group to include p2p single chats (user-only); user/bot; supports sorting, auto-pagination, --exclude-muted (user-only)",
+        "ref": ""
+      },
+      {
+        "name": "+chat-members-list",
+        "desc": "List members of a chat; returns separate users[] / bots[] buckets; callable as user or bot; --member-types filters which kinds to return; --page-all pagination; surfaces truncations[] when the server caps a bucket",
+        "ref": ""
+      },
+      {
+        "name": "+chat-messages-list",
+        "desc": "List messages in a chat or P2P conversation; user/bot; accepts --chat-id or --user-id, resolves P2P chat_id, supports time range, --order asc/desc sorting, auto-pagination",
+        "ref": ""
+      },
+      {
+        "name": "+chat-search",
+        "desc": "Search visible group chats by --query keyword and/or --member-ids; user/bot; e.g. look up chat_id by group name; supports type filters, sorting, auto-pagination, and --exclude-muted (user identity only)",
+        "ref": ""
+      },
+      {
+        "name": "+chat-update",
+        "desc": "Update group chat name or description; user/bot; updates a chat's name or description",
+        "ref": ""
+      },
+      {
+        "name": "+feed-group-list",
+        "desc": "List the caller's feed groups (tags); user-only; supports --page-all auto-pagination",
+        "ref": ""
+      },
+      {
+        "name": "+feed-group-list-item",
+        "desc": "List feed cards in a feed group (tag); user-only; enriches each item with chat_name resolved from feed_id; supports --page-all auto-pagination",
+        "ref": ""
+      },
+      {
+        "name": "+feed-group-query-item",
+        "desc": "Look up specific feed cards in a feed group (tag) by ID; user-only; enriches each item with chat_name resolved from feed_id",
+        "ref": ""
+      },
+      {
+        "name": "+feed-shortcut-create",
+        "desc": "Add chats to the user's feed shortcuts; user-only; oc_xxx chat IDs only; batch up to 10 per call; --head/--tail controls insertion order; partial failures return an ok:false ledger",
+        "ref": ""
+      },
+      {
+        "name": "+feed-shortcut-list",
+        "desc": "List one page of the user's feed shortcuts; user-only; omit --page-token for the first page; default output enriches CHAT entries under detail; pass --no-detail to skip the extra lookup and im:chat:read scope",
+        "ref": ""
+      },
+      {
+        "name": "+feed-shortcut-remove",
+        "desc": "Remove chats from the user's feed shortcuts; user-only; batch up to 10 per call; removing an absent shortcut is idempotent success; real per-item failures return an ok:false ledger",
+        "ref": ""
+      },
+      {
+        "name": "+flag-cancel",
+        "desc": "Cancel (remove) a bookmark. When no --flag-type is given, best-effort double-cancel: removes message layer and (when chat_type is determinable) feed layer",
+        "ref": ""
+      },
+      {
+        "name": "+flag-create",
+        "desc": "Create a bookmark on a message; user-only; defaults to message-layer flag; use --flag-type feed for feed-layer flag (item_type auto-detected from chat mode)",
+        "ref": ""
+      },
+      {
+        "name": "+flag-list",
+        "desc": "List bookmarks; user-only; auto-enriches feed-type thread entries with message content; --page-all is capped by --page-limit (default 20, max 1000), and has_more=true means the result is incomplete",
+        "ref": ""
+      },
+      {
+        "name": "+message-read-users",
+        "desc": "user: im:message:readonly (recommended), im:message, im:message:basic, or im:message:get_as_user; bot: im:message:readonly",
+        "ref": ""
+      },
+      {
+        "name": "+messages-edit",
+        "desc": "Edit a message's content (text/post, including the attachment zone); bot-only (user identity is rejected by the server); PUT /open-apis/im/v1/messages/:message_id",
+        "ref": ""
+      },
+      {
+        "name": "+messages-mget",
+        "desc": "Batch get messages by IDs; user/bot; fetches up to 50 om_ message IDs, formats sender names, expands thread replies",
+        "ref": ""
+      },
+      {
+        "name": "+messages-read-status",
+        "desc": "Batch query whether the current user read 1–50 messages; user-only; returns readable items and invalid message IDs",
+        "ref": ""
+      },
+      {
+        "name": "+messages-reply",
+        "desc": "Reply to a message (supports thread replies); user/bot; supports text/markdown/post/media replies, reply-in-thread, idempotency key",
+        "ref": ""
+      },
+      {
+        "name": "+messages-resources-download",
+        "desc": "Download an image/file from a message; folders are not directly downloadable — expand with im files folder --recursive first, then download the files inside; user/bot",
+        "ref": ""
+      },
+      {
+        "name": "+messages-search",
+        "desc": "Search messages across chats (supports keyword, sender, time range filters) with user or bot identity; filters by chat/sender/attachment/time, supports auto-pagination via --page-all / --page-limit, enriches results via batched mget and chats batch_query",
+        "ref": ""
+      },
+      {
+        "name": "+messages-send",
+        "desc": "Send a message to a chat or direct message; user/bot; sends to chat-id or user-id with text/markdown/post/media, supports idempotency key",
+        "ref": ""
+      },
+      {
+        "name": "+threads-messages-list",
+        "desc": "List messages in a thread; user/bot; accepts om_/omt_ input, resolves message IDs to thread_id, supports --order asc/desc sorting, auto-pagination",
+        "ref": ""
+      }
+    ],
+    "apis": [
+      {
+        "resource": "chats",
+        "method": "create",
+        "desc": "创建群。Identity: `bot` only (`tenant_access_token`)."
+      },
+      {
+        "resource": "chats",
+        "method": "get",
+        "desc": "获取群信息。Identity: supports `user` and `bot`; the caller must be in the target chat to get full details, and must belong to the same tenant for internal chats."
+      },
+      {
+        "resource": "chats",
+        "method": "link",
+        "desc": "获取群分享链接。Identity: supports `user` and `bot`; the caller must be in the target chat, must be an owner or admin when chat sharing is restricted to owners/admins, and must belong to the same tenant for internal chats."
+      },
+      {
+        "resource": "chats",
+        "method": "update",
+        "desc": "更新群信息。Identity: supports `user` and `bot`."
+      },
+      {
+        "resource": "chat.members",
+        "method": "create",
+        "desc": "将用户或机器人拉入群聊。Identity: supports `user` and `bot`; the caller must be in the target chat; for `bot` calls, added users must be within the app's availability; for internal chats the operator must belong to the same tenant; if only owners/admins can add members, the caller must be an owner/admin, or a chat-creator bot with `im:chat:operate_as_owner`."
+      },
+      {
+        "resource": "chat.members",
+        "method": "delete",
+        "desc": "将用户或机器人移出群聊。Identity: supports `user` and `bot`; only group owner, admin, or creator bot can remove others; max 50 users or 5 bots per request."
+      },
+      {
+        "resource": "chat.user_setting",
+        "method": "batch_query",
+        "desc": "批量查询当前用户在群内的个人偏好设置 (e.g. `is_muted` mutes normal messages, `is_mute_at_all` mutes @all messages); up to 10 chats per request. Identity: `user` only (`user_access_token`); the caller must be in each target chat."
+      },
+      {
+        "resource": "chat.user_setting",
+        "method": "batch_update",
+        "desc": "批量更新当前用户在群内的个人偏好设置 (e.g. `is_muted` mutes normal messages, `is_mute_at_all` mutes @all messages); up to 10 chats per request. Identity: `user` only (`user_access_token`); the caller must be in each target chat."
+      },
+      {
+        "resource": "chat.nickname",
+        "method": "get",
+        "desc": "获取自己的群昵称。Get your own nickname in the chat (self-only). Identity: `user` only (`user_access_token`); returns an empty string when no nickname is set."
+      },
+      {
+        "resource": "chat.nickname",
+        "method": "update",
+        "desc": "设置自己的群昵称。Set or update your own nickname in the chat (self-only). Identity: `user` only (`user_access_token`); `nickname` must be a non-empty string (max 300 bytes). Use DELETE to clear it."
+      },
+      {
+        "resource": "chat.nickname",
+        "method": "delete",
+        "desc": "清空自己的群昵称。Clear your own nickname in the chat (self-only). Identity: `user` only (`user_access_token`)."
+      },
+      {
+        "resource": "chat.join_requests",
+        "method": "list",
+        "desc": "列出群的待审批入群申请（仅群主/管理员，user_access_token）。List pending join requests for a chat. Identity: `user` only (`user_access_token`); the caller must be the chat owner or an admin. Paginated (`page_size` 1-100); stop on `has_more == false` — `page_token` is returned even on the last page, so paging while it is present never terminates."
+      },
+      {
+        "resource": "chat.join_requests",
+        "method": "handle",
+        "desc": "批量审批入群申请（approve/reject，仅群主/管理员，user_access_token）。Approve or reject pending join requests in bulk (1-50 items, processed in order). Identity: `user` only (`user_access_token`); the caller must be the chat owner or an admin. `results[]` mirrors `items[]` in count and order — check each `result` (`success` / `failed` / `already_handled`); exit 0 does not mean every item succeeded."
+      },
+      {
+        "resource": "chat.managers",
+        "method": "add_managers",
+        "desc": "指定群管理员。Identity: supports `user` and `bot`; only the group owner can add managers; max 10 managers per chat (20 for super-large chats), and at most 5 bots per request."
+      },
+      {
+        "resource": "chat.managers",
+        "method": "delete_managers",
+        "desc": "删除群管理员。Identity: supports `user` and `bot`; only the group owner can remove managers; max 50 users or 5 bots per request."
+      },
+      {
+        "resource": "chat.moderation",
+        "method": "get",
+        "desc": "获取群成员发言权限。Identity: supports `user` and `bot`; the caller must be in the target chat and belong to the same tenant."
+      },
+      {
+        "resource": "chat.moderation",
+        "method": "update",
+        "desc": "更新群发言权限。Identity: supports `user` and `bot`; only the group owner (or creator bot with `im:chat:operate_as_owner`) can update; the caller must be in the chat."
+      },
+      {
+        "resource": "messages",
+        "method": "read_status",
+        "desc": "批量查询当前用户对消息的已读状态。Identity: `user` only (`user_access_token`); accepts up to 50 message IDs and returns readable items plus invalid message IDs.[Must-read](references/lark-im-message-read-status.md)"
+      },
+      {
+        "resource": "messages",
+        "method": "delete",
+        "desc": "撤回消息。Identity: supports `user` and `bot`; for `bot` calls, the bot must be in the chat to revoke group messages; to revoke another user's group message, the bot must be the owner, an admin, or the creator; for user P2P recalls, the target user must be within the bot's availability."
+      },
+      {
+        "resource": "messages",
+        "method": "forward",
+        "desc": "转发消息。Identity: supports `user` and `bot`."
+      },
+      {
+        "resource": "messages",
+        "method": "merge_forward",
+        "desc": "合并转发消息。Identity: `bot` only (`tenant_access_token`)."
+      },
+      {
+        "resource": "messages",
+        "method": "read_users",
+        "desc": "查询消息已读信息。Identity: supports `user` and `bot`; the caller must still be in the chat. A user can query messages they sent within the last 7 days, while a bot can query only messages sent by that bot within the last 7 days.[Must-read](references/lark-im-message-read-status.md)"
+      },
+      {
+        "resource": "messages",
+        "method": "patch",
+        "desc": "更新已发送的消息卡片。Update an interactive message card sent by the app. Identity: supports `user` and `bot`; the message must have been sent within the last 14 days, and `content` must be a JSON-serialized string no larger than 30 KB.[Must-read](references/card/lark-im-card-create.md)"
+      },
+      {
+        "resource": "messages",
+        "method": "urgent_app",
+        "desc": "发送应用内加急。Identity: `bot` only (`tenant_access_token`); the bot must be the message sender and must be in the conversation that contains the message."
+      },
+      {
+        "resource": "messages",
+        "method": "urgent_phone",
+        "desc": "发送电话加急。Identity: `bot` only (`tenant_access_token`); the bot must be the message sender and must be in the conversation that contains the message."
+      },
+      {
+        "resource": "messages",
+        "method": "urgent_sms",
+        "desc": "发送短信加急。Identity: `bot` only (`tenant_access_token`); the bot must be the message sender and must be in the conversation that contains the message."
+      },
+      {
+        "resource": "reactions",
+        "method": "batch_query",
+        "desc": "批量获取消息表情。Identity: supports `user` and `bot`.[Must-read](references/lark-im-reactions.md)"
+      },
+      {
+        "resource": "reactions",
+        "method": "create",
+        "desc": "添加消息表情回复。Identity: supports `user` and `bot`; the caller must be in the conversation that contains the message.[Must-read](references/lark-im-reactions.md)"
+      },
+      {
+        "resource": "reactions",
+        "method": "delete",
+        "desc": "删除消息表情回复。Identity: supports `user` and `bot`; the caller must be in the conversation that contains the message, and can only delete reactions added by itself.[Must-read](references/lark-im-reactions.md)"
+      },
+      {
+        "resource": "reactions",
+        "method": "list",
+        "desc": "获取消息表情回复。Identity: supports `user` and `bot`; the caller must be in the conversation that contains the message.[Must-read](references/lark-im-reactions.md)"
+      },
+      {
+        "resource": "threads",
+        "method": "forward",
+        "desc": "转发话题。Identity: supports `user` and `bot`."
+      },
+      {
+        "resource": "images",
+        "method": "create",
+        "desc": "上传图片。Identity: supports `user` and `bot`; user identity requires `im:resource` scope on the UAT."
+      },
+      {
+        "resource": "files",
+        "method": "create",
+        "desc": "上传文件。Identity: supports `user` and `bot`; user identity requires `im:resource` scope on the UAT."
+      },
+      {
+        "resource": "pins",
+        "method": "create",
+        "desc": "Pin 消息。Identity: supports `user` and `bot`."
+      },
+      {
+        "resource": "pins",
+        "method": "delete",
+        "desc": "移除 Pin 消息。Identity: supports `user` and `bot`."
+      },
+      {
+        "resource": "pins",
+        "method": "list",
+        "desc": "获取群内 Pin 消息。Identity: supports `user` and `bot`."
+      },
+      {
+        "resource": "feed.groups",
+        "method": "batch_add_item",
+        "desc": "Batch add feed cards to a feed group. Identity: `user` only (`user_access_token`).[Must-read](references/lark-im-feed-groups.md)"
+      },
+      {
+        "resource": "feed.groups",
+        "method": "batch_query",
+        "desc": "Batch query feed groups. Identity: `user` only (`user_access_token`).[Must-read](references/lark-im-feed-groups.md)"
+      },
+      {
+        "resource": "feed.groups",
+        "method": "batch_remove_item",
+        "desc": "Batch remove feed cards from a feed group. Identity: `user` only (`user_access_token`).[Must-read](references/lark-im-feed-groups.md)"
+      },
+      {
+        "resource": "feed.groups",
+        "method": "create",
+        "desc": "Create a feed group. Identity: `user` only (`user_access_token`).[Must-read](references/lark-im-feed-groups.md)"
+      },
+      {
+        "resource": "feed.groups",
+        "method": "delete",
+        "desc": "Delete a feed group. Identity: `user` only (`user_access_token`).[Must-read](references/lark-im-feed-groups.md)"
+      },
+      {
+        "resource": "feed.groups",
+        "method": "update",
+        "desc": "Update a feed group. Identity: `user` only (`user_access_token`).[Must-read](references/lark-im-feed-groups.md)"
+      }
+    ],
+    "refs": 60,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-mail",
+    "name": "lark-mail",
+    "version": "1.0.0",
+    "description": "飞书邮箱：Use when user mentions 起草邮件、写邮件、草稿、发送/回复/转发邮件、查阅邮件、看邮件、搜索邮件、邮件文件夹、邮件标签、邮件联系人、监听新邮件、邮件收信规则等；use for mail/email intent only. Do not use for docs/sheets/calendar/auth setup/pure contact lookup/IM chat tasks.",
+    "cliHelp": "lark-cli mail --help",
+    "prefixes": [
+      "mail"
+    ],
+    "domPrefix": "mail",
+    "shortcuts": [
+      {
+        "name": "+decline-receipt",
+        "desc": "Dismiss the read-receipt request banner on an incoming mail by clearing its READ_RECEIPT_REQUEST label, without sending a receipt. Use when the user wants to silence the prompt but refuse to confirm they have read it. Idempotent — safe to re-run.",
+        "ref": ""
+      },
+      {
+        "name": "+draft-create",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+draft-edit",
+        "desc": "Use when updating an existing mail draft without sending it. Prefer this shortcut over calling raw drafts.get or drafts.update directly, because it performs draft-safe MIME read/patch/write editing while preserving unchanged structure, attachments, and headers where possible.",
+        "ref": ""
+      },
+      {
+        "name": "+forward",
+        "desc": "Forward a message and save as draft (default). Use --confirm-send to send immediately after user confirmation. Original message block included automatically.",
+        "ref": ""
+      },
+      {
+        "name": "+lint-html",
+        "desc": "Lint mail HTML body for compatibility / safety / Feishu-native rules. Returns warnings/errors and (default) auto-fixed HTML. Read-only: no draft, no API call. Use this BEFORE creating a draft to preview what the writing-path lint would change, or as a CI gate for static HTML templates.",
+        "ref": ""
+      },
+      {
+        "name": "+message",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+message-trash",
+        "desc": "3. 用户确认后 →",
+        "ref": ""
+      },
+      {
+        "name": "+messages",
+        "desc": "Use when reading full content for multiple emails by message ID. Accepts comma-separated message IDs; CLI handles more than 20 IDs in batches and merges output.",
+        "ref": ""
+      },
+      {
+        "name": "+reply",
+        "desc": "Reply to a message and save as draft (default). Use --confirm-send to send immediately after user confirmation. Sets Re: subject, In-Reply-To, and References headers automatically.",
+        "ref": ""
+      },
+      {
+        "name": "+reply-all",
+        "desc": "Reply to all recipients and save as draft (default). Use --confirm-send to send immediately after user confirmation. Includes all original To and CC automatically.",
+        "ref": ""
+      },
+      {
+        "name": "+send",
+        "desc": "Compose a new email and save as draft (default). Use --confirm-send to send immediately after user confirmation.",
+        "ref": ""
+      },
+      {
+        "name": "+send-receipt",
+        "desc": "Send a read-receipt reply for an incoming message that requested one (i.e. carries the READ_RECEIPT_REQUEST label). Body is auto-generated (subject / recipient / send time / read time) to match the Lark client's receipt format — callers cannot customize it, matching the industry norm that read-receipt bodies are system-generated templates, not free-form replies. Intended for agent use after the user confirms.",
+        "ref": ""
+      },
+      {
+        "name": "+share-to-chat",
+        "desc": "Share an email or thread as a card to a Lark IM chat.",
+        "ref": ""
+      },
+      {
+        "name": "+signature",
+        "desc": "List or view email signatures with default usage info.",
+        "ref": ""
+      },
+      {
+        "name": "+template-create",
+        "desc": "Create a personal mail template. Scans HTML <img src> local paths (reusing draft inline-image detection), uploads inline images and non-inline attachments to Drive, rewrites HTML to cid: references, and POSTs a Template payload to mail.user_mailbox.templates.create.",
+        "ref": ""
+      },
+      {
+        "name": "+template-update",
+        "desc": "Update an existing mail template. Supports --inspect (read-only projection), --print-patch-template (prints a JSON skeleton for --patch-file), and flat flags (--set-subject / --set-name / etc). Internally it GETs the template, applies the patch, rewrites <img> local paths to cid: refs, and PUTs a full-replace update (no optimistic locking: last-write-wins).",
+        "ref": ""
+      },
+      {
+        "name": "+thread",
+        "desc": "Use when querying a full mail conversation/thread by thread ID. Returns all messages in chronological order, including replies and drafts, with body content and attachments metadata, including inline images.",
+        "ref": ""
+      },
+      {
+        "name": "+thread-modify",
+        "desc": "Modify existing mail threads by adding/removing label IDs or moving them to a folder. Batches thread IDs in groups of 20 and returns success_thread_ids / failed_thread_ids.",
+        "ref": ""
+      },
+      {
+        "name": "+thread-trash",
+        "desc": "Soft-delete existing mail threads. Batches thread IDs in groups of 20 and returns success_thread_ids / failed_thread_ids. Requires --yes.",
+        "ref": ""
+      },
+      {
+        "name": "+triage",
+        "desc": "List mail summaries (date/from/subject/message_id). Use --query for full-text search, --filter for exact-match conditions.",
+        "ref": ""
+      },
+      {
+        "name": "+watch",
+        "desc": "Watch for incoming mail events via WebSocket (requires scope mail:event and bot event mail.user_mailbox.event.message_received_v1 added). Run with --print-output-schema to see per-format field reference before parsing output.",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 30,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-markdown",
+    "name": "lark-markdown",
+    "version": "1.2.2",
+    "description": "飞书 Markdown：查看、创建、上传、编辑和比较飞书中的原生 Markdown 文件。当用户要操作飞书 Markdown 文件，或比较其远端版本及本地草稿时使用。纯本地 Markdown 文件操作不触发本 skill。不负责将 Markdown 导入为飞书在线文档，也不负责文件搜索、权限、评论、移动、删除等云空间管理操作。",
+    "cliHelp": "lark-cli markdown --help",
+    "prefixes": [
+      "markdown"
+    ],
+    "domPrefix": "markdown",
+    "shortcuts": [
+      {
+        "name": "+create",
+        "desc": "Create a Markdown file in Drive",
+        "ref": ""
+      },
+      {
+        "name": "+diff",
+        "desc": "Compare two remote Markdown versions, or compare remote Markdown against a local file",
+        "ref": ""
+      },
+      {
+        "name": "+fetch",
+        "desc": "Fetch a Markdown file from Drive",
+        "ref": ""
+      },
+      {
+        "name": "+overwrite",
+        "desc": "Overwrite an existing Markdown file in Drive",
+        "ref": ""
+      },
+      {
+        "name": "+patch",
+        "desc": "Patch a Markdown file in Drive via fetch-local-replace-overwrite",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 5,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-meeting",
+    "name": "lark-meeting",
+    "version": "1.0.0",
+    "description": "飞书视频会议：查询会议记录与会议产物(纪要/逐字稿/妙记)、妙记搜索/上传/下载/编辑、机器人参与会议；查询进行中的会议、实时会议内容(发言/聊天/共享文档)问答(会上/会里)、发送会中聊天/表情；基于 meeting_id、meeting_no、event_id、note_id、minute_token、vc-node-id 或妙记 URL 查询相关信息。预约会议、忙闲和会议室管理走 lark-calendar。",
+    "cliHelp": "lark-cli vc --help;lark-cli minutes --help;lark-cli note --help",
+    "prefixes": [
+      "vc",
+      "minutes",
+      "note"
+    ],
+    "domPrefix": "vc",
+    "shortcuts": [
+      {
+        "name": "+apply-permission",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+detail",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+download",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-countdown",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-end",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-events",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-invite",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-join",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-leave",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-list-active",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-message-send",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+meeting-screenshot",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+member-add",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+member-list",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+recording",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+search",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+speaker-replace",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+summary",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+todo",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+transcript",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+upload",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+word-replace",
+        "desc": "",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 23,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-minutes",
+    "name": "lark-minutes",
+    "version": "1.0.0",
+    "description": "仅当用户或上游配置显式指定 lark-minutes 时使用，相关请求统一交由 lark-meeting 技能处理。",
+    "cliHelp": "",
+    "prefixes": [
+      "minutes"
+    ],
+    "domPrefix": "minutes",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-note",
+    "name": "lark-note",
+    "version": "1.0.0",
+    "description": "仅当用户或上游配置显式指定 lark-note 时使用，相关请求统一交由 lark-meeting 技能处理。",
+    "cliHelp": "",
+    "prefixes": [
+      "note"
+    ],
+    "domPrefix": "note",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-okr",
+    "name": "lark-okr",
+    "version": "1.0.0",
+    "description": "飞书 OKR：管理目标与关键结果。查看和编辑 OKR 周期、目标、关键结果、对齐关系、量化指标和进展记录。当用户需要查看或创建 OKR、管理目标和关键结果、查看对齐关系时使用。不负责：待办任务管理（lark-task）、日程/会议安排（lark-calendar）、绩效评估",
+    "cliHelp": "lark-cli okr --help",
+    "prefixes": [
+      "okr"
+    ],
+    "domPrefix": "okr",
+    "shortcuts": [
+      {
+        "name": "+batch-create",
+        "desc": "批量创建 Objective（可带备注）和 KR",
+        "ref": ""
+      },
+      {
+        "name": "+comment-create",
+        "desc": "创建新评论或回复已有评论(仅支持 --as user)",
+        "ref": ""
+      },
+      {
+        "name": "+comment-delete",
+        "desc": "永久删除单条评论(仅支持 --as user)",
+        "ref": ""
+      },
+      {
+        "name": "+comment-detail",
+        "desc": "获取周期下 Cycle/Objective/KeyResult/Progress 的全部评论",
+        "ref": ""
+      },
+      {
+        "name": "+comment-get",
+        "desc": "获取单条评论详情",
+        "ref": ""
+      },
+      {
+        "name": "+comment-list",
+        "desc": "查询/创建/修改/解决 OKR 评论",
+        "ref": ""
+      },
+      {
+        "name": "+comment-patch",
+        "desc": "修改评论内容(仅支持 --as user)",
+        "ref": ""
+      },
+      {
+        "name": "+comment-reopen",
+        "desc": "重新打开评论或划词评论串(仅支持 --as user)",
+        "ref": ""
+      },
+      {
+        "name": "+comment-solve",
+        "desc": "解决评论或划词评论串(仅支持 --as user)",
+        "ref": ""
+      },
+      {
+        "name": "+create",
+        "desc": "创建单个 Objective（可带备注），或向已有 Objective 新增 KR",
+        "ref": ""
+      },
+      {
+        "name": "+cycle-detail",
+        "desc": "获取特定 OKR 中所有目标和关键结果的内容",
+        "ref": ""
+      },
+      {
+        "name": "+cycle-list",
+        "desc": "分页获取特定用户的 OKR 周期列表，可以用 --time-range 对当前页后置筛选",
+        "ref": ""
+      },
+      {
+        "name": "+indicator-update",
+        "desc": "更新 Objective 或 KR 的当前进度指标。更复杂的量化指标操作见 量化指标管理",
+        "ref": ""
+      },
+      {
+        "name": "+patch",
+        "desc": "部分更新 Objective 或 KR（content、notes、score、deadline）",
+        "ref": ""
+      },
+      {
+        "name": "+progress-create",
+        "desc": "为目标或关键结果创建进展记录",
+        "ref": ""
+      },
+      {
+        "name": "+progress-delete",
+        "desc": "删除指定 ID 的进展记录（不可恢复）",
+        "ref": ""
+      },
+      {
+        "name": "+progress-get",
+        "desc": "根据 ID 获取单条 OKR 进展记录",
+        "ref": ""
+      },
+      {
+        "name": "+progress-list",
+        "desc": "分页获取目标或关键结果的进展记录列表",
+        "ref": ""
+      },
+      {
+        "name": "+progress-update",
+        "desc": "更新指定 ID 的进展记录内容",
+        "ref": ""
+      },
+      {
+        "name": "+reorder",
+        "desc": "调整 Objective 或 KR 的顺位",
+        "ref": ""
+      },
+      {
+        "name": "+search-user",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+upload-image",
+        "desc": "上传图片用于 OKR 进展记录的富文本内容",
+        "ref": ""
+      },
+      {
+        "name": "+weight",
+        "desc": "调整 Objective 或 KR 的权重",
+        "ref": ""
+      }
+    ],
+    "apis": [
+      {
+        "resource": "alignments",
+        "method": "delete",
+        "desc": "删除对齐关系"
+      },
+      {
+        "resource": "alignments",
+        "method": "get",
+        "desc": "获取对齐关系"
+      },
+      {
+        "resource": "categories",
+        "method": "list",
+        "desc": "批量获取分类"
+      },
+      {
+        "resource": "cycles",
+        "method": "list",
+        "desc": "批量获取用户周期"
+      },
+      {
+        "resource": "cycle.objectives",
+        "method": "list",
+        "desc": "批量获取用户周期下的目标"
+      },
+      {
+        "resource": "indicators",
+        "method": "patch",
+        "desc": "更新量化指标"
+      },
+      {
+        "resource": "key_results",
+        "method": "delete",
+        "desc": "删除关键结果"
+      },
+      {
+        "resource": "key_results",
+        "method": "get",
+        "desc": "获取关键结果"
+      },
+      {
+        "resource": "key_results",
+        "method": "patch",
+        "desc": "更新关键结果"
+      },
+      {
+        "resource": "key_result.indicators",
+        "method": "list",
+        "desc": "获取关键结果的量化指标"
+      },
+      {
+        "resource": "objectives",
+        "method": "delete",
+        "desc": "删除目标"
+      },
+      {
+        "resource": "objectives",
+        "method": "get",
+        "desc": "获取目标"
+      },
+      {
+        "resource": "objectives",
+        "method": "key_results_position",
+        "desc": "更新全部关键结果的位置"
+      },
+      {
+        "resource": "objectives",
+        "method": "key_results_weight",
+        "desc": "更新全部关键结果的权重"
+      },
+      {
+        "resource": "objectives",
+        "method": "patch",
+        "desc": "更新目标"
+      },
+      {
+        "resource": "objective.alignments",
+        "method": "create",
+        "desc": "创建对齐关系"
+      },
+      {
+        "resource": "objective.alignments",
+        "method": "list",
+        "desc": "批量获取目标下的对齐关系"
+      },
+      {
+        "resource": "objective.indicators",
+        "method": "list",
+        "desc": "获取目标的量化指标"
+      },
+      {
+        "resource": "objective.key_results",
+        "method": "list",
+        "desc": "批量获取目标下的关键结果"
+      }
+    ],
+    "refs": 25,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-openapi-explorer",
+    "name": "lark-openapi-explorer",
+    "version": "1.0.0",
+    "description": "飞书/Lark 原生 OpenAPI 探索：从官方文档库中挖掘未经 CLI 封装的原生 OpenAPI 接口。当用户的需求无法被现有 lark-* skill 或 lark-cli 已注册命令满足，需要查找并调用原生飞书 OpenAPI 时使用。",
+    "cliHelp": "",
+    "prefixes": [
+      "openapi-explorer"
+    ],
+    "domPrefix": "openapi-explorer",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-shared",
+    "name": "lark-shared",
+    "version": "1.1.0",
+    "description": "Use for lark-cli setup/auth tasks: auth login/status/logout, user vs bot identity, business-domain permissions (--domain, including all/docs/drive), missing scopes, revoking authorization, or handling _notice JSON.",
+    "cliHelp": "",
+    "prefixes": [
+      "shared"
+    ],
+    "domPrefix": "shared",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 6,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-sheets",
+    "name": "lark-sheets",
+    "version": "3.5.2",
+    "description": "飞书电子表格：创建和操作电子表格。支持工作表与行列结构（增删/合并/尺寸/隐藏/冻结/分组）、单元格读写（值/公式/样式/批注/单元格图片）、区域复制移动排序填充、查找替换、批量更新，图表、透视表、条件格式、筛选器与筛选视图、下拉列表、迷你图、浮动图片等对象的创建与维护，以及公式校验、历史版本回滚、本地 Excel/CSV 与飞书表格的导入导出。当用户需要创建或编辑表格、统计汇总与可视化、表格美化、公式计算（含 Excel 公式迁移）、金融/财务建模（DCF、三张表、预算、Sensitivity 等）时使用。多维表格（Base/bitable）请改用 lark-base；若用户是想按名称或关键词搜索云空间（云盘/云存储）里的表格文件，请改用 lark-drive 的 drive +search 先定位资源。当用户给出 doubao.com 的 /sheets/ URL/token 时，也应直接使用本 skill，不要因为域名不是飞书而回退到 WebFetch；路由依据是 URL 路径模式和 token，而不是域名。",
+    "cliHelp": "lark-cli sheets --help",
+    "prefixes": [
+      "sheets"
+    ],
+    "domPrefix": "sheets",
+    "shortcuts": [
+      {
+        "name": "+batch-chart-create",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+cells-batch-clear",
+        "desc": "批量清除多区域",
+        "ref": ""
+      },
+      {
+        "name": "+cells-clear",
+        "desc": "行列操作",
+        "ref": ""
+      },
+      {
+        "name": "+cells-get",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+cells-merge",
+        "desc": "行列操作",
+        "ref": ""
+      },
+      {
+        "name": "+cells-replace",
+        "desc": "查找 / 替换文本",
+        "ref": ""
+      },
+      {
+        "name": "+cells-search",
+        "desc": "查找 / 替换文本",
+        "ref": ""
+      },
+      {
+        "name": "+cells-set",
+        "desc": "Lark Sheet Write Cells",
+        "ref": ""
+      },
+      {
+        "name": "+cells-set-image",
+        "desc": "写入数据",
+        "ref": ""
+      },
+      {
+        "name": "+cells-set-style",
+        "desc": "写入数据",
+        "ref": ""
+      },
+      {
+        "name": "+cells-unmerge",
+        "desc": "行列操作",
+        "ref": ""
+      },
+      {
+        "name": "+changeset-get",
+        "desc": "复核编辑变更 / 取版本间差异",
+        "ref": ""
+      },
+      {
+        "name": "+chart-config-update",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+chart-create",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+chart-create-basic",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+chart-data-update",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+chart-list",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+chart-update",
+        "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+        "ref": ""
+      },
+      {
+        "name": "+cols-resize",
+        "desc": "行列操作",
+        "ref": ""
+      },
+      {
+        "name": "+cond-format-create",
+        "desc": "条件格式 / 条件高亮 / 数据条 / 色阶",
+        "ref": ""
+      },
+      {
+        "name": "+csv-get",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+csv-put",
+        "desc": "Lark Sheet Write Cells",
+        "ref": ""
+      },
+      {
+        "name": "+dim-delete",
+        "desc": "子表结构",
+        "ref": ""
+      },
+      {
+        "name": "+dim-insert",
+        "desc": "格式继承（新列/新行）",
+        "ref": ""
+      },
+      {
+        "name": "+filter-create",
+        "desc": "保存多份筛选状态 / 命名筛选视图",
+        "ref": ""
+      },
+      {
+        "name": "+filter-view-create",
+        "desc": "保存多份筛选状态 / 命名筛选视图",
+        "ref": ""
+      },
+      {
+        "name": "+float-image-create",
+        "desc": "插图：自由摆放的装饰",
+        "ref": ""
+      },
+      {
+        "name": "+history-list",
+        "desc": "查编辑历史 / 回滚到历史版本",
+        "ref": ""
+      },
+      {
+        "name": "+history-revert",
+        "desc": "查编辑历史 / 回滚到历史版本",
+        "ref": ""
+      },
+      {
+        "name": "+history-revert-status",
+        "desc": "查编辑历史 / 回滚到历史版本",
+        "ref": ""
+      },
+      {
+        "name": "+pivot-create",
+        "desc": "分组汇总 / 透视",
+        "ref": ""
+      },
+      {
+        "name": "+range-copy",
+        "desc": "格式继承（新列/新行）",
+        "ref": ""
+      },
+      {
+        "name": "+range-sort",
+        "desc": "行列操作",
+        "ref": ""
+      },
+      {
+        "name": "+revision-get",
+        "desc": "工作簿操作",
+        "ref": ""
+      },
+      {
+        "name": "+rows-resize",
+        "desc": "行列操作",
+        "ref": ""
+      },
+      {
+        "name": "+sheet-copy",
+        "desc": "工作簿操作",
+        "ref": ""
+      },
+      {
+        "name": "+sheet-info",
+        "desc": "子表结构",
+        "ref": ""
+      },
+      {
+        "name": "+sparkline-create",
+        "desc": "迷你图 / 单元格内趋势线",
+        "ref": ""
+      },
+      {
+        "name": "+styles-put",
+        "desc": "美化收尾",
+        "ref": ""
+      },
+      {
+        "name": "+table-put",
+        "desc": "Lark Sheet Sheet Structure",
+        "ref": ""
+      },
+      {
+        "name": "+workbook-create",
+        "desc": "Lark Sheet Styles Put",
+        "ref": ""
+      },
+      {
+        "name": "+workbook-export",
+        "desc": "工作簿操作",
+        "ref": ""
+      },
+      {
+        "name": "+workbook-import",
+        "desc": "工作簿操作",
+        "ref": ""
+      },
+      {
+        "name": "+workbook-info",
+        "desc": "工作簿操作",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 20,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-skill-maker",
+    "name": "lark-skill-maker",
+    "version": "1.0.0",
+    "description": "创建 lark-cli 的自定义 Skill。当用户需要把飞书 API 操作封装成可复用的 Skill（包装原子 API 或编排多步流程）时使用。",
+    "cliHelp": "",
+    "prefixes": [
+      "skill-maker"
+    ],
+    "domPrefix": "skill-maker",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-slides",
+    "name": "lark-slides",
+    "version": "1.0.0",
+    "description": "飞书幻灯片：创建和编辑幻灯片。创建演示文稿、读取幻灯片内容、管理幻灯片页面（创建、删除、读取、局部替换）。当用户需要创建或编辑幻灯片、读取或修改单个页面时使用。当用户给出 doubao.com 的 /slides/ URL/token 时，也应直接使用本 skill，不要因为域名不是飞书而回退到 WebFetch；路由依据是 URL 路径模式和 token，而不是域名。不负责：云文档内容编辑（走 lark-doc）、云文档里的独立画板对象（走 lark-whiteboard）、上传或下载普通文件（走 lark-drive）。",
+    "cliHelp": "lark-cli slides --help",
+    "prefixes": [
+      "slides"
+    ],
+    "domPrefix": "slides",
+    "shortcuts": [
+      {
+        "name": "+add-slide",
+        "desc": "向已有演示文稿追加或插入一页（--before-slide-id 控制位置），XML 支持 @file / stdin，<img src=\"@./path\"> 占位符自动上传",
+        "ref": ""
+      },
+      {
+        "name": "+create",
+        "desc": "2. 创建流程：新建演示文稿用 slides",
+        "ref": ""
+      },
+      {
+        "name": "+delete-slide",
+        "desc": "按 slide_id 删除一页",
+        "ref": ""
+      },
+      {
+        "name": "+history-list",
+        "desc": "查看或回滚历史版本",
+        "ref": ""
+      },
+      {
+        "name": "+history-revert",
+        "desc": "查看或回滚历史版本",
+        "ref": ""
+      },
+      {
+        "name": "+history-revert-status",
+        "desc": "查看或回滚历史版本",
+        "ref": ""
+      },
+      {
+        "name": "+media-download",
+        "desc": "根据 Slides 图片 file_token 下载本地图片；--output 选填，未传时使用 --output-dir 默认值 .lark-slides/media 并自动生成文件名；调用后使用返回的 path，不要猜测实际路径；直连下载无权限时自动回退到源文件预览",
+        "ref": ""
+      },
+      {
+        "name": "+media-upload",
+        "desc": "上传本地图片到指定演示文稿，返回 file_token（用作 <img src=\"...\">），最大 20 MB",
+        "ref": ""
+      },
+      {
+        "name": "+node-get",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+replace-slide",
+        "desc": "对已有幻灯片页面进行块级替换/插入（block_replace / block_insert），自动注入 id 和 <content/>，不改变页序",
+        "ref": ""
+      },
+      {
+        "name": "+screenshot",
+        "desc": "把幻灯片页面截图保存为本地图片；用 --slide-number 指定页码（从 1 开始，多页重复传入）或用 --slide-id 指定页面；单张用 --output .lark-slides/screenshots/<deck-or-task-id>/page-01，批量用 --output-dir .lark-slides/screenshots/<deck-or-task-id>（一次最多 10 页）；后续必须读取返回的 output / screenshots[].path",
+        "ref": ""
+      },
+      {
+        "name": "+update-slide",
+        "desc": "把一整页 XML 交给已有页面，页面变成 --content 描述的样子；能一次改样式/插入/删除/备注/背景，slide_id 和页序不变。没写进 --content 的元素会被删除",
+        "ref": ""
+      },
+      {
+        "name": "+xml-get",
+        "desc": "读取全文或单页 XML；用 --presentation 指定演示文稿，单页传 --slide-id 或 --slide-number；用 --output 把 XML 存到本地文件（必须是 CWD 内的相对路径，如 .lark-slides/plan/<deck>/readback.xml）",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 36,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-task",
+    "name": "lark-task",
+    "version": "1.0.0",
+    "description": "飞书任务：管理任务、清单和任务智能体。创建待办任务、查看和更新任务状态、拆分子任务、组织任务清单、分配协作成员、上传任务附件、注册或注销任务智能体、更新任务智能体的主页数据、写入智能体任务记录。当用户需要创建待办事项、查看任务列表、跟踪任务进度、管理项目清单或给他人分配任务、为任务上传附件文件、注册注销任务智能体、更新智能体主页数据、写入任务记录时使用。",
+    "cliHelp": "lark-cli task --help",
+    "prefixes": [
+      "task"
+    ],
+    "domPrefix": "task",
+    "shortcuts": [
+      {
+        "name": "+assign",
+        "desc": "assign or remove task members",
+        "ref": ""
+      },
+      {
+        "name": "+comment",
+        "desc": "add a comment to a task",
+        "ref": ""
+      },
+      {
+        "name": "+complete",
+        "desc": "mark a task as complete",
+        "ref": ""
+      },
+      {
+        "name": "+create",
+        "desc": "create a task",
+        "ref": ""
+      },
+      {
+        "name": "+followers",
+        "desc": "manage task followers",
+        "ref": ""
+      },
+      {
+        "name": "+get-my-tasks",
+        "desc": "List tasks assigned to me",
+        "ref": ""
+      },
+      {
+        "name": "+get-related-tasks",
+        "desc": "list tasks related to me",
+        "ref": ""
+      },
+      {
+        "name": "+reminder",
+        "desc": "manage task reminders",
+        "ref": ""
+      },
+      {
+        "name": "+reopen",
+        "desc": "reopen a completed task",
+        "ref": ""
+      },
+      {
+        "name": "+search",
+        "desc": "> 任务搜索相关性提示：",
+        "ref": ""
+      },
+      {
+        "name": "+set-ancestor",
+        "desc": "set or clear a task ancestor",
+        "ref": ""
+      },
+      {
+        "name": "+tasklist-create",
+        "desc": "create a tasklist and optionally add tasks",
+        "ref": ""
+      },
+      {
+        "name": "+tasklist-members",
+        "desc": "manage tasklist members",
+        "ref": ""
+      },
+      {
+        "name": "+tasklist-search",
+        "desc": "search tasklists",
+        "ref": ""
+      },
+      {
+        "name": "+tasklist-task-add",
+        "desc": "add tasks to a tasklist",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "update task attributes",
+        "ref": ""
+      },
+      {
+        "name": "+upload-attachment",
+        "desc": "upload a local file as an attachment to a task",
+        "ref": ""
+      }
+    ],
+    "apis": [
+      {
+        "resource": "tasks",
+        "method": "create",
+        "desc": "创建任务"
+      },
+      {
+        "resource": "tasks",
+        "method": "delete",
+        "desc": "删除任务"
+      },
+      {
+        "resource": "tasks",
+        "method": "get",
+        "desc": "获取任务详情"
+      },
+      {
+        "resource": "tasks",
+        "method": "list",
+        "desc": "列取任务列表"
+      },
+      {
+        "resource": "tasks",
+        "method": "patch",
+        "desc": "更新任务"
+      },
+      {
+        "resource": "tasklists",
+        "method": "add_members",
+        "desc": "添加清单成员"
+      },
+      {
+        "resource": "tasklists",
+        "method": "create",
+        "desc": "创建清单"
+      },
+      {
+        "resource": "tasklists",
+        "method": "delete",
+        "desc": "删除清单"
+      },
+      {
+        "resource": "tasklists",
+        "method": "get",
+        "desc": "获取清单详情"
+      },
+      {
+        "resource": "tasklists",
+        "method": "list",
+        "desc": "获取清单列表"
+      },
+      {
+        "resource": "tasklists",
+        "method": "patch",
+        "desc": "更新清单"
+      },
+      {
+        "resource": "tasklists",
+        "method": "remove_members",
+        "desc": "移除清单成员"
+      },
+      {
+        "resource": "tasklists",
+        "method": "tasks",
+        "desc": "获取清单任务列表"
+      },
+      {
+        "resource": "subtasks",
+        "method": "create",
+        "desc": "创建子任务"
+      },
+      {
+        "resource": "subtasks",
+        "method": "list",
+        "desc": "获取任务的子任务列表"
+      },
+      {
+        "resource": "members",
+        "method": "add",
+        "desc": "添加任务成员"
+      },
+      {
+        "resource": "members",
+        "method": "remove",
+        "desc": "移除任务成员"
+      },
+      {
+        "resource": "sections",
+        "method": "create",
+        "desc": "创建自定义分组"
+      },
+      {
+        "resource": "sections",
+        "method": "delete",
+        "desc": "删除自定义分组"
+      },
+      {
+        "resource": "sections",
+        "method": "get",
+        "desc": "获取自定义分组详情"
+      },
+      {
+        "resource": "sections",
+        "method": "list",
+        "desc": "获取自定义分组列表"
+      },
+      {
+        "resource": "sections",
+        "method": "patch",
+        "desc": "更新自定义分组"
+      },
+      {
+        "resource": "sections",
+        "method": "tasks",
+        "desc": "获取自定义分组任务列表"
+      },
+      {
+        "resource": "custom_fields",
+        "method": "create",
+        "desc": "创建自定义字段"
+      },
+      {
+        "resource": "custom_fields",
+        "method": "get",
+        "desc": "获取自定义字段详情"
+      },
+      {
+        "resource": "custom_fields",
+        "method": "patch",
+        "desc": "更新自定义字段"
+      },
+      {
+        "resource": "custom_fields",
+        "method": "list",
+        "desc": "获取自定义字段列表"
+      },
+      {
+        "resource": "custom_fields",
+        "method": "add",
+        "desc": "将自定义字段加入资源"
+      },
+      {
+        "resource": "custom_fields",
+        "method": "remove",
+        "desc": "将自定义字段移出资源"
+      },
+      {
+        "resource": "custom_field_options",
+        "method": "create",
+        "desc": "创建自定义字段选项"
+      },
+      {
+        "resource": "custom_field_options",
+        "method": "patch",
+        "desc": "更新自定义字段选项"
+      },
+      {
+        "resource": "agent",
+        "method": "update_agent_profile",
+        "desc": "更新任务代理的主页内容数据。"
+      },
+      {
+        "resource": "agent",
+        "method": "register_agent",
+        "desc": "注册AI 智能体"
+      },
+      {
+        "resource": "agent_task_step_info",
+        "method": "append_task_steps",
+        "desc": "写入任务记录。"
+      }
+    ],
+    "refs": 17,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-vc",
+    "name": "lark-vc",
+    "version": "1.0.0",
+    "description": "仅当用户或上游配置显式指定 lark-vc 时使用，相关请求统一交由 lark-meeting 技能处理。",
+    "cliHelp": "",
+    "prefixes": [
+      "vc"
+    ],
+    "domPrefix": "vc",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-vc-agent",
+    "name": "lark-vc-agent",
+    "version": "1.0.0",
+    "description": "仅当用户或上游配置显式指定 lark-vc-agent 时使用，相关请求统一交由 lark-meeting 技能处理。",
+    "cliHelp": "",
+    "prefixes": [
+      "vc-agent"
+    ],
+    "domPrefix": "vc-agent",
+    "shortcuts": [],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-whiteboard",
+    "name": "lark-whiteboard",
+    "version": "1.0.0",
+    "description": "飞书画板：查询和编辑飞书云文档中的画板。支持导出画板为预览图片、导出原始节点结构、使用多种格式更新画板内容。 当用户需要查看画板内容、导出画板图片、编辑画板时使用此 skill。不负责：飞书云文档内容编辑（lark-doc）、文档内嵌电子表格/Base（lark-sheets / lark-base）。",
+    "cliHelp": "lark-cli whiteboard --help",
+    "prefixes": [
+      "whiteboard"
+    ],
+    "domPrefix": "whiteboard",
+    "shortcuts": [
+      {
+        "name": "+export",
+        "desc": "导出画板为预览图片、SVG 矢量图、代码或原始节点结构。",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "更新画板，支持 PlantUML、Mermaid、SVG 或 OpenAPI 原生格式",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 3,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-wiki",
+    "name": "lark-wiki",
+    "version": "1.0.3",
+    "description": "飞书知识库：管理知识空间、空间成员和文档节点。创建和查询知识空间、查看和管理空间成员、管理节点层级结构、在知识库中组织文档和快捷方式。当用户需要在知识库中查找或创建文档、浏览知识空间结构、查看或管理空间成员、移动或复制节点时使用。当用户给出 doubao.com 的 /wiki/ URL/token 时，也应直接使用本 skill，不要因为域名不是飞书而回退到 WebFetch；路由依据是 URL 路径模式和 token，而不是域名。不负责：上传文件到知识库节点下（走 lark-drive）、编辑文档/表格/Base 内容（走 lark-doc / lark-sheets / lark-base）。",
+    "cliHelp": "lark-cli wiki --help",
+    "prefixes": [
+      "wiki"
+    ],
+    "domPrefix": "wiki",
+    "shortcuts": [
+      {
+        "name": "+delete-space",
+        "desc": "Delete a wiki space, polling the async delete task when needed",
+        "ref": ""
+      },
+      {
+        "name": "+member-add",
+        "desc": "Add a member to a wiki space",
+        "ref": ""
+      },
+      {
+        "name": "+member-list",
+        "desc": "List members of a wiki space (supports pagination)",
+        "ref": ""
+      },
+      {
+        "name": "+member-remove",
+        "desc": "Remove a member from a wiki space",
+        "ref": ""
+      },
+      {
+        "name": "+move",
+        "desc": "Move a wiki node, or move a Drive document into Wiki",
+        "ref": ""
+      },
+      {
+        "name": "+move-to-drive",
+        "desc": "Move a wiki node to a Drive folder and poll the async task",
+        "ref": ""
+      },
+      {
+        "name": "+node-copy",
+        "desc": "Copy a wiki node to a target space or parent node",
+        "ref": ""
+      },
+      {
+        "name": "+node-create",
+        "desc": "Create a wiki node with automatic space resolution",
+        "ref": ""
+      },
+      {
+        "name": "+node-delete",
+        "desc": "Delete a wiki node, polling the async delete task when needed",
+        "ref": ""
+      },
+      {
+        "name": "+node-get",
+        "desc": "Get a wiki node's details by node_token / obj_token / Lark URL",
+        "ref": ""
+      },
+      {
+        "name": "+node-list",
+        "desc": "List wiki nodes in a space or under a parent node (supports pagination)",
+        "ref": ""
+      },
+      {
+        "name": "+space-create",
+        "desc": "Create a wiki space (user identity only)",
+        "ref": ""
+      },
+      {
+        "name": "+space-list",
+        "desc": "List all wiki spaces accessible to the caller",
+        "ref": ""
+      }
+    ],
+    "apis": [
+      {
+        "resource": "spaces",
+        "method": "create",
+        "desc": "创建知识空间"
+      },
+      {
+        "resource": "spaces",
+        "method": "get",
+        "desc": "获取知识空间信息"
+      },
+      {
+        "resource": "spaces",
+        "method": "list",
+        "desc": "获取知识空间列表"
+      },
+      {
+        "resource": "members",
+        "method": "create",
+        "desc": "添加知识空间成员"
+      },
+      {
+        "resource": "members",
+        "method": "delete",
+        "desc": "删除知识空间成员"
+      },
+      {
+        "resource": "members",
+        "method": "list",
+        "desc": "获取知识空间成员列表"
+      },
+      {
+        "resource": "nodes",
+        "method": "copy",
+        "desc": "创建知识空间节点副本"
+      },
+      {
+        "resource": "nodes",
+        "method": "create",
+        "desc": "创建知识空间节点"
+      },
+      {
+        "resource": "nodes",
+        "method": "list",
+        "desc": "获取知识空间子节点列表"
+      }
+    ],
+    "refs": 13,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-workflow-meeting-summary",
+    "name": "lark-workflow-meeting-summary",
+    "version": "1.0.0",
+    "description": "会议纪要整理工作流：汇总指定时间范围内的会议纪要并生成结构化报告。当用户需要整理会议纪要、生成会议周报、回顾一段时间内的会议内容时使用。",
+    "cliHelp": "",
+    "prefixes": [
+      "workflow-meeting-summary"
+    ],
+    "domPrefix": "workflow-meeting-summary",
+    "shortcuts": [
+      {
+        "name": "+create",
+        "desc": "",
+        "ref": ""
+      },
+      {
+        "name": "+detail",
+        "desc": "> lark-cli minutes",
+        "ref": ""
+      },
+      {
+        "name": "+search",
+        "desc": "{时间范围} ─► vc",
+        "ref": ""
+      },
+      {
+        "name": "+update",
+        "desc": "",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  },
+  {
+    "dir": "lark-workflow-standup-report",
+    "name": "lark-workflow-standup-report",
+    "version": "1.0.0",
+    "description": "日程待办摘要：编排 calendar +agenda 和 task +get-my-tasks，生成指定日期的日程与未完成任务摘要。适用于了解今天/明天/本周的安排。",
+    "cliHelp": "",
+    "prefixes": [
+      "workflow-standup-report"
+    ],
+    "domPrefix": "workflow-standup-report",
+    "shortcuts": [
+      {
+        "name": "+agenda",
+        "desc": "{date} ─┬─► calendar",
+        "ref": ""
+      },
+      {
+        "name": "+get-my-tasks",
+        "desc": "lark-task",
+        "ref": ""
+      }
+    ],
+    "apis": [],
+    "refs": 0,
+    "hasSkillMd": true
+  }
+]

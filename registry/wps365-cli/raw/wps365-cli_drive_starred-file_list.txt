@@ -1,0 +1,25 @@
+分页列出已收藏的文件。
+
+Usage:
+  wps365-cli drive starred-file list [flags]
+
+Examples:
+wps365-cli drive starred-file list --page-size 20
+
+Flags:
+  -h, --help                  help for list
+      --id-type string        ID 类型
+      --include-exts string   包含的扩展名
+      --page-size int         分页大小
+      --page-token string     分页标记
+      --token-type string     authentication identity: delegated|app
+      --with-permission       是否返回权限信息
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

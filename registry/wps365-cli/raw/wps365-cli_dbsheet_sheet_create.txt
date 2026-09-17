@@ -1,0 +1,25 @@
+在多维表格中创建新的数据表。
+
+Usage:
+  wps365-cli dbsheet sheet create <file-id> [flags]
+
+Examples:
+wps365-cli dbsheet sheet create f_abc123 --name "任务跟踪" --fields-body '[{"name":"任务名","type":"MultiLineText"},{"name":"状态","type":"SingleSelect"}]' --views-body '[{"name":"默认视图","type":"Grid"}]'
+
+Flags:
+      --after-sheet-id int    插入到指定数据表之后（数据表 ID）
+      --before-sheet-id int   插入到指定数据表之前（数据表 ID）
+      --fields-body string    (required) 字段定义 JSON 数组（字段类型使用 PascalCase，如 MultiLineText、SingleSelect）
+  -h, --help                  help for create
+      --name string           数据表名称
+      --token-type string     authentication identity: delegated|app
+      --views-body string     (required) 视图定义 JSON 数组（视图类型使用 PascalCase，如 Grid、Kanban）
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

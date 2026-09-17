@@ -1,0 +1,546 @@
+{
+  "meta": {
+    "name": "wecom-cli",
+    "title": "企业微信 CLI",
+    "command": "wecom-cli",
+    "version": "1.3.0",
+    "repo": "https://github.com/WecomTeam/wecom-cli",
+    "license": "MIT",
+    "install": "npm install -g @wecom/cli",
+    "scannedAt": "2026-09-17 06:52:39",
+    "source": "skill-repo",
+    "nodes": 93,
+    "stats": {
+      "技能域": 12,
+      "文档内命令": 93,
+      "参考文档": 51
+    },
+    "commit": "dcf6929884b5"
+  },
+  "domains": [
+    {
+      "id": "calendar",
+      "label": "calendar",
+      "prefix": "calendar` / `meeting",
+      "commands": [
+        {
+          "name": "wecom-cli calendar schedules cancel",
+          "desc": "取消日程",
+          "ref": "references/calendar-cancel.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules create",
+          "desc": "",
+          "ref": "references/calendar-create.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules free list",
+          "desc": "查询参与人共同空闲",
+          "ref": "references/calendar-freebusy.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules get",
+          "desc": "读取日程详情",
+          "ref": "references/calendar-agenda.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules list",
+          "desc": "读取日程列表",
+          "ref": "references/calendar-agenda.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules search",
+          "desc": "搜索日程",
+          "ref": "references/calendar-search.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules update",
+          "desc": "更新日程",
+          "ref": "references/calendar-update.md"
+        },
+        {
+          "name": "wecom-cli meeting rooms buildings list",
+          "desc": "",
+          "ref": "references/calendar-meeting-room.md"
+        },
+        {
+          "name": "wecom-cli meeting rooms search",
+          "desc": "",
+          "ref": "references/calendar-meeting-room.md"
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "contact",
+      "prefix": "contact",
+      "commands": [
+        {
+          "name": "wecom-cli contact users search",
+          "desc": "企业微信联系人搜索",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "disk",
+      "label": "disk",
+      "prefix": "disk",
+      "commands": [
+        {
+          "name": "wecom-cli disk files download",
+          "desc": "下载文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files get",
+          "desc": "读取文件信息",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files list",
+          "desc": "列出文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files rename",
+          "desc": "重命名文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files search",
+          "desc": "搜索文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files upload",
+          "desc": "上传文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk folders create",
+          "desc": "创建文件夹",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "doc",
+      "label": "doc",
+      "prefix": "doc",
+      "commands": [
+        {
+          "name": "wecom-cli doc contents append",
+          "desc": "追加内容到在线文档",
+          "ref": "references/doc-contents-append.md"
+        },
+        {
+          "name": "wecom-cli doc contents get",
+          "desc": "读取doc文档内容",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli doc contents overwrite",
+          "desc": "覆盖在线文档内容",
+          "ref": "references/doc-contents-overwrite.md"
+        },
+        {
+          "name": "wecom-cli doc import",
+          "desc": "导入doc文档",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "doc-manage",
+      "label": "doc-manage",
+      "prefix": "doc",
+      "commands": [
+        {
+          "name": "wecom-cli doc members update",
+          "desc": "添加文档成员",
+          "ref": "references/doc-members-update.md"
+        },
+        {
+          "name": "wecom-cli doc names update",
+          "desc": "修改文档名",
+          "ref": "references/doc-names-update.md"
+        },
+        {
+          "name": "wecom-cli doc rules update",
+          "desc": "",
+          "ref": "references/doc-rules-update.md"
+        },
+        {
+          "name": "wecom-cli doc search",
+          "desc": "",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "email",
+      "label": "email",
+      "prefix": "mail",
+      "commands": [
+        {
+          "name": "wecom-cli mail get",
+          "desc": "读取邮件详情",
+          "ref": "references/get-mail.md"
+        },
+        {
+          "name": "wecom-cli mail search",
+          "desc": "",
+          "ref": "references/reply-mail.md"
+        },
+        {
+          "name": "wecom-cli mail send",
+          "desc": "",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "meeting",
+      "label": "meeting",
+      "prefix": "meeting",
+      "commands": [
+        {
+          "name": "wecom-cli meeting cancel",
+          "desc": "取消会议",
+          "ref": "references/meeting-cancel.md"
+        },
+        {
+          "name": "wecom-cli meeting create",
+          "desc": "创建会议",
+          "ref": "references/meeting-create.md"
+        },
+        {
+          "name": "wecom-cli meeting get",
+          "desc": "获取详情",
+          "ref": "references/meeting-search.md"
+        },
+        {
+          "name": "wecom-cli meeting list",
+          "desc": "拉取会议列表",
+          "ref": "references/meeting-list.md"
+        },
+        {
+          "name": "wecom-cli meeting original get",
+          "desc": "拉取转写",
+          "ref": "references/meeting-original-get.md"
+        },
+        {
+          "name": "wecom-cli meeting search",
+          "desc": "搜索会议",
+          "ref": "references/meeting-search.md"
+        },
+        {
+          "name": "wecom-cli meeting update",
+          "desc": "更新会议",
+          "ref": "references/meeting-update.md"
+        }
+      ]
+    },
+    {
+      "id": "message",
+      "label": "message",
+      "prefix": "message` / `identity",
+      "commands": [
+        {
+          "name": "wecom-cli identity whoami",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli message aibot send",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli message aibot sessions list",
+          "desc": "",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "sheet",
+      "label": "sheet",
+      "prefix": "sheet",
+      "commands": [
+        {
+          "name": "wecom-cli sheet contents update",
+          "desc": "修改表格内容",
+          "ref": "references/sheet-contents-update.md"
+        },
+        {
+          "name": "wecom-cli sheet get",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli sheet import",
+          "desc": "新建在线表格",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli sheet ranges get",
+          "desc": "读取子表数据",
+          "ref": "references/sheet-ranges-get.md"
+        },
+        {
+          "name": "wecom-cli sheet rows append",
+          "desc": "追加一行数据",
+          "ref": "references/sheet-rows-append.md"
+        },
+        {
+          "name": "wecom-cli sheet subsheets add",
+          "desc": "添加子工作表",
+          "ref": "references/sheet-subsheets-add.md"
+        },
+        {
+          "name": "wecom-cli sheet subsheets delete",
+          "desc": "删除子工作表",
+          "ref": "references/sheet-subsheets-delete.md"
+        }
+      ]
+    },
+    {
+      "id": "smartpage",
+      "label": "smartpage",
+      "prefix": "smartpage` / `media",
+      "commands": [
+        {
+          "name": "wecom-cli media download",
+          "desc": "",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage blocks update",
+          "desc": "编辑页面 Block",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage create",
+          "desc": "路径 B：先创建空白再追加内容",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli smartpage databases get",
+          "desc": "获取关联的数据表信息",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage files upload",
+          "desc": "上传附件到文档空间",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage images upload",
+          "desc": "上传附件到文档空间",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage import",
+          "desc": "新建智能文档场景",
+          "ref": "references/mdx-syntax.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages append",
+          "desc": "追加内容到页面",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages get",
+          "desc": "读取所有页面内容",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages overwrite",
+          "desc": "覆盖页面内容",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages update",
+          "desc": "修改页面结构",
+          "ref": "references/smartpage-edit.md"
+        }
+      ]
+    },
+    {
+      "id": "smartsheet",
+      "label": "smartsheet",
+      "prefix": "smartsheet",
+      "commands": [
+        {
+          "name": "wecom-cli smartsheet charts add",
+          "desc": "图表操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet charts delete",
+          "desc": "写操作，支持新增/修改/删除仪表盘图表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet charts list",
+          "desc": "查询图表列表",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet charts update",
+          "desc": "写操作，支持新增/修改/删除仪表盘图表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet create",
+          "desc": "新建智能表格",
+          "ref": "references/common.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields",
+          "desc": "",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields add",
+          "desc": "写操作，字段操作独立命令",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields delete",
+          "desc": "写操作，字段操作独立命令",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields list",
+          "desc": "查询字段列表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields update",
+          "desc": "写操作，字段操作独立命令",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet files upload",
+          "desc": "",
+          "ref": "references/smart-sheet-record-values.md"
+        },
+        {
+          "name": "wecom-cli smartsheet images upload",
+          "desc": "",
+          "ref": "references/smart-sheet-record-values.md"
+        },
+        {
+          "name": "wecom-cli smartsheet import",
+          "desc": "导入文档为智能表格",
+          "ref": "references/common.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records add",
+          "desc": "记录操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records delete",
+          "desc": "写操作，支持新增/修改/删除行记录",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records list",
+          "desc": "",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records query",
+          "desc": "读取智能表格数据",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records update",
+          "desc": "写操作，支持新增/修改/删除行记录",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets add",
+          "desc": "子表操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets delete",
+          "desc": "写操作，支持新增/修改/删除子表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets list",
+          "desc": "查询子表列表",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets update",
+          "desc": "写操作，支持新增/修改/删除子表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views add",
+          "desc": "视图操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views delete",
+          "desc": "写操作，支持新增/修改/删除视图",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views list",
+          "desc": "查询视图列表",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views update",
+          "desc": "写操作，支持新增/修改/删除视图",
+          "ref": "references/smart-sheet-edit.md"
+        }
+      ]
+    },
+    {
+      "id": "todo",
+      "label": "todo",
+      "prefix": "todo",
+      "commands": [
+        {
+          "name": "wecom-cli todo create",
+          "desc": "创建待办",
+          "ref": "references/todo-create.md"
+        },
+        {
+          "name": "wecom-cli todo delete",
+          "desc": "删除/退出待办",
+          "ref": "references/todo-delete.md"
+        },
+        {
+          "name": "wecom-cli todo finish",
+          "desc": "",
+          "ref": "references/todo-finish.md"
+        },
+        {
+          "name": "wecom-cli todo get",
+          "desc": "批量获取待办详情",
+          "ref": "references/todo-get.md"
+        },
+        {
+          "name": "wecom-cli todo list",
+          "desc": "按时间范围查询待办",
+          "ref": "references/todo-list.md"
+        },
+        {
+          "name": "wecom-cli todo update",
+          "desc": "",
+          "ref": "references/todo-update.md"
+        }
+      ]
+    }
+  ]
+}

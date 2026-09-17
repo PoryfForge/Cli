@@ -1,0 +1,25 @@
+查询导出任务结果（POST /v7/airpage/{file_id}/export_task/query，不是 GET）。
+
+Usage:
+  wps365-cli airpage export get <file-id> [flags]
+
+Examples:
+wps365-cli airpage export get f_001 --format docx --version "1" --task-id t_001
+
+Flags:
+      --format string       (required) 导出格式
+  -h, --help                help for get
+      --internal-link       是否使用内部链接
+      --print               是否打印
+      --task-id string      (required) 导出任务 ID
+      --token-type string   authentication identity: delegated|app
+      --version string      (required) 文档版本
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

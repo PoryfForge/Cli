@@ -1,0 +1,17 @@
+Start MCP stdio server (JSON-RPC on stdin/stdout)
+
+Usage:
+  wps365-cli mcp serve [flags]
+
+Flags:
+      --domains string   comma-separated domain prefixes to expose (e.g. calendar,im)
+  -h, --help             help for serve
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,22 @@
+向智能文档导入 OTL JSON 数据（POST /v7/airpage/{file_id}/import_json_data）。
+--content 按 OpenAPI 原样传入，不是 Markdown 明文。
+
+Usage:
+  wps365-cli airpage import create <file-id> [flags]
+
+Examples:
+wps365-cli airpage import create f_001 --content '<openapi-content-string>'
+
+Flags:
+      --content string      (required) OTL JSON 内容（按 OpenAPI 原样；不是 Markdown）
+  -h, --help                help for create
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

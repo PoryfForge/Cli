@@ -1,0 +1,22 @@
+根据用户 ID 获取 P2P 会话信息。
+
+Usage:
+  wps365-cli im p2p-chat get [flags]
+
+Examples:
+wps365-cli im p2p-chat get --user-id "u1"
+
+Flags:
+  -h, --help                help for get
+      --id-type string      高级参数，对应请求头 X-Kso-Id-Type (default "internal")
+      --token-type string   authentication identity: delegated|app
+      --user-id string      (required) 用户 ID
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,21 @@
+为指定日程批量添加会议室，最多 40 个。
+
+Usage:
+  wps365-cli calendar event-room add <calendar-id> <event-id> [flags]
+
+Examples:
+wps365-cli calendar event-room add primary "event_id_xxx" --room-ids "room_1,room_2"
+
+Flags:
+  -h, --help                help for add
+      --room-ids string     (required) 会议室 id，多个用逗号分隔，最多 40 个
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

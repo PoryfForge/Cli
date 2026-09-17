@@ -1,0 +1,24 @@
+查看指定用户或会议室在某时间段内的忙闲状态，时间区间不超过 7 天。
+
+Usage:
+  wps365-cli calendar free-busy list [flags]
+
+Examples:
+wps365-cli calendar free-busy list --start "2024-01-15T00:00:00+08:00" --end "2024-01-15T23:59:59+08:00" --user-ids "u1,u2"
+
+Flags:
+      --end string          (required) 结束时间，RFC3339 格式，与 --start 间隔不超过 7 天
+  -h, --help                help for list
+      --room-ids string     会议室 ID，多个用逗号分隔，最多 50 个
+      --start string        (required) 起始时间，RFC3339 格式
+      --token-type string   authentication identity: delegated|app
+      --user-ids string     用户 ID，多个用逗号分隔，最多 50 个
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

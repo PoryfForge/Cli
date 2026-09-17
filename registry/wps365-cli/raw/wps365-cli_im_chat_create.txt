@@ -1,0 +1,25 @@
+创建会话，支持创建 P2P 会话和群聊。
+
+Usage:
+  wps365-cli im chat create [flags]
+
+Examples:
+wps365-cli im chat create --type group --member-ids "u1,u2,u3" --name "项目群" --owner-id "u1"
+wps365-cli im chat create --type p2p --member-ids "u1,u2"
+
+Flags:
+  -h, --help                help for create
+      --member-ids string   (required) 成员用户 ID，多个用逗号分隔；P2P 需包含操作者和对方
+      --name string         群名称（群聊时使用）
+      --owner-id string     群主用户 ID（群聊时必填）
+      --token-type string   authentication identity: delegated|app
+      --type string         (required) 会话类型，可选 p2p 或 group
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

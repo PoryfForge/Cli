@@ -1,0 +1,25 @@
+使用 v2 结构化 JSON 在指定父块下插入一个段落（POST /v7/airpage/v2/{file_id}/blocks/create）。
+--content 写入一段纯文本，不是 Markdown。默认插入到文档根（block-id=doc）。
+复杂块结构请用 api post /v7/airpage/v2/{file_id}/blocks/create。
+
+Usage:
+  wps365-cli airpage block create <file-id> [flags]
+
+Examples:
+wps365-cli airpage block create f_001 --content "test测试123"
+
+Flags:
+      --block-id string     父块 ID；doc 表示在文档根下插入 (default "doc")
+      --content string      (required) 要写入的一段纯文本（不是 Markdown）
+  -h, --help                help for create
+      --index int           插入位置，从 0 开始；省略时由服务端默认插到首位
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

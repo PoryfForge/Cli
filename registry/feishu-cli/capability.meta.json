@@ -1,0 +1,26 @@
+{
+  "name": "feishu-cli",
+  "command": "lark-cli",
+  "title": "飞书 CLI",
+  "version": "1.0.96",
+  "description": "飞书/Lark 官方开源的命令行工具，把开放平台能力封装成终端命令，原生面向 AI Agent。覆盖 23 个业务域、343 个快捷命令、120 个 API 方法，底层可达 2500+ 开放平台端点。",
+  "repo": "https://github.com/larksuite/cli",
+  "license": "MIT",
+  "install": "npx @larksuite/cli@latest install",
+  "scannedAt": "2026-09-17 06:52:39",
+  "source": "skill-repo",
+  "commit": "cb5a3d704379",
+  "stats": {
+    "业务域": 23,
+    "快捷命令": 343,
+    "API方法": 120,
+    "参考文档": 437
+  },
+  "domains": 23,
+  "extras": 5,
+  "commands": 343,
+  "apiMethods": 120,
+  "refs": 437,
+  "nodes": 343,
+  "manual": true
+}

@@ -1,0 +1,34 @@
+修改指定日程，支持增量更新。对于重复日程，可通过 --mod-type 指定修改范围。
+
+Usage:
+  wps365-cli calendar event update <calendar-id> <event-id> [flags]
+
+Examples:
+wps365-cli calendar event update primary "evt_xxx" --name "新标题"
+wps365-cli calendar event update primary "evt_xxx" --start "2024-01-16T14:30:00+08:00" --end "2024-01-16T15:30:00+08:00" --mod-type all
+
+Flags:
+      --description string           日程描述
+      --end string                   结束时间，RFC3339 格式
+      --free-busy-status string      忙闲状态
+  -h, --help                         help for update
+      --location string              地点名称
+      --mod-type string              重复日程修改范围，可选 one 或 all
+      --name string                  日程标题
+      --no-notification              不向参与者发更新通知
+      --online-meeting-body string   在线会议配置 JSON
+      --recurrence-body string       重复规则 JSON
+      --reminders string             提醒时间，单位为分钟，多个用逗号分隔
+      --start string                 起始时间，RFC3339 格式
+      --token-type string            authentication identity: delegated|app
+      --visibility string            可见性
+      --which-day-time string        重复日程中要改的那一天的开始时间（毫秒时间戳），mod-type=one 时必填
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

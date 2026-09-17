@@ -1,0 +1,21 @@
+批量删除群成员。
+
+Usage:
+  wps365-cli im chat-member remove <chat-id> [flags]
+
+Examples:
+wps365-cli im chat-member remove "chat_xxx" --user-ids "u1,u2"
+
+Flags:
+  -h, --help                help for remove
+      --token-type string   authentication identity: delegated|app
+      --user-ids string     (required) 成员用户 ID，多个用逗号分隔，最多 100 个
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

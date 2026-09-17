@@ -1,0 +1,24 @@
+获取群聊成员列表，支持分页和按状态/类型过滤。
+
+Usage:
+  wps365-cli im chat-member list <chat-id> [flags]
+
+Examples:
+wps365-cli im chat-member list "chat_xxx" --page-size 50 --status 1
+
+Flags:
+  -h, --help                help for list
+      --page-size int       每页数量，1–100
+      --page-token string   分页标记
+      --status int          成员状态，可选 1: normal、2: dissolved (default 1)
+      --token-type string   authentication identity: delegated|app
+      --type string         成员类型，可选 user、app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

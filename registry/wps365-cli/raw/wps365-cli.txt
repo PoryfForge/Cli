@@ -1,0 +1,46 @@
+WPS 365 Open API command-line tool
+
+开始使用:
+  1. wps365-cli config init           # 浏览器创建/绑定应用（仅需一次）
+  2. wps365-cli auth login --device   # 设备码授权（可省略 --scopes）
+  3. wps365-cli user me               # 确认当前登录用户
+
+精装命令覆盖日历、即时通讯、通讯录、邮箱、云文档、智能文档、智能表格、多维表、会议；未覆盖接口用 api 命令调用。
+
+Usage:
+  wps365-cli [flags]
+  wps365-cli [command]
+
+Available Commands:
+  airpage     智能文档
+  airsheet    智能表格
+  api         Invoke low-level API requests
+  auth        Authentication and credential management
+  calendar    日历、日程与忙闲管理
+  completion  Generate shell completion scripts
+  config      Local configuration and application binding
+  dbsheet     多维表数据管理
+  drive       云文档与文件管理
+  help        Help about any command
+  im          消息与群会话管理
+  mail        邮箱与邮件管理
+  mcp         Expose curated commands as a stdio MCP server
+  meeting     在线会议管理
+  provider    管理 provider
+  spec        Manage builtin wps365 spec files
+  update      Update wps365-cli from the official CDN
+  user        企业用户与组织架构
+  version     Show version information
+
+Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+  -h, --help             help for wps365-cli
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)
+  -v, --version          version for wps365-cli
+
+Use "wps365-cli [command] --help" for more information about a command.

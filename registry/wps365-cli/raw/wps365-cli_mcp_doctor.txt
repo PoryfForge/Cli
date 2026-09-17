@@ -1,0 +1,17 @@
+Check MCP prerequisites (spec load, credentials)
+
+Usage:
+  wps365-cli mcp doctor [flags]
+
+Flags:
+  -h, --help   help for doctor
+      --json   output JSON (default; always JSON)
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,22 @@
+Perform delegated OAuth login.
+
+推荐使用设备码: wps365-cli auth login --device（可省略 --scopes）。
+授权码模式需要交互终端，且必须显式传入 --scopes。
+
+Usage:
+  wps365-cli auth login [flags]
+
+Flags:
+      --device                use device code flow (auto-opens browser when available; also works headless)
+  -h, --help                  help for login
+      --redirect-uri string   optional, override the pre-registered local callback URL
+      --scopes string         permission scopes, comma-separated (required for auth-code login; optional with --device)
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

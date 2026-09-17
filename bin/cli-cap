@@ -1,0 +1,1525 @@
+#!/usr/bin/env node
+/**
+ * cli-cap — 通用 CLI 能力提取器
+ *
+ * 把一个命令行工具的「全部能力面」递归抓下来，固化成 AI 可读的能力快照。
+ * 只读操作：永远只执行 `<cmd> ... --help` / `-h` / `help`，绝不执行真实业务命令。
+ *
+ * 收录范围：**厂商提供的 SaaS 能力型 CLI**（飞书 CLI、即梦 CLI 这类）。
+ * 不含系统自带工具（git / curl / sqlite3）、包管理器（brew / npm）与通用数据库客户端。
+ *
+ * 用法:
+ *   cli-cap scan <command> [options]      扫描一个 CLI，写入 registry/<name>/
+ *   cli-cap list                          列出能力库里已有的 CLI
+ *   cli-cap index                         重新生成 INDEX.md 与 docs/index.html
+ *   cli-cap show <name> [command...]      查询已录入的能力（给 AI 用的快速检索）
+ *   cli-cap search <关键词>              跨 CLI 搜索路由与能力文档
+ *   cli-cap remember <name> --intent "..." --command "..." [--note "..."]
+ *                                        保存路由经验并重建索引（不执行命令）
+ *
+ * scan 选项:
+ *   --name <name>        注册名（默认取命令名）
+ *   --desc <text>        一句话能力描述（覆盖自动提取）
+ *   --skill <path>       合并厂商官方 SKILL.md 的 Agent 规则（合并进能力文档 + 留档 vendor/）
+ *   --depth <n>          递归深度，0=仅顶层，1=+一级子命令（默认 1）
+ *   --max <n>            最多抓取多少个命令节点（默认 300）
+ *   --timeout <ms>       单次 help 超时（默认 8000）
+ *   --help-flag <flag>   强制使用指定 help flag（如 -h）
+ *   --extra-cmds "<args>" --help 只列常用子命令时，用它补全全量清单
+ */
+
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const { execFile } = require('child_process');
+
+const ROOT = path.resolve(__dirname, '..');
+const REGISTRY = path.join(ROOT, 'registry');
+const DOCS = path.join(ROOT, 'docs');
+
+// 本库只收录「厂商提供的 SaaS 能力型 CLI」（飞书 CLI、即梦 CLI 这类），
+// 不含系统自带工具（git/curl…）、包管理器（brew/npm）与数据库客户端。
+// 这类 CLI 的 help 通常干净且结构化，抓取基本不需要特殊照顾：
+//   · 非全局 --help 的用 --help-flag 指定；
+//   · --help 只列常用子命令的用 --extra-cmds 补全；
+//   · 能力说明散在官方 SKILL.md 里的用 --skill 合并进能力文档。
+// 工具特异性配置一律走命令行参数，不在代码里硬编码。
+
+// ---------------------------------------------------------------- 工具函数
+
+const stripAnsi = (s) => s.replace(/\u001b\[[0-9;?]*[A-Za-z]/g, '');
+const uniq = (arr) => [...new Set(arr)];
+const trim = (s) => (s || '').replace(/\s+/g, ' ').trim();
+const escapeRe = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** 把一段命令路径压成安全的文件名片段 */
+const sanitizeSeg = (s) => String(s || '').replace(/[^\w.@+-]+/g, '_');
+
+function run(cmd, args, timeout) {
+  return new Promise((resolve) => {
+    const env = {
+      ...process.env,
+      NO_COLOR: '1',
+      CLICOLOR: '0',
+      FORCE_COLOR: '0',
+      TERM: 'dumb',
+      PAGER: 'cat',
+      GIT_PAGER: 'cat',
+      GH_PAGER: 'cat',
+      LESS: '-F -X -R',
+      MANPAGER: 'cat',
+      LC_ALL: 'C',
+      LANG: 'C',
+      // 关掉会联网/交互的自动行为
+      HOMEBREW_NO_AUTO_UPDATE: '1',
+      HOMEBREW_NO_ANALYTICS: '1',
+      HOMEBREW_NO_ENV_HINTS: '1',
+      HOMEBREW_NO_INSTALL_CLEANUP: '1',
+      npm_config_update_notifier: 'false',
+      npm_config_fund: 'false',
+      npm_config_audit: 'false',
+      DOCKER_CLI_HINTS: 'false',
+    };
+    execFile(
+      cmd,
+      args,
+      { timeout, env, maxBuffer: 16 * 1024 * 1024, windowsHide: true },
+      (err, stdout, stderr) => {
+        const out = stripAnsi(String(stdout || ''));
+        const eout = stripAnsi(String(stderr || ''));
+        resolve({
+          ok: !err,
+          code: err && typeof err.code === 'number' ? err.code : err ? 1 : 0,
+          stdout: out,
+          stderr: eout,
+          // 有些 CLI 把 help 打到 stderr
+          text: out.trim().length >= eout.trim().length ? out : eout,
+        });
+      }
+    );
+  });
+}
+
+// ---------------------------------------------------------------- help 解析
+
+const SECTION_ALIASES = {
+  usage: ['usage', 'usage:', '用法', '用法:', 'usages'],
+  commands: [
+    'commands', 'commands:', 'available commands', 'available commands:',
+    'subcommands', 'subcommands:', 'command', 'command:', '命令', '命令:',
+    'all commands', 'all commands:', 'all the commands', 'available subcommands',
+    'the most commonly used commands are', 'core commands', 'common commands',
+    'management commands', 'additional commands',
+  ],
+  options: [
+    'options', 'options:', 'flags', 'flags:', 'global flags', 'global flags:',
+    'global options', 'global options:', 'parameters', 'parameters:',
+    '选项', '选项:', '参数',
+  ],
+  examples: ['examples', 'examples:', 'example', '示例', '示例:', 'examples:'],
+};
+
+// 分节头的「词尾」兜底。
+// 精确别名表覆盖不了变体：即梦 CLI 用的是 `Built-in Commands:` / `Generator Commands:`，
+// 早期只认 `Commands:` 就会整段漏掉，最后回退扫描把 Examples 里的用法行当成命令。
+const SECTION_SUFFIX = [
+  [/(commands?|subcommands?|命令|指令)$/, 'commands'],
+  [/(options?|flags?|选项|参数|标志)$/, 'options'],
+  [/(examples?|示例)$/, 'examples'],
+  [/(usage|用法)$/, 'usage'],
+];
+
+function classifyHeader(line) {
+  const t = line
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/[:：]$/, '');
+  if (!t) return null;
+  for (const key of Object.keys(SECTION_ALIASES)) {
+    if (SECTION_ALIASES[key].includes(t)) return key;
+  }
+  // 只有「看起来像标题的短行」才走后缀规则，避免把正文句子误判成分节头
+  if (t.length > 40) return null;
+  if (/[.,;!?。，；！？]/.test(t)) return null;
+  if (t.split(' ').length > 4) return null;
+  for (const [re, key] of SECTION_SUFFIX) if (re.test(t)) return key;
+  return null;
+}
+
+/** 某个标题是否只是通用别名（"Commands:"），通用别名不当分组名用，免得索引里全是噪声 */
+const isPlainAlias = (text, key) =>
+  SECTION_ALIASES[key].includes(text.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[:：]$/, ''));
+
+const isHeaderLike = (line) => /^[A-Z][A-Za-z ]{2,32}:?\s*$/.test(line) && line.trim() === line;
+
+/**
+ * 解析 "  -h, --help   desc" 形式的选项行。
+ * 同时兼容 cobra/pflag 的 "  --prompt string   desc"：flag 与类型之间恰好一个空格，
+ * 类型与说明之间 2 个以上空格 —— 这个空格数差异是区分「类型」和「单字说明」的唯一依据。
+ */
+function parseOptionLine(line) {
+  const m = line.match(
+    /^\s{1,8}((?:-[A-Za-z0-9],?\s*)?--?[A-Za-z0-9][\w-]*(?:=[A-Za-z<][\w.<>[\]]*)?(?:\[=[^\]]*\])?)(?:\s([A-Za-z<][\w.<>[\]]*))?(?:\s{2,}|\s*$)(.*)$/
+  );
+  if (!m) return null;
+  const flagsBase = trim(m[1]).replace(/,$/, '');
+  let type = m[2] ? trim(m[2]) : '';
+  let desc = trim(m[3]);
+  // 类型之后没有说明，说明那个词其实是说明本身
+  if (type && !desc) {
+    desc = type;
+    type = '';
+  }
+  if (!/^-/.test(flagsBase)) return null;
+  return { flags: type ? `${flagsBase} ${type}` : flagsBase, desc };
+}
+
+/** 解析 "  name   description" 形式的子命令行 */
+function parseCommandLine(line, minIndent) {
+  const m = line.match(/^(\s+)([A-Za-z][\w:@.+-]*)(\s{2,}|\s*$)(.*)$/);
+  if (!m) return null;
+  const indent = m[1].length;
+  if (indent < minIndent || indent > 8) return null;
+  const name = m[2];
+  const desc = trim(m[4]);
+  if (name.length > 40) return null;
+  if (/^(usage|options?|flags|commands?|global|examples?)$/i.test(name)) return null;
+  return { name, desc, indent };
+}
+
+/** 逗号分隔的裸命令名清单，如 npm 的 "All commands:\n  access, adduser, audit, ..." */
+function parseCommaList(line) {
+  const bare = line.trim().replace(/[,\s]+$/, '');
+  if (!/^[a-z][\w-]*(\s*,\s*[a-z][\w-]*)+$/.test(bare)) return null;
+  return bare.split(',').map((s) => s.trim()).filter(Boolean);
+}
+
+// 兜底扫描里 `程序名 xxx` 这种前缀式很容易把正文句子当成命令
+// （"dreamina is the official CLI tool." → 会解析出一个叫 `is` 的子命令）。
+// 用一份虚词黑名单挡掉这类误判：宁可漏，不可错。
+const PROSE_WORDS = new Set([
+  'is', 'are', 'was', 'were', 'be', 'been', 'being', 'the', 'a', 'an', 'and', 'or', 'but',
+  'to', 'of', 'in', 'on', 'at', 'by', 'for', 'with', 'as', 'it', 'its', 'this', 'that',
+  'these', 'those', 'will', 'would', 'can', 'could', 'may', 'might', 'must', 'should',
+  'has', 'have', 'had', 'do', 'does', 'did', 'not', 'no', 'all', 'any', 'use', 'uses',
+]);
+
+/** "  brew search TEXT" / "npm install   desc" 这类把程序名写在行首的写法 */
+function parseSelfPrefixed(line, rootName) {
+  if (!rootName) return null;
+  const r = escapeRe(rootName);
+  let m = line.match(new RegExp(`^\\s+${r}\\s+([A-Za-z][\\w:-]*)\\s{2,}(\\S.*)$`));
+  if (m && !PROSE_WORDS.has(m[1].toLowerCase())) return { name: m[1], desc: trim(m[2]) };
+  m = line.match(new RegExp(`^\\s+${r}\\s+([A-Za-z][\\w:-]*)(\\s+\\S.*)?$`));
+  if (m && !PROSE_WORDS.has(m[1].toLowerCase())) return { name: m[1], desc: '' };
+  return null;
+}
+
+function parseHelp(text, rootName) {
+  const lines = text.split('\n');
+  const result = {
+    usage: '',
+    summary: '',
+    commands: [],
+    options: [],
+    examples: [],
+    groups: [],
+  };
+  if (!text.trim()) return result;
+
+  // ---- usage
+  // 记下 usage 覆盖了哪些行：后面扫描子命令时要跳过它们，
+  // 否则 "  dreamina login [flags]" 这种续行会被当成一个叫 login 的子命令。
+  const usageLineIdx = new Set();
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*(usage|用法)\s*[::]/i.test(lines[i])) {
+      usageLineIdx.add(i);
+      const buf = [lines[i].replace(/^\s*(usage|用法)\s*[::]\s*/i, '').trim()];
+      for (let j = i + 1; j < lines.length; j++) {
+        if (!lines[j].trim()) break;
+        if (/^\s{2,}\S/.test(lines[j]) && !/^\s{2,}-\S/.test(lines[j])) {
+          usageLineIdx.add(j);
+          buf.push(lines[j].trim());
+        } else break;
+      }
+      result.usage = trim(buf.join(' '));
+      break;
+    }
+  }
+
+  // ---- summary：首个 section 头之前的第一段有意义的文字
+  // 宁可留空，也不要把 usage 片段/选项说明的续行当成描述（会误导调用方）
+  const firstSection = lines.findIndex((l) => classifyHeader(l) !== null);
+  const headEnd = firstSection === -1 ? lines.length : firstSection;
+  const cands = [];
+  let inWrappedDesc = false;
+  for (let i = 0; i < headEnd; i++) {
+    const line = lines[i];
+    const t = line.trim();
+    if (!t) {
+      inWrappedDesc = false;
+      continue;
+    }
+    const indented = /^\s/.test(line);
+    if (!indented) inWrappedDesc = false;
+    if (/^\s*(usage|用法)\s*[::]/i.test(line)) continue;
+    if (parseOptionLine(line) || /^-/.test(t)) {
+      inWrappedDesc = true;
+      continue;
+    }
+    if (inWrappedDesc) continue; // 选项说明的换行续行
+    if (/^or\s*:/i.test(t)) continue; // usage 的 "or:" 续行
+    if (/^[[<(~]/.test(t)) continue; // usage 片段
+    if (result.usage && t.startsWith(result.usage.slice(0, 20))) continue;
+    cands.push({ text: t, indented });
+  }
+  const picked = cands.find((c) => !c.indented) || cands[0];
+  result.summary = trim(picked ? picked.text : '');
+
+  // ---- 分节扫描
+  let section = null;
+  let sectionLabel = ''; // "Built-in Commands:" / "Generator Commands:" 这类带信息的分节名
+  let currentGroup = '';
+  const enterSection = (key, rawLine) => {
+    section = key === 'usage' ? null : key;
+    // 通用别名（"Commands:"）不当分组名，只有带限定词的分节名才值得保留
+    sectionLabel = key && !isPlainAlias(rawLine, key) ? rawLine.trim().replace(/[:：]$/, '') : '';
+    currentGroup = '';
+  };
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const header = line.trim() && line.trim() === line ? classifyHeader(line) : null;
+    if (header) {
+      enterSection(header, line);
+      continue;
+    }
+    // 宽松识别：以冒号结尾的标题行
+    if (isHeaderLike(line)) {
+      const k = classifyHeader(line);
+      if (k && k !== 'usage') {
+        enterSection(k, line);
+        continue;
+      }
+    }
+    if (!line.trim()) continue;
+    if (usageLineIdx.has(i)) continue; // usage 块里的行不是子命令声明
+
+    if (section === 'options') {
+      const o = parseOptionLine(line);
+      if (o) result.options.push(o);
+      continue;
+    }
+
+    if (section === 'commands') {
+      const group = currentGroup || sectionLabel;
+      const list = parseCommaList(line);
+      if (list) {
+        for (const nm of list) result.commands.push({ name: nm, desc: '', group });
+        continue;
+      }
+      const self = parseSelfPrefixed(line, rootName);
+      if (self && !/^\s*</.test(line)) {
+        result.commands.push({ name: self.name, desc: self.desc, group });
+        continue;
+      }
+      const c = parseCommandLine(line, 1);
+      if (c) {
+        result.commands.push({ name: c.name, desc: c.desc, group });
+      } else if (!/^\s/.test(line)) {
+        currentGroup = trim(line).replace(/:$/, '');
+        result.groups.push(currentGroup);
+      }
+      continue;
+    }
+
+    if (section === 'examples') {
+      const t = trim(line);
+      if (t) result.examples.push(t);
+    }
+  }
+
+  // ---- 回退：没有 "Commands:" 头的 CLI，宽松扫描缩进条目
+  if (result.commands.length === 0) {
+    let group = '';
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line.trim()) continue;
+      if (usageLineIdx.has(i)) continue;
+      if (classifyHeader(line) === 'options') break;
+      if (!/^\s/.test(line)) {
+        const t = trim(line);
+        if (t && !/^\s*(usage|用法)\s*[::]/i.test(line)) group = t.replace(/:$/, '');
+        continue;
+      }
+      const self = parseSelfPrefixed(line, rootName);
+      if (self) {
+        result.commands.push({ name: self.name, desc: self.desc, group });
+        continue;
+      }
+      const list = parseCommaList(line);
+      if (list) {
+        for (const nm of list) result.commands.push({ name: nm, desc: '', group });
+        continue;
+      }
+      const c = parseCommandLine(line, 2);
+      if (c && c.desc) result.commands.push({ name: c.name, desc: c.desc, group });
+    }
+  }
+
+  result.options = dedupeOptions(result.options);
+  result.commands = dedupeCommands(result.commands);
+  return result;
+}
+
+const dedupeOptions = (opts) => {
+  const seen = new Set();
+  return opts.filter((o) => (seen.has(o.flags) ? false : (seen.add(o.flags), true)));
+};
+
+const dedupeCommands = (cmds) => {
+  const seen = new Set();
+  return cmds.filter((c) => (seen.has(c.name) ? false : (seen.add(c.name), true)));
+};
+
+// ---------------------------------------------------------------- 抓取
+
+/**
+ * 判断一段输出是不是「帮助文本」。
+ * 很多 CLI（如 git 子命令）把 help 打到 stdout 却以 129/1 退出，
+ * 所以不能只看退出码；同时要排除 "not a git command" 这类报错。
+ */
+function looksLikeHelp(text) {
+  const t = String(text || '').trim();
+  if (t.length < 10) return false;
+  if (/^([\w .'-]+:\s*)?(fatal|error|warning)\b/i.test(t)) return false;
+  if (/is not a (git )?command|unknown command|unrecognized (sub)?command|command not found/i.test(t))
+    return false;
+  return (
+    /(^|\n)\s*(usage|用法|usages)\s*[::]/i.test(t) ||
+    /(^|\n)\s*(options?|flags|global flags|commands|subcommands|available commands|examples?)\s*[:：]?\s*$/im.test(t) ||
+    /(^|\n)\s{0,6}-{1,2}[A-Za-z][\w-]*(\s*[,=]\s*|\s{2,})/.test(t)
+  );
+}
+
+async function fetchHelp(cmdPath, timeout, helpFlag) {
+  const flags = helpFlag ? [helpFlag] : ['--help', '-h'];
+  const accept = (r) => r && r.text.trim().length > 10 && (r.ok || looksLikeHelp(r.text));
+  for (const f of flags) {
+    const r = await run(cmdPath[0], [...cmdPath.slice(1), f], timeout);
+    if (accept(r)) return { ...r, usedFlag: f };
+  }
+  // 兜底：`cmd help`
+  if (!helpFlag && cmdPath.length === 1) {
+    const r = await run(cmdPath[0], ['help'], timeout);
+    if (accept(r)) return { ...r, usedFlag: 'help' };
+  }
+  return null;
+}
+
+async function scanTree(command, opts) {
+  const { depth, maxCommands, timeout, helpFlag } = opts;
+  const base = path.basename(command);
+  const root = await fetchHelp([command], timeout, helpFlag);
+  if (!root) {
+    throw new Error(
+      `无法获取 \`${command}\` 的帮助输出。命令可能不存在，或该 CLI 不支持 --help/-h。`
+    );
+  }
+
+  const rootParsed = parseHelp(root.text, base);
+  const nodes = [];
+  const queue = [];
+  const seen = new Set([command]);
+
+  const rootNode = {
+    path: [command],
+    depth: 0,
+    usage: rootParsed.usage,
+    summary: rootParsed.summary,
+    options: rootParsed.options,
+    groups: rootParsed.groups,
+    children: rootParsed.commands.map((c) => c.name),
+    helpFlag: root.usedFlag,
+  };
+  nodes.push(rootNode);
+  for (const c of rootParsed.commands) queue.push({ path: [command, c.name], depth: 1, desc: c.desc, group: c.group });
+
+  // 补充发现：部分 CLI（如 git）的 --help 只列常用命令，用一条附加命令拿全量
+  const extra = opts.extraCmds;
+  if (extra) {
+    const r = await run(command, extra, timeout);
+    if (r.ok || /^\s*[a-z]/.test(r.text)) {
+      const names = r.text
+        .split(/[\s,]+/)
+        .map((s) => s.trim())
+        .filter((s) => /^[a-z][\w-]{0,30}$/.test(s));
+      const known = new Set(rootParsed.commands.map((c) => c.name));
+      let added = 0;
+      for (const n of names) {
+        if (known.has(n)) continue;
+        known.add(n);
+        queue.push({ path: [command, n], depth: 1, desc: '', group: '（补充发现）' });
+        added++;
+      }
+      rootNode.children = [...rootNode.children, ...names.filter((n) => !rootParsed.commands.some((c) => c.name === n))];
+      rootNode.extraDiscovered = added;
+    }
+  }
+
+  const rawDir = path.join(opts.outDir, 'raw');
+  fs.mkdirSync(rawDir, { recursive: true });
+  // 允许用绝对路径调用可执行文件（如 .cache/bin 里解出来的发布版），
+  // 但留档文件名与文档里的命令名都不能带目录前缀。
+  const rawName = (p) => [base, ...p.slice(1)].map(sanitizeSeg).join('_') + '.txt';
+  fs.writeFileSync(path.join(rawDir, rawName(rootNode.path)), root.text);
+
+  while (queue.length && nodes.length < maxCommands) {
+    const batch = queue.splice(0, 6);
+    const results = await Promise.all(
+      batch.map(async (item) => {
+        const key = item.path.join(' ');
+        if (seen.has(key)) return null;
+        seen.add(key);
+        const r = await fetchHelp(item.path, timeout, helpFlag);
+        return { item, r };
+      })
+    );
+    for (const res of results) {
+      if (!res || !res.r) continue;
+      const { item, r } = res;
+      const parsed = parseHelp(r.text, base);
+      const node = {
+        path: item.path,
+        depth: item.depth,
+        usage: parsed.usage,
+        // 父命令列表里的描述比子命令 help 自解析的更可靠
+        summary: item.desc || parsed.summary || '',
+        detail: parsed.summary || '',
+        group: item.group || '',
+        options: parsed.options,
+        children: parsed.commands.map((c) => c.name),
+      };
+      nodes.push(node);
+      fs.writeFileSync(path.join(rawDir, rawName(node.path)), r.text);
+      if (item.depth < depth) {
+        for (const c of parsed.commands) {
+          queue.push({
+            path: [...item.path, c.name],
+            depth: item.depth + 1,
+            desc: c.desc,
+            // 子命令自己没分节头时继承父级分组，免得命令树里冒出一堆「其他」
+            group: c.group || item.group || '',
+          });
+        }
+      }
+    }
+  }
+  // 路径归一：显示与留档一律用可执行文件名，不带调用时的目录
+  rootNode.path = [base];
+  for (const n of nodes) n.path = [base, ...n.path.slice(1)];
+  return { root: rootNode, nodes };
+}
+
+// ---------------------------------------------------------------- 官方 SKILL.md 合并
+
+/**
+ * 读取官方 SKILL.md。
+ *
+ * 这类 CLI 的 `--help` 只描述「能做什么」，而厂商附带的 SKILL.md 描述「该怎么用」——
+ * 判断任务是否算成功的标准、哪些操作要事先警示用户、失败怎么追。
+ * 这些才是 Agent 真正会踩坑的地方，所以原样合并进能力文档，而不是让调用方再去找一遍。
+ */
+function loadSkill(skillPath, outDir) {
+  const p = path.resolve(skillPath);
+  if (!fs.existsSync(p)) throw new Error(`找不到 SKILL.md：${p}`);
+  const raw = fs.readFileSync(p, 'utf8');
+
+  const fm = {};
+  const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n?/);
+  if (fmMatch) {
+    for (const line of fmMatch[1].split('\n')) {
+      // frontmatter 的键可能缩进（如 metadata: 下的子键）
+      const kv = line.match(/^\s*([a-zA-Z_][\w-]*):\s*(.*)$/);
+      if (!kv) continue;
+      let v = kv[2].trim();
+      if (/^".*"$/.test(v)) v = v.slice(1, -1).replace(/\\"/g, '"');
+      fm[kv[1]] = v;
+    }
+  }
+  const body = raw.slice(fmMatch ? fmMatch[0].length : 0).trim();
+
+  // 留档：这份规则取自哪一版官方文档，便于以后比对更新
+  const vendorDir = path.join(outDir, 'vendor');
+  fs.mkdirSync(vendorDir, { recursive: true });
+  fs.writeFileSync(path.join(vendorDir, 'SKILL.md'), raw);
+
+  return {
+    name: fm.name || '',
+    description: fm.description || '',
+    body,
+    // 记成 `~` 相对形式：能力文档是要进版本库给人看的，写死本机绝对路径
+    // 既有隐私问题，也让别人无法判断这份留档取自哪里。
+    source: homeShorten(p),
+  };
+}
+
+/** /Users/me/x → ~/x（只在确实位于 HOME 之下时替换） */
+function homeShorten(p) {
+  const home = process.env.HOME || '';
+  const abs = path.resolve(String(p));
+  return home && abs.startsWith(home + path.sep) ? '~' + abs.slice(home.length) : abs;
+}
+
+/** 把 SKILL.md 的标题层级整体降一级，避免与能力文档自身的结构打架 */
+function demoteHeadings(md, by = 1) {
+  return md
+    .replace(/^#\s+.*\n+/, '') // 丢掉它自己的 H1，本文档已有标题
+    .split('\n')
+    .map((l) => {
+      const m = l.match(/^(#{1,6})(\s.*)$/);
+      return m ? '#'.repeat(Math.min(6, m[1].length + by)) + m[2] : l;
+    })
+    .join('\n')
+    .trim();
+}
+
+// ---------------------------------------------------------------- 渲染
+
+function renderCapabilityMd(meta, root, nodes, skill) {
+  const L = [];
+  const byDepth = nodes.reduce((a, n) => ((a[n.depth] = (a[n.depth] || 0) + 1), a), {});
+  L.push('---');
+  L.push(`name: ${meta.name}`);
+  L.push(`kind: cli`);
+  L.push(`command: ${meta.command}`);
+  if (meta.version)   L.push(`version: ${meta.version}`);
+  if (meta.title) L.push(`title: ${meta.title}`);
+  if (meta.license) L.push(`license: ${meta.license}`);
+  if (meta.repo) L.push(`repo: ${meta.repo}`);
+  L.push(`scanned_at: ${meta.scannedAt}`);
+  L.push(`source: ${skill ? 'help-tree + official-skill' : 'help-tree'}`);
+  L.push(`nodes: ${nodes.length}`);
+  if (skill) L.push(`official_skill: vendor/SKILL.md`);
+  L.push('---');
+  L.push('');
+  L.push(`# ${meta.title || meta.name}（\`${meta.command}\`）— 能力快照`);
+  L.push('');
+  L.push(`> ${meta.description}`);
+  L.push('');
+  L.push('## 怎么用这份文档');
+  L.push('');
+  L.push('- 这是由 `' + meta.command + ' --help` 递归提取的能力快照；覆盖范围受扫描深度、节点上限及 help 输出限制，不保证包含全部接口。');
+  L.push('- 需要二级细节时，直接查本文档对应小节；如需最新参数，跑 `<命令路径> --help`。');
+  L.push('- 用法：先在下表定位子命令，再按该小节的 usage 与 flag 拼命令。');
+  if (skill) {
+    L.push(
+      '- **动手前先读文末「官方 Agent 使用规则」**：那是厂商写给 Agent 的判断标准（例如怎样才算任务成功、哪些操作要先警示用户），比 help 更权威。'
+    );
+  }
+  L.push('');
+  L.push('## 概览');
+  L.push('');
+  L.push('| 项 | 值 |');
+  L.push('|---|---|');
+  L.push(`| 可执行文件 | \`${meta.command}\` |`);
+  if (meta.version) L.push(`| 版本 | \`${meta.version}\` |`);
+  if (meta.repo) L.push(`| 仓库 | ${meta.repo} |`);
+  if (meta.license) L.push(`| 许可证 | ${meta.license} |`);
+  L.push(`| 采集方式 | help 全树（\`--help\` 递归） |`);
+  L.push(`| 本轮抓取命令数 | ${nodes.length}（顶层 ${byDepth[0] || 1}） |`);
+  if (root.extraDiscovered) L.push(`| 其中补充发现 | ${root.extraDiscovered}（--help 未列出，由附加命令补全） |`);
+  L.push(`| 抓取时间 | ${meta.scannedAt} |`);
+  L.push(`| 原始 help 留档 | \`raw/\` |`);
+  if (skill) L.push(`| 官方 Agent 规则 | \`vendor/SKILL.md\`（已合并到文末） |`);
+  L.push('');
+
+  if (meta.install) {
+    L.push('## 安装');
+    L.push('');
+    L.push('```bash');
+    L.push(meta.install);
+    L.push('```');
+    L.push('');
+  }
+
+  if (root.usage) {
+    L.push('## 顶层用法');
+    L.push('');
+    L.push('```');
+    L.push(root.usage);
+    L.push('```');
+    L.push('');
+  }
+
+  // 全局选项
+  const withOpts = nodes.filter((n) => n.options && n.options.length);
+  if (root.options && root.options.length) {
+    L.push('## 顶层选项');
+    L.push('');
+    L.push('| Flag | 说明 |');
+    L.push('|---|---|');
+    for (const o of root.options) L.push(`| \`${o.flags}\` | ${escapeCell(o.desc)} |`);
+    L.push('');
+  }
+
+  // 命令树索引
+  L.push('## 命令树');
+  L.push('');
+  const sorted = [...nodes].sort((a, b) => a.path.join(' ').localeCompare(b.path.join(' ')));
+  const subs = sorted.filter((n) => n.depth > 0);
+  const row = (n) =>
+    `| \`${n.path.join(' ')}\` | ${'&nbsp;'.repeat((n.depth - 1) * 4)}${escapeCell(
+      n.summary || synopsisOf(n, 100)
+    )} |`;
+  // 有分组的 CLI（如即梦的 Built-in / Generator）按分组分段列，比一张长表好读
+  const groups = uniq(subs.map((n) => n.group || ''));
+  if (groups.filter(Boolean).length >= 2) {
+    for (const g of groups) {
+      const label = g || '其他';
+      L.push(`### ${label}`);
+      L.push('');
+      L.push('| 命令 | 说明 / 用法概要 |');
+      L.push('|---|---|');
+      for (const n of subs.filter((x) => (x.group || '') === g)) L.push(row(n));
+      L.push('');
+    }
+  } else {
+    L.push('| 命令 | 说明 / 用法概要 |');
+    L.push('|---|---|');
+    for (const n of subs) L.push(row(n));
+    L.push('');
+  }
+
+  // 逐命令详情
+  L.push('## 逐命令详情');
+  L.push('');
+  for (const n of sorted) {
+    if (n.depth === 0) continue;
+    const cmd = n.path.join(' ');
+    L.push(`### \`${cmd}\``);
+    L.push('');
+    if (n.summary) L.push(`${escapeCell(n.summary)}`);
+    L.push('');
+    if (n.usage) {
+      L.push('```');
+      L.push(n.usage);
+      L.push('```');
+      L.push('');
+    }
+    if (n.children && n.children.length) {
+      L.push(`**子命令**：${n.children.map((c) => '`' + c + '`').join(' · ')}`);
+      L.push('');
+    }
+    if (n.options && n.options.length) {
+      L.push('| Flag | 说明 |');
+      L.push('|---|---|');
+      for (const o of n.options) L.push(`| \`${o.flags}\` | ${escapeCell(o.desc)} |`);
+      L.push('');
+    }
+  }
+
+  // 官方 Agent 规则：原样合并，只降一级标题
+  if (skill && skill.body) {
+    L.push('## 官方 Agent 使用规则');
+    L.push('');
+    L.push(
+      `> 摘自官方 SKILL.md：\`${skill.source}\`（留档于 \`vendor/SKILL.md\`）。这是厂商对 Agent 的约定，优先于一般经验。`
+    );
+    L.push('');
+    if (skill.description) {
+      L.push(`**官方定位**：${escapeCell(skill.description)}`);
+      L.push('');
+    }
+    L.push(demoteHeadings(skill.body, 1));
+    L.push('');
+  }
+  return L.join('\n');
+}
+
+const escapeCell = (s) => String(s || '').replace(/\|/g, '\\|').replace(/\n/g, ' ').trim();
+
+/** 没有官方描述时，用 usage synopsis 兜底 —— 比留空更有用 */
+function synopsisOf(n, max = 110) {
+  const u = String(n.usage || '').trim();
+  if (!u) return '';
+  const prefix = n.path.join(' ');
+  let s = u.startsWith(prefix) ? u.slice(prefix.length).trim() : u;
+  if (!s) return '';
+  return s.length > max ? s.slice(0, max - 1) + '…' : s;
+}
+
+/**
+ * 取版本号。各家写法差别很大：
+ *   `wps365-cli version 0.3.5`（一行纯文本）
+ *   `{"version":"673dd28-dirty","commit":"…"}`（JSON，可能不是语义化版本）
+ * 所以先认 JSON 的 version 字段，再退回全文里的语义化版本片段 —— 只看第一行会全部落空。
+ */
+function pickVersion(text) {
+  const json = String(text || '').match(/"version"\s*:\s*"([^"]+)"/);
+  if (json) return json[1];
+  const sem = String(text || '').match(/\b\d+\.\d+(?:\.\d+)?[\w.\-+]*/);
+  return sem ? sem[0] : '';
+}
+
+function getVersion(command, timeout) {
+  return new Promise((resolve) => {
+    const variants = [['--version'], ['-v'], ['version']];
+    let i = 0;
+    const next = () => {
+      if (i >= variants.length) return resolve('');
+      const v = variants[i++];
+      run(command, v, Math.min(timeout, 4000)).then((r) => {
+        const picked = r.text && r.text.trim() ? pickVersion(r.text) : '';
+        if (r.ok && picked) resolve(picked);
+        else next();
+      });
+    };
+    next();
+  });
+}
+
+// ---------------------------------------------------------------- 命令实现
+
+async function cmdScan(command, opts) {
+  const outDir = path.join(REGISTRY, opts.name);
+  fs.mkdirSync(outDir, { recursive: true });
+  process.stdout.write(`→ 扫描 ${command} ...\n`);
+  const { root, nodes } = await scanTree(command, { ...opts, outDir });
+  const version = await getVersion(command, opts.timeout);
+  const skill = opts.skill ? loadSkill(opts.skill, outDir) : null;
+
+  const meta = {
+    name: opts.name,
+    title: opts.title || '',
+    // 文档里只出现可执行文件名，不带调用时用的目录（可能是本地缓存路径）
+    command: path.basename(command),
+    version,
+    description: opts.desc || root.summary || `${command} 命令行工具`,
+    scannedAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    depth: opts.depth,
+    source: skill ? 'help-tree + official-skill' : 'help-tree',
+    nodes: nodes.length,
+  };
+  if (opts.repo) meta.repo = opts.repo;
+  if (opts.license) meta.license = opts.license;
+  if (opts.installCmd) meta.install = opts.installCmd;
+  if (skill) meta.officialSkill = { name: skill.name, source: skill.source };
+
+  fs.writeFileSync(
+    path.join(outDir, 'capability.json'),
+    JSON.stringify(
+      { meta, root, nodes, skill: skill ? { ...skill, body: skill.body } : null },
+      null,
+      2
+    )
+  );
+  fs.writeFileSync(
+    path.join(outDir, 'CAPABILITY.md'),
+    renderCapabilityMd(meta, root, nodes, skill)
+  );
+  process.stdout.write(
+    `✓ ${nodes.length} 个命令节点${skill ? ' + 官方 SKILL.md' : ''} → registry/${opts.name}/CAPABILITY.md\n`
+  );
+  return { meta, nodes };
+}
+
+function listRegistry() {
+  if (!fs.existsSync(REGISTRY)) return [];
+  return fs
+    .readdirSync(REGISTRY, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => {
+      const dir = path.join(REGISTRY, d.name);
+      // 手工/源码录入的条目用 capability.meta.json 描述自己
+      const metaPath = path.join(dir, 'capability.meta.json');
+      if (fs.existsSync(metaPath)) {
+        try {
+          return { ...JSON.parse(fs.readFileSync(metaPath, 'utf8')), manual: true };
+        } catch {
+          /* ignore */
+        }
+      }
+      const p = path.join(dir, 'capability.json');
+      if (fs.existsSync(p)) {
+        try {
+          const j = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (j.meta && j.nodes) return j.meta;
+          if (j.meta) return { ...j.meta, nodes: j.meta.nodes || 0 };
+        } catch {
+          /* ignore */
+        }
+      }
+      return { name: d.name, command: d.name, description: '（无元数据）', scannedAt: '', nodes: 0 };
+    });
+}
+
+// HTML 转义
+const escHtml = (s) => String(s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// Markdown 表格转义：竖线会切断单元格
+const escMd = escapeCell;
+
+function loadRouteDocument() {
+  const f = path.join(ROOT, 'routes.json');
+  if (!fs.existsSync(f)) return { routes: [] };
+  const data = JSON.parse(fs.readFileSync(f, 'utf8'));
+  if (!data || !Array.isArray(data.routes) || data.routes.some((r) =>
+    !r || ['intent', 'cli', 'command'].some((k) => typeof r[k] !== 'string' || !r[k].trim())
+  )) {
+    throw new Error('routes.json 格式错误；需要 routes 数组，每条含 intent、cli、command。未修改文件。');
+  }
+  return data;
+}
+
+const loadRoutes = () => loadRouteDocument().routes;
+
+function cmdSearch(query) {
+  const q = query.join(' ').trim().toLowerCase();
+  if (!q) throw new Error('缺少关键词；用法：bin/cli-cap search <关键词>');
+  const routes = loadRoutes();
+  let matched = 0;
+  for (const it of listRegistry().sort((a, b) => a.name.localeCompare(b.name))) {
+    const routeHits = routes.filter((r) => r.cli === it.name &&
+      `${r.intent} ${r.cli} ${r.command} ${r.note || ''}`.toLowerCase().includes(q));
+    const lines = [];
+    for (const filename of ['CAPABILITY.md', 'api-resources.md']) {
+      const relative = `registry/${it.name}/${filename}`;
+      const file = path.join(ROOT, relative);
+      if (!fs.existsSync(file)) continue;
+      fs.readFileSync(file, 'utf8').split('\n').forEach((line, i) => {
+        if (line.toLowerCase().includes(q)) lines.push(`${relative}:${i + 1}: ${line.trim()}`);
+      });
+    }
+    if (!routeHits.length && !lines.length) continue;
+    matched++;
+    console.log(`\n### ${it.name}（快照版本 ${it.version || '未记录'}；${(it.scannedAt || '').slice(0, 10) || '日期未记录'}）`);
+    for (const r of routeHits) {
+      console.log(`  ${r.intent}\n    ${r.command}`);
+      if (r.note) console.log(`    注意：${r.note}`);
+    }
+    for (const line of lines.slice(0, 8)) console.log(`  ${line}`);
+    if (lines.length > 8) console.log(`  文档共 ${lines.length} 处命中，显示前 8 处；其余请查对应文件。`);
+    console.log(`  详情：bin/cli-cap show ${it.name}；执行前阅读 registry/${it.name}/CAPABILITY.md。`);
+  }
+  if (!matched) console.log(`（没有匹配 "${q}" 的本地记录；可换关键词或补录，未命中不代表工具没有此能力。）`);
+}
+
+function cmdRemember(name, flags) {
+  const item = listRegistry().find((it) => it.name === name);
+  if (!item) throw new Error(`未收录：${name || '（未指定 CLI）'}。请先录入能力文档。`);
+  for (const key of Object.keys(flags)) {
+    if (!['intent', 'command', 'note'].includes(key)) throw new Error(`未知选项：--${key}`);
+  }
+  for (const key of ['intent', 'command']) {
+    if (typeof flags[key] !== 'string' || !flags[key].trim()) throw new Error(`缺少 --${key} 的文本值`);
+  }
+  if (flags.note !== undefined && typeof flags.note !== 'string') throw new Error('缺少 --note 的文本值');
+  const document = loadRouteDocument();
+  const existing = document.routes.find((r) => r.cli === name && r.intent === flags.intent.trim());
+  const route = {
+    ...existing,
+    cli: name,
+    intent: flags.intent.trim(),
+    command: flags.command.trim(),
+    note: flags.note === undefined ? (existing?.note || '') : flags.note.trim(),
+    recordedAt: new Date().toISOString(),
+    snapshotVersion: item.version || '',
+  };
+  if (existing) Object.assign(existing, route);
+  else document.routes.push(route);
+  fs.writeFileSync(path.join(ROOT, 'routes.json'), JSON.stringify(document, null, 2) + '\n');
+  console.log(`✓ 已${existing ? '更新' : '保存'}路由：${route.intent} → ${name}（仅保存，未执行或验证业务命令）`);
+  cmdIndex();
+}
+
+/** 采集方式的自然语言说法 —— 读者据此判断快照的可信范围 */
+function acquireLabel(it) {
+  const map = {
+    'skill-repo': '仓库 skill 文档',
+    'release-bin + help-tree': 'release 二进制 help 全树',
+    'local-bin + help-tree + official-skill': '本机 CLI help 全树 + 官方 SKILL.md',
+    'help-tree + official-skill': 'help 全树 + 官方 SKILL.md',
+    'help-tree': 'help 全树',
+  };
+  const src = it.source || '';
+  return map[src] || src || '—';
+}
+
+/** 收录清单排序：业务域多的在前，其次命令多的在前 */
+function sortedForIndex(items) {
+  return [...items].sort(
+    (a, b) =>
+      (b.domains || 0) - (a.domains || 0) ||
+      (b.commands || b.nodes || 0) - (a.commands || a.nodes || 0) ||
+      a.name.localeCompare(b.name)
+  );
+}
+
+function cmdIndex() {
+  const items = listRegistry().sort((a, b) => a.name.localeCompare(b.name));
+  const routes = loadRoutes();
+  fs.mkdirSync(DOCS, { recursive: true });
+
+  // ---------- INDEX.md（AI 与人都能读的总索引）
+  const L = [];
+  L.push('# CLI 能力库 · 总索引');
+  L.push('');
+  L.push(`> 共收录 ${items.length} 个 CLI。**Agent 动手前先读这里，别再现场翻 help。**`);
+  L.push('>');
+  L.push(
+    '> 收录范围：**厂商提供的 SaaS 能力型 CLI**（飞书 CLI、即梦 CLI 这类）。' +
+      '系统自带工具（git / curl）、包管理器（brew / npm）、通用数据库客户端不在范围内 —— 那些现查 help 足够便宜。'
+  );
+  L.push('');
+  L.push('## 按需求找方案');
+  L.push('');
+  L.push('先想清楚「要做什么」→ 在这里挑工具和命令 → 打开能力文档看参数。不要凭印象造命令。');
+  L.push('');
+  L.push('| 我想做的事 | 用哪个 CLI | 关键命令 | 注意事项 |');
+  L.push('|---|---|---|---|');
+  for (const r of routes) {
+    L.push(
+      `| ${escMd(r.intent)} | \`${r.cli}\` | \`${escMd(r.command)}\` | ${escMd(r.note || '')} |`
+    );
+  }
+  L.push('');
+  L.push('## 已收录的 CLI');
+  L.push('');
+  L.push('按业务域数量排序。`采集方式` 说明这份快照是从哪儿来的 —— 这是判断它可信范围的关键。');
+  L.push('');
+  L.push('| CLI | 能干什么 | 域 | 命令 | 采集方式 | 版本 | 能力文档 |');
+  L.push('|---|---|---:|---:|---|---|---|');
+  for (const it of sortedForIndex(items)) {
+    const dir = path.join(REGISTRY, it.name);
+    const doc = fs.existsSync(path.join(dir, 'CAPABILITY.md'))
+      ? `[快照](registry/${it.name}/CAPABILITY.md)`
+      : '—';
+    const extra = [];
+    if (fs.existsSync(path.join(dir, 'api-resources.md'))) extra.push('[API 清单](registry/' + it.name + '/api-resources.md)');
+    if (fs.existsSync(path.join(dir, 'vendor'))) extra.push('[官方原文](registry/' + it.name + '/vendor)');
+    L.push(
+      `| **${escMd(it.name)}** | ${escMd(it.description)} | ${it.domains || '—'} | ${it.commands || it.nodes || '—'} | ${escMd(acquireLabel(it))} | ${escMd(it.version || '—')} | ${doc}${extra.length ? ' · ' + extra.join(' · ') : ''} |`
+    );
+  }
+  L.push('');
+  L.push('## 新增 / 更新一个 CLI');
+  L.push('');
+  L.push('```bash');
+  L.push('bin/refresh                                                  # 一键刷新全部已收录 CLI + 索引');
+  L.push('');
+  L.push('bin/cli-cap scan <命令名> --depth 1                          # 递归抓 help 全树');
+  L.push('bin/cli-cap scan <命令名> --skill <SKILL.md>                 # 顺带合并厂商官方 Agent 规则');
+  L.push('bin/cli-cap show <名字> <关键词>                              # 按关键词查已录入的能力');
+  L.push('bin/cli-cap search <关键词>                                   # 跨 CLI 搜索路由与能力文档');
+  L.push('bin/cli-cap remember <名字> --intent "需求" --command "命令模板" --note "注意事项"');
+  L.push('bin/cli-cap index                                            # 重建 INDEX.md 与 docs/index.html');
+  L.push('```');
+  L.push('');
+  L.push('想加一个新的 CLI：往 `clis.json` 加一条记录，再跑 `bin/refresh <名字>`。');
+  L.push('采集方式和解析档的说明见 `CONTRIBUTING.md` —— 加 CLI 不用改任何脚本。');
+  L.push('');
+  L.push('`remember` 保存到 `routes.json` 并自动重建索引；同一个 CLI、同一个意图再次保存会更新原条目，不执行业务命令。也可手工编辑后运行 `bin/cli-cap index`。');
+  L.push('');
+  fs.writeFileSync(path.join(ROOT, 'INDEX.md'), L.join('\n'));
+
+  // ---------- index.json（给程序/Agent 读的紧凑索引，比 markdown 好解析）
+  const indexJson = {
+    generatedAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    count: items.length,
+    clis: sortedForIndex(items).map((it) => {
+      const dir = path.join(REGISTRY, it.name);
+      const extraDocs = ['CAPABILITY.md', 'api-resources.md']
+        .filter((f) => fs.existsSync(path.join(dir, f)))
+        .map((f) => `registry/${it.name}/${f}`);
+      if (fs.existsSync(path.join(dir, 'vendor'))) extraDocs.push(`registry/${it.name}/vendor/`);
+      return {
+        name: it.name,
+        command: it.command,
+        title: it.title || it.name,
+        version: it.version || '',
+        description: it.description || '',
+        repo: it.repo || '',
+        license: it.license || '',
+        install: it.install || '',
+        acquiredBy: it.source || '',
+        scannedAt: it.scannedAt || '',
+        commit: it.commit || '',
+        domains: it.domains || 0,
+        commands: it.commands || it.nodes || 0,
+        apiMethods: it.apiMethods || 0,
+        refDocs: it.refs || 0,
+        docs: extraDocs,
+      };
+    }),
+    routes: routes.map((r) => ({ intent: r.intent, cli: r.cli, command: r.command, note: r.note || '' })),
+  };
+  fs.writeFileSync(path.join(ROOT, 'index.json'), JSON.stringify(indexJson, null, 2));
+
+  // ---------- docs/index.html
+  const cards = sortedForIndex(items)
+    .map((it) => {
+      const stats = [];
+      if (it.domains) stats.push(`${it.domains} 个业务域`);
+      const cmds = it.commands || it.nodes || 0;
+      if (cmds) stats.push(`${cmds} 条命令`);
+      if (it.apiMethods) stats.push(`${it.apiMethods} 个 API 方法`);
+      if (it.refs) stats.push(`${it.refs} 篇参考`);
+      const links = [`<a href="../registry/${it.name}/CAPABILITY.md">能力快照</a>`];
+      if (fs.existsSync(path.join(REGISTRY, it.name, 'api-resources.md')))
+        links.push(`<a href="../registry/${it.name}/api-resources.md">API 清单</a>`);
+      if (it.repo) links.push(`<a href="${escHtml(it.repo)}" target="_blank" rel="noopener">官方仓库</a>`);
+      return `      <div class="card">
+        <div class="card-head"><span class="name">${escHtml(it.name)}</span><span class="ver">${escHtml(it.version || '')}</span></div>
+        <p class="desc">${escHtml(it.description)}</p>
+        <div class="chips">${stats.map((x) => `<span class="chip">${escHtml(x)}</span>`).join('')}</div>
+        <div class="meta"><span>${escHtml(acquireLabel(it))}</span><span>${(it.scannedAt || '').slice(0, 10) || '—'}</span></div>
+        <div class="links">${links.join(' · ')}</div>
+      </div>`;
+    })
+    .join('\n');
+
+  const routeRows = routes
+    .map((r) => {
+      const doc = fs.existsSync(path.join(REGISTRY, r.cli, 'CAPABILITY.md'))
+        ? `../registry/${r.cli}/CAPABILITY.md`
+        : '';
+      return `      <tr data-s="${escHtml((r.intent + ' ' + r.cli + ' ' + r.command + ' ' + (r.note || '')).toLowerCase())}">
+        <td>${escHtml(r.intent)}</td>
+        <td>${doc ? `<a href="${doc}"><code>${escHtml(r.cli)}</code></a>` : `<code>${escHtml(r.cli)}</code>`}</td>
+        <td><code class="cmd">${escHtml(r.command)}</code></td>
+        <td class="note">${escHtml(r.note || '')}</td>
+      </tr>`;
+    })
+    .join('\n');
+
+  const domains = items.reduce((a, it) => a + (it.domains || 0), 0);
+  const totalCmds = items.reduce((a, it) => a + (it.commands || it.nodes || 0), 0);
+
+  const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLI 能力库</title>
+<style>
+  :root{--bg:#fff;--panel:#f7f8fa;--border:#e6e8eb;--text:#1a1d21;--muted:#6b7280;--accent:#d93026;--accent-soft:#fdf2f2}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 72px}
+  header{margin-bottom:34px}
+  h1{margin:0 0 10px;font-size:30px;letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0}
+  .sub code{background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:13px}
+  .kpis{display:flex;gap:26px;margin-top:20px;flex-wrap:wrap}
+  .kpi b{display:block;font-size:23px;line-height:1.2}
+  .kpi span{font-size:12px;color:var(--muted)}
+  h2{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:38px 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+  .card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:17px;transition:.16s}
+  .card:hover{border-color:var(--accent);background:var(--accent-soft);transform:translateY(-2px)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
+  .chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:1px 9px;font-size:11.5px;color:#4a525a;white-space:nowrap}
+  .links{margin-top:9px;font-size:12.5px}
+  .links a{color:var(--accent);text-decoration:none;margin-right:2px}
+  .links a:hover{text-decoration:underline}
+  .card-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:7px}
+  .name{font-size:16.5px;font-weight:650;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .ver{font-size:12px;color:var(--muted);font-family:ui-monospace,monospace}
+  .desc{margin:0 0 13px;font-size:13.5px;color:#414a53;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);border-top:1px dashed var(--border);padding-top:9px}
+  .search{width:100%;padding:11px 14px;font-size:14px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);margin-bottom:12px;font-family:inherit}
+  .search:focus{outline:none;border-color:var(--accent);background:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;background:#f1f3f5}
+  tr:last-child td{border-bottom:none}
+  td code{background:#fff;border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:12.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  td code.cmd{background:transparent;border:none;padding:0;color:#3d454d}
+  td.note{color:var(--muted);font-size:12.5px}
+  td a{color:inherit}
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .step{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px}
+  .step b{display:block;font-size:13px;margin-bottom:5px}
+  .step span{font-size:13px;color:var(--muted)}
+  .step em{font-style:normal;display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;background:var(--accent);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:7px}
+  footer{margin-top:42px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  code.blk{display:block;background:#1a1d21;color:#e8eaed;padding:14px 16px;border-radius:10px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre}
+  .empty{padding:22px;text-align:center;color:var(--muted);font-size:13.5px;display:none}
+  .hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .hint code{background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>CLI 能力库</h1>
+    <p class="sub">把厂商 SaaS 能力型 CLI 的能力面固化成本地文档 —— <strong>Agent 直接查，不再每次现翻 help</strong>。每个 CLI 都标了采集方式，便于判断可信范围。</p>
+    <div class="kpis">
+      <div class="kpi"><b>${items.length}</b><span>收录的 CLI</span></div>
+      <div class="kpi"><b>${totalCmds}</b><span>命令与快捷命令</span></div>
+      <div class="kpi"><b>${domains}</b><span>业务域</span></div>
+      <div class="kpi"><b>${routes.length}</b><span>意图路由</span></div>
+    </div>
+  </header>
+
+  <h2>按需求找方案</h2>
+  <input class="search" id="q" type="search" placeholder="搜场景、命令或 CLI，例如：发消息 / 日程 / 生成视频">
+  <table id="routes">
+    <thead><tr><th style="width:24%">我想做的事</th><th style="width:11%">CLI</th><th style="width:38%">关键命令</th><th>注意事项</th></tr></thead>
+    <tbody>
+${routeRows}
+    </tbody>
+  </table>
+  <div class="empty" id="empty">没有匹配的路由。要加一条？编辑 <code>routes.json</code> 后跑 <code>bin/cli-cap index</code>。</div>
+
+  <h2>已收录的 CLI</h2>
+  <div class="grid">
+${cards}
+  </div>
+
+  <h2>怎么用</h2>
+  <div class="flow">
+    <div class="step"><b><em>1</em>先查索引</b><span>想做什么 → 挑 CLI → 打开能力文档</span></div>
+    <div class="step"><b><em>2</em>照单执行</b><span>按文档里的命令与 flag 拼，别凭印象造</span></div>
+    <div class="step"><b><em>3</em>查不到就补录</b><span>往 clis.json 加一条，跑 refresh 固化</span></div>
+  </div>
+
+  <h2>新增 / 更新</h2>
+  <p class="hint">加一个新 CLI：往 <code>clis.json</code> 加一条记录，然后跑 <code>bin/refresh &lt;名字&gt;</code>。脚本不用改。</p>
+  <code class="blk">bin/refresh                      # 刷新全部已收录 CLI，并重建索引
+bin/refresh wecom-cli --force    # 只刷一个，并强制重新下载源
+bin/refresh --list               # 看清单里有什么
+
+bin/cli-cap show &lt;名字&gt; &lt;关键词&gt;   # 在某个 CLI 的能力面里搜
+bin/cli-cap search &lt;关键词&gt;        # 不知道用哪个 CLI 时先跨库搜
+bin/cli-cap remember &lt;名字&gt; --intent "需求" --command "命令模板" --note "注意事项"
+bin/cli-cap index                # 只重建索引</code>
+  <p class="hint">怎么选采集方式、怎么写解析档，见仓库里的 <code>CONTRIBUTING.md</code>。</p>
+
+  <footer>由 <code>bin/cli-cap</code> 从 <code>registry/</code> 生成 · 索引重建于 ${new Date().toISOString().slice(0, 10)}</footer>
+</div>
+<script>
+  var q = document.getElementById('q'), rows = [].slice.call(document.querySelectorAll('#routes tbody tr'));
+  var empty = document.getElementById('empty');
+  q.addEventListener('input', function () {
+    var v = q.value.trim().toLowerCase(), n = 0;
+    rows.forEach(function (r) {
+      var hit = !v || r.getAttribute('data-s').indexOf(v) >= 0;
+      r.style.display = hit ? '' : 'none';
+      if (hit) n++;
+    });
+    empty.style.display = n ? 'none' : 'block';
+  });
+</script>
+</body>
+</html>
+`;
+  fs.writeFileSync(path.join(DOCS, 'index.html'), html);
+  process.stdout.write(
+    `✓ 索引已重建：INDEX.md + index.json + docs/index.html（${items.length} 个 CLI，${routes.length} 条路由）\n`
+  );
+}
+
+function cmdShow(name, query) {
+  const p = path.join(REGISTRY, name, 'capability.json');
+  if (!fs.existsSync(p)) {
+    process.stderr.write(`✗ 未收录：${name}。先跑 bin/cli-cap scan ${name}\n`);
+    process.exit(1);
+  }
+  const data = JSON.parse(fs.readFileSync(p, 'utf8'));
+  const q = (query || []).join(' ').toLowerCase();
+
+  // 中文意图先过路由表：设备命令名和说明基本都是英文，直接搜「视频」「生成」是搜不到的。
+  // routes.json 就是这层中文 → 命令的映射，所以先在这里捞一把。
+  const routeHits = q
+    ? loadRoutes().filter(
+        (r) =>
+          r.cli === name &&
+          `${r.intent} ${r.note || ''} ${r.command}`.toLowerCase().includes(q)
+      )
+    : [];
+
+  /** 从命中的路由里反推出涉及哪些子命令，好在下面把它们的参数一并带出来 */
+  const routeCommands = (prog) => {
+    const out = new Set();
+    for (const r of routeHits) {
+      for (const seg of String(r.command).split('|')) {
+        const s = seg.trim();
+        const m =
+          s.match(new RegExp(`^${escapeRe(prog)}\\s+([A-Za-z_][\\w-]*)`)) ||
+          s.replace(/[…\.]+$/, '').trim().match(/^([A-Za-z_][\w-]*)$/);
+        if (m) out.add(m[1]);
+      }
+    }
+    return out;
+  };
+
+  const printRoutes = () => {
+    if (!routeHits.length) return;
+    console.log('\n### 路由命中（routes.json）');
+    for (const r of routeHits) {
+      console.log(`  · ${r.intent}`);
+      console.log(`    ${r.command}`);
+      if (r.note) console.log(`    ⚠ ${r.note}`);
+    }
+  };
+
+  // skill 型 CLI：能力按业务域组织（飞书 / 企业微信）。域的描述就是路由依据。
+  if (Array.isArray(data.domains)) {
+    const groups = [...data.domains, ...(data.extras || [])];
+
+    // 全局约定与厂商规则也要进检索：Agent 常问的是「怎样才算成功」这类问题
+    const proseHits = [];
+    if (q) {
+      for (const c of data.conventions || []) {
+        for (const line of String(c.body || '').split('\n')) {
+          if (line.trim() && line.toLowerCase().includes(q)) proseHits.push(`[${c.title}] ${line.trim()}`);
+        }
+      }
+      for (const line of String((data.rules && data.rules.body) || '').split('\n')) {
+        if (line.trim() && line.toLowerCase().includes(q)) proseHits.push(`[官方规则] ${line.trim()}`);
+      }
+      printRoutes();
+    }
+
+    if (!q) {
+      console.log(JSON.stringify(data.meta, null, 2));
+      console.log('\n业务域：');
+      for (const d of data.domains || []) {
+        console.log(`  ${String(d.label).padEnd(14)}${(d.commands || []).length} 条  ${trim(d.description || '').slice(0, 60)}`);
+      }
+      if ((data.extras || []).length) {
+        console.log('\n辅助模块：');
+        for (const d of data.extras) {
+          console.log(`  ${String(d.label).padEnd(14)}${(d.commands || []).length} 条  ${trim(d.description || '').slice(0, 60)}`);
+        }
+      }
+      console.log(`\n提示：命令全量清单在 registry/${name}/CAPABILITY.md 的「命令全量清单」章。`);
+      return;
+    }
+
+    let hits = 0;
+    for (const d of groups) {
+      const blob = `${d.id || ''} ${d.label || ''} ${d.prefix || ''} ${d.description || ''} ${d.note || ''}`.toLowerCase();
+      const domHit = blob.includes(q);
+      const cmds = (d.commands || []).filter((c) => `${c.name} ${c.desc || ''}`.toLowerCase().includes(q));
+      if (!domHit && !cmds.length) continue;
+      hits++;
+      console.log(`\n### ${d.label}（${d.prefix || '—'}）`);
+      if (domHit) {
+        console.log(trim(d.description || '').slice(0, 400));
+        if (d.note) console.log(d.note);
+      }
+      // 域整体命中 → 列出该域全部命令；只是命令命中 → 只列命中的那几条
+      const list = domHit ? d.commands || [] : cmds;
+      for (const c of list.slice(0, 30)) console.log(`  ${c.name}${c.desc ? '  — ' + c.desc : ''}`);
+      if (list.length > 30) console.log(`  … 另 ${list.length - 30} 条，见 CAPABILITY.md`);
+    }
+    if (proseHits.length) {
+      console.log('\n### 全局约定 / 官方规则命中');
+      for (const l of proseHits.slice(0, 20)) console.log('  ' + l);
+      console.log(`\n  （完整内容见 registry/${name}/CAPABILITY.md）`);
+    }
+    if (!hits && !proseHits.length) console.log(`（${name} 中没有匹配 "${q}" 的能力）`);
+    return;
+  }
+
+  // 通用 CLI：扁平的命令节点树
+  if (Array.isArray(data.nodes)) {
+    // 官方 SKILL.md 里的行为规则也纳入检索：Agent 常问的是「怎样才算成功」这类问题
+    const ruleLines = (data.skill && data.skill.body ? data.skill.body.split('\n') : []).filter(
+      (l) => l.trim()
+    );
+    const ruleHits = q ? ruleLines.filter((l) => l.toLowerCase().includes(q)) : [];
+
+    if (!q) {
+      console.log(JSON.stringify(data.meta, null, 2));
+      console.log('\n命令：');
+      for (const n of data.nodes) {
+        const g = n.group ? `[${n.group}] ` : '';
+        console.log('  ' + g + n.path.join(' ') + (n.summary ? '  — ' + n.summary : ''));
+      }
+      if (data.skill) {
+        console.log(`\n另含官方 Agent 规则（${data.skill.source}），见 CAPABILITY.md 文末。`);
+      }
+      return;
+    }
+
+    const viaRoute = routeCommands((data.meta && data.meta.command) || name);
+    const hits = data.nodes.filter(
+      (n) =>
+        n.path.join(' ').toLowerCase().includes(q) ||
+        (n.summary || '').toLowerCase().includes(q) ||
+        (n.group || '').toLowerCase().includes(q) ||
+        viaRoute.has(n.path[n.path.length - 1]) ||
+        (n.options || []).some((o) => o.flags.toLowerCase().includes(q))
+    );
+    printRoutes();
+    for (const n of hits) {
+      console.log(`\n### ${n.path.join(' ')}${n.group ? '   [' + n.group + ']' : ''}`);
+      if (n.summary) console.log(n.summary);
+      if (n.usage) console.log('  ' + n.usage);
+      if (n.options && n.options.length) for (const o of n.options) console.log(`  ${o.flags}  ${o.desc}`);
+    }
+    if (ruleHits.length) {
+      console.log('\n### 官方 Agent 规则命中');
+      for (const l of ruleHits.slice(0, 20)) console.log('  ' + l.trim());
+      console.log(`\n  （完整规则见 registry/${name}/CAPABILITY.md 文末「官方 Agent 使用规则」）`);
+    }
+    if (!hits.length && !ruleHits.length && !routeHits.length) {
+      console.log(`（${name} 中没有匹配 "${q}" 的能力）`);
+    }
+    return;
+  }
+
+  // 源码聚合型（如飞书 CLI）：按业务域组织
+  if (Array.isArray(data.skills)) {
+    if (!q) {
+      console.log(JSON.stringify(data.meta, null, 2));
+      console.log('\n业务域：');
+      for (const s of data.skills) {
+        console.log(
+          `  ${s.name.padEnd(30)} ${s.shortcuts.length} 快捷命令 / ${s.apis.length} API 方法`
+        );
+      }
+      return;
+    }
+    let hits = 0;
+    for (const s of data.skills) {
+      const domHit = s.name.toLowerCase().includes(q) || (s.description || '').toLowerCase().includes(q);
+      const cmds = s.shortcuts.filter(
+        (c) => c.name.toLowerCase().includes(q) || (c.desc || '').toLowerCase().includes(q)
+      );
+      const apis = s.apis.filter(
+        (a) => `${a.resource}.${a.method}`.toLowerCase().includes(q) || (a.desc || '').toLowerCase().includes(q)
+      );
+      if (!domHit && !cmds.length && !apis.length) continue;
+      hits++;
+      console.log(`\n### ${s.name}  [${s.prefixes.join(' / ')}]`);
+      if (domHit && s.description) console.log(s.description.slice(0, 400));
+      for (const c of (domHit ? s.shortcuts : cmds)) {
+        console.log(`  lark-cli ${s.prefixes[0]} ${c.name}${c.desc ? '  — ' + c.desc : ''}`);
+      }
+      for (const a of (domHit ? s.apis : apis).slice(0, 40)) {
+        console.log(`  lark-cli ${s.prefixes[0]} ${a.resource} ${a.method}  — ${a.desc}`);
+      }
+    }
+    printRoutes();
+    // 路由里点名的快捷命令直接列出来，省得再去业务域里翻
+    const named = new Set();
+    for (const r of routeHits) {
+      for (const m of String(r.command).match(/\+[a-z][\w-]*/g) || []) named.add(m);
+    }
+    if (named.size) {
+      console.log('\n### 路由点名的快捷命令');
+      for (const s of data.skills) {
+        for (const c of s.shortcuts) {
+          if (named.has(c.name)) {
+            console.log(`  lark-cli ${s.prefixes[0]} ${c.name}${c.desc ? '  — ' + c.desc : ''}`);
+          }
+        }
+      }
+    }
+    if (!hits && !routeHits.length) console.log(`（${name} 中没有匹配 "${q}" 的能力）`);
+    return;
+  }
+
+  console.log(JSON.stringify(data.meta || {}, null, 2));
+}
+
+// ---------------------------------------------------------------- 入口
+
+function parseArgs(argv) {
+  const pos = [];
+  const flags = {};
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--') {
+      pos.push(...argv.slice(i + 1));
+      break;
+    }
+    if (a.startsWith('--')) {
+      const eq = a.indexOf('=');
+      const k = a.slice(2, eq < 0 ? undefined : eq);
+      if (eq >= 0) flags[k] = a.slice(eq + 1);
+      else if (argv[i + 1] && !argv[i + 1].startsWith('-')) flags[k] = argv[++i];
+      else flags[k] = true;
+    } else pos.push(a);
+  }
+  return { pos, flags };
+}
+
+async function main() {
+  const { pos, flags } = parseArgs(process.argv.slice(2));
+  const sub = pos[0];
+
+  if (!sub || sub === 'help' || flags.help) {
+    console.log(
+      `cli-cap — 通用 CLI 能力提取器\n\n` +
+        `  scan <command> [options]\n` +
+        `      --name <name>        注册名（默认取命令名）\n` +
+        `      --desc "<text>"      一句话能力描述\n` +
+        `      --skill <path>       合并厂商官方 SKILL.md 的 Agent 规则\n` +
+        `      --depth <n>          递归深度，0=仅顶层（默认 1）\n` +
+        `      --max <n>            最多抓取多少节点（默认 300）\n` +
+        `      --timeout <ms>       单次 help 超时（默认 8000）\n` +
+        `      --help-flag <flag>   强制用指定 help flag（默认依次试 --help / -h）\n` +
+        `      --extra-cmds "<args>" --help 只列常用子命令时，用它补全\n` +
+        `      --title/--repo/--license/--install  溯源信息（通常由 bin/skill-digest 从 clis.json 传入）\n` +
+        `  list                     列出能力库已收录的 CLI\n` +
+        `  index                    重建 INDEX.md 与 docs/index.html\n` +
+        `  show <name> [关键词]      按关键词查已录入的能力\n` +
+        `  search <关键词>           跨 CLI 搜索路由、能力文档和规则（搜 flag 用 search -- --flag）\n` +
+        `  remember <name> --intent "需求" --command "命令模板" [--note "注意事项"]\n` +
+        `                           保存或更新路由并重建索引，不执行业务命令\n`
+    );
+    return;
+  }
+
+  if (sub === 'scan') {
+    const command = pos[1];
+    if (!command) throw new Error('缺少命令名');
+    await cmdScan(command, {
+      name: flags.name || path.basename(command),
+      depth: Number(flags.depth ?? 1),
+      maxCommands: Number(flags.max ?? 300),
+      timeout: Number(flags.timeout ?? 8000),
+      desc: flags.desc || '',
+      skill: flags.skill ? String(flags.skill) : null,
+      helpFlag: flags['help-flag'] ? String(flags['help-flag']) : null,
+      extraCmds: flags['extra-cmds'] ? String(flags['extra-cmds']).split(/\s+/) : null,
+      // 溯源信息：由 clis.json 提供，让 help 型 CLI 的快照与 skill 型保持同一套元数据
+      title: flags.title ? String(flags.title) : '',
+      repo: flags.repo ? String(flags.repo) : '',
+      license: flags.license ? String(flags.license) : '',
+      installCmd: flags.install ? String(flags.install) : '',
+    });
+    // 被 bin/refresh 批量调用时用 --no-index 跳过，避免每采一个就重建一次索引
+    if (!flags['no-index']) cmdIndex();
+    return;
+  }
+  if (sub === 'list') {
+    for (const it of listRegistry().sort((a, b) => a.name.localeCompare(b.name))) {
+      console.log(`${it.name.padEnd(16)} ${String(it.nodes || '—').padStart(5)} 命令  ${it.description}`);
+    }
+    return;
+  }
+  if (sub === 'index') return cmdIndex();
+  if (sub === 'show') return cmdShow(pos[1], pos.slice(2));
+  if (sub === 'search') return cmdSearch(pos.slice(1));
+  if (sub === 'remember') {
+    if (pos.length !== 2) throw new Error('用法：remember <名字> --intent "需求" --command "命令模板" [--note "注意事项"]');
+    return cmdRemember(pos[1], flags);
+  }
+
+  throw new Error(`未知子命令：${sub}`);
+}
+
+if (require.main === module) {
+  main().catch((e) => {
+    process.stderr.write(`✗ ${e.message}\n`);
+    process.exit(1);
+  });
+}
+
+module.exports = { parseHelp, parseCommandLine, parseOptionLine, classifyHeader };

@@ -1,0 +1,32 @@
+在指定日历中创建日程，开始时间和结束时间使用 RFC3339 格式。
+
+Usage:
+  wps365-cli calendar event create <calendar-id> [flags]
+
+Examples:
+wps365-cli calendar event create primary --name "项目评审" --start "2024-01-15T14:30:00+08:00" --end "2024-01-15T15:30:00+08:00"
+wps365-cli calendar event create primary --name "项目评审" --start "2024-01-15T14:30:00+08:00" --end "2024-01-15T15:30:00+08:00" --reminders "30,10"
+wps365-cli calendar event create primary --name "周会" --start "2024-01-15T14:30:00+08:00" --end "2024-01-15T15:30:00+08:00" --location "3F 会议室"
+
+Flags:
+      --description string           日程描述，最长 2000 字符
+      --end string                   (required) 结束时间，RFC3339 格式，例如 2024-01-15T15:30:00+08:00
+      --free-busy-status string      忙闲状态
+  -h, --help                         help for create
+      --location string              地点名称
+      --name string                  日程标题
+      --online-meeting-body string   在线会议配置 JSON
+      --recurrence-body string       重复规则 JSON
+      --reminders string             提醒时间，单位为分钟，多个用逗号分隔
+      --start string                 (required) 起始时间，RFC3339 格式，例如 2024-01-15T14:30:00+08:00
+      --token-type string            authentication identity: delegated|app
+      --visibility string            可见性
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

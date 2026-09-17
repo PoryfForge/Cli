@@ -1,0 +1,22 @@
+在指定数据表中创建字段。
+
+Usage:
+  wps365-cli dbsheet field create <file-id> <sheet-id> [flags]
+
+Examples:
+wps365-cli dbsheet field create f_abc123 12345 --fields-body '[{"name":"优先级","type":"SingleSelect"}]'
+
+Flags:
+      --fields-body string   字段定义 JSON 数组
+  -h, --help                 help for create
+      --prefer-id            是否优先使用指定 ID
+      --token-type string    authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

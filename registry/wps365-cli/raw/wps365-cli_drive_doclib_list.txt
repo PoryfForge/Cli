@@ -1,0 +1,34 @@
+获取当前用户有权限的文档库/团队文档列表。返回项含 drive 与 group。
+查询团队中的文件（两步，没有单接口）：取结果里的
+items[].drive.id（doclib 没有顶层 drive_id），再执行
+`drive file list <drive_id> 0`
+（GET /v7/drives/{drive_id}/files/{parent_id}/children，
+根目录 parent_id=0）。不要走
+`drive list --allotee-type group` 作为主路径。
+全员团队：在结果里筛 data.items[].group.type == "whole"
+（不是 org_normal；GET /v7/doclibs 没有 type 过滤；
+公开 OpenAPI 的 group_type 枚举没有 whole，也没有「全员」字样）。
+不要用 GET /v7/doclib/search 列文件。
+
+Usage:
+  wps365-cli drive doclib list [flags]
+
+Examples:
+wps365-cli drive doclib list --page-size 20
+wps365-cli drive doclib list --page-size 20 --user-role owner
+
+Flags:
+  -h, --help                help for list
+      --page-size int       (required) 每页数量
+      --page-token string   翻页 token
+      --token-type string   authentication identity: delegated|app
+      --user-role string    按角色过滤（owner/admin/normal），多个用逗号分隔
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

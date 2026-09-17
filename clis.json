@@ -1,0 +1,116 @@
+{
+  "_comment": "收录清单：本库收了哪些 CLI、每个的能力从哪来、怎么采集。新增一个 CLI = 往 clis 里加一条记录，然后跑 bin/refresh <name>。脚本本身不用改。",
+  "_scope": "只收厂商提供的 SaaS 能力型 CLI（有账号体系、调用有副作用、官方另有写给 Agent 的规则）。系统自带工具、包管理器、数据库客户端不在范围内。",
+  "_fields": {
+    "name": "注册名，对应 registry/<name>/",
+    "command": "可执行文件名",
+    "repo": "官方仓库，用于溯源与 release 查询",
+    "profile": "解析档，决定能力怎么写进文档。可选：lark / wecom / help-tree",
+    "acquire.kind": "skill-repo（下载仓库源码解出 skills/）或 release-bin（取官方 release 可执行文件跑 --help）"
+  },
+  "clis": [
+    {
+      "name": "feishu-cli",
+      "title": "飞书 CLI",
+      "command": "lark-cli",
+      "repo": "https://github.com/larksuite/cli",
+      "license": "MIT",
+      "install": "npx @larksuite/cli@latest install",
+      "homepage": "https://github.com/larksuite/cli",
+      "acquire": {
+        "kind": "skill-repo",
+        "profile": "lark",
+        "srcDir": ".cache/src/lark-cli",
+        "ref": "main",
+        "tarball": "https://codeload.github.com/larksuite/cli/tar.gz/refs/heads/main",
+        "stripPrefix": "cli-main",
+        "versionFrom": "package.json",
+        "vendor": ["AGENTS.md", "README.zh.md"],
+        "extract": [
+          "skills",
+          "affordance",
+          "skill-template",
+          "README.md",
+          "README.zh.md",
+          "AGENTS.md",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "name": "wecom-cli",
+      "title": "企业微信 CLI",
+      "command": "wecom-cli",
+      "repo": "https://github.com/WecomTeam/wecom-cli",
+      "license": "MIT",
+      "install": "npm install -g @wecom/cli",
+      "homepage": "https://github.com/WecomTeam/wecom-cli",
+      "acquire": {
+        "kind": "skill-repo",
+        "profile": "wecom",
+        "srcDir": ".cache/src/wecom-cli",
+        "ref": "main",
+        "tarball": "https://codeload.github.com/WecomTeam/wecom-cli/tar.gz/refs/heads/main",
+        "stripPrefix": "wecom-cli-main",
+        "versionFrom": "package.json",
+        "vendor": ["AGENTS.md", "docs/cli-reference.md", "docs/skills.md"],
+        "extract": [
+          "skills",
+          "docs",
+          "AGENTS.md",
+          "README.md",
+          "package.json",
+          "CHANGELOG.md"
+        ]
+      }
+    },
+    {
+      "name": "dreamina",
+      "title": "即梦 CLI",
+      "command": "dreamina",
+      "repo": "https://jimeng.jianying.com/cli",
+      "license": "厂商专有",
+      "install": "curl -fsSL https://jimeng.jianying.com/cli | bash",
+      "homepage": "https://jimeng.jianying.com/cli",
+      "acquire": {
+        "kind": "local-bin",
+        "profile": "help-tree",
+        "skill": "~/.dreamina_cli/dreamina/SKILL.md",
+        "vendor": ["~/.dreamina_cli/dreamina/SKILL.md"],
+        "scan": {
+          "depth": 2,
+          "max": 80,
+          "desc": "即梦（Dreamina）官方 AIGC CLI：文生图 / 图生图 / 文生视频 / 图生视频 / 多模态参考，含账号、会话与任务管理"
+        }
+      }
+    },
+    {
+      "name": "wps365-cli",
+      "title": "WPS 365 CLI",
+      "command": "wps365-cli",
+      "repo": "https://github.com/wps365-open/cli",
+      "license": "MIT",
+      "install": "curl -fsSL https://open-docs.wpscdn.cn/cli/install.sh | bash",
+      "homepage": "https://github.com/wps365-open/cli",
+      "acquire": {
+        "kind": "release-bin",
+        "profile": "help-tree",
+        "binDir": ".cache/releases/wps365-cli",
+        "binName": "wps365-cli",
+        "version": "latest",
+        "asset": {
+          "darwin-arm64": "wps365-cli-aarch64-apple-darwin.tar.gz",
+          "darwin-x64": "wps365-cli-x86_64-apple-darwin.tar.gz",
+          "linux-arm64": "wps365-cli-aarch64-unknown-linux-gnu.tar.gz",
+          "linux-x64": "wps365-cli-x86_64-unknown-linux-gnu.tar.gz",
+          "win32-x64": "wps365-cli-x86_64-pc-windows-gnu.zip"
+        },
+        "scan": {
+          "depth": 3,
+          "max": 900,
+          "desc": "WPS 365 官方 CLI：日历、消息、通讯录、邮箱、云文档、智能文档、智能表格、多维表、会议 9 大业务域，另含 api 兜底命令与 spec 管理"
+        }
+      }
+    }
+  ]
+}

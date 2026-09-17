@@ -1,0 +1,24 @@
+在指定父目录下创建新文件或文件夹。
+
+Usage:
+  wps365-cli drive file create <drive-id> <parent-id> [flags]
+
+Examples:
+wps365-cli drive file create dr_1 0 --name "新建文件夹" --file-type folder
+
+Flags:
+      --file-type string          (required) 文件类型
+  -h, --help                      help for create
+      --id-type string            ID 类型
+      --name string               (required) 名称
+      --on-name-conflict string   同名冲突策略
+      --token-type string         authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

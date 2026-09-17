@@ -1,0 +1,31 @@
+列出数据表中的所有记录，支持筛选和分页。
+
+Usage:
+  wps365-cli dbsheet record list <file-id> <sheet-id> [flags]
+
+Examples:
+wps365-cli dbsheet record list f_abc123 12345
+wps365-cli dbsheet record list f_abc123 12345 --page-size 50 --show-fields-info
+
+Flags:
+      --fields string            返回字段列表，多个用逗号分隔
+      --filter-body string       筛选条件 JSON
+  -h, --help                     help for list
+      --max-records int          最大记录数
+      --page-size int            每页大小
+      --page-token string        分页 token
+      --prefer-id                是否优先使用指定 ID
+      --show-fields-info         是否返回字段 schema
+      --show-record-extra-info   是否返回记录额外信息
+      --text-value string        文本值格式
+      --token-type string        authentication identity: delegated|app
+      --view-id string           视图 ID
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,875 @@
+{
+  "meta": {
+    "name": "dreamina",
+    "title": "即梦 CLI",
+    "command": "dreamina",
+    "version": "673dd28-dirty",
+    "description": "即梦（Dreamina）官方 AIGC CLI：文生图 / 图生图 / 文生视频 / 图生视频 / 多模态参考，含账号、会话与任务管理",
+    "scannedAt": "2026-09-17 06:53:16",
+    "depth": 2,
+    "source": "local-bin + help-tree + official-skill",
+    "nodes": 23,
+    "repo": "https://jimeng.jianying.com/cli",
+    "license": "厂商专有",
+    "install": "curl -fsSL https://jimeng.jianying.com/cli | bash",
+    "officialSkill": {
+      "name": "dreamina-cli",
+      "source": "~/.dreamina_cli/dreamina/SKILL.md"
+    }
+  },
+  "root": {
+    "path": [
+      "dreamina"
+    ],
+    "depth": 0,
+    "usage": "dreamina [flags]",
+    "summary": "",
+    "options": [],
+    "groups": [],
+    "children": [
+      "help",
+      "list_task",
+      "login",
+      "logout",
+      "query_result",
+      "relogin",
+      "session",
+      "user_credit",
+      "version",
+      "frames2video",
+      "image2image",
+      "image2video",
+      "image_upscale",
+      "multiframe2video",
+      "multimodal2video",
+      "text2image",
+      "text2video"
+    ],
+    "helpFlag": "--help"
+  },
+  "nodes": [
+    {
+      "path": [
+        "dreamina"
+      ],
+      "depth": 0,
+      "usage": "dreamina [flags]",
+      "summary": "",
+      "options": [],
+      "groups": [],
+      "children": [
+        "help",
+        "list_task",
+        "login",
+        "logout",
+        "query_result",
+        "relogin",
+        "session",
+        "user_credit",
+        "version",
+        "frames2video",
+        "image2image",
+        "image2video",
+        "image_upscale",
+        "multiframe2video",
+        "multimodal2video",
+        "text2image",
+        "text2video"
+      ],
+      "helpFlag": "--help"
+    },
+    {
+      "path": [
+        "dreamina",
+        "help"
+      ],
+      "depth": 1,
+      "usage": "dreamina help [command] [flags]",
+      "summary": "Help about any command",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for help"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "list_task"
+      ],
+      "depth": 1,
+      "usage": "dreamina list_task [flags]",
+      "summary": "List saved tasks with status and result summary",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "--gen_status string",
+          "desc": "filter by gen_status"
+        },
+        {
+          "flags": "--gen_task_type string",
+          "desc": "filter by gen_task_type"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list_task"
+        },
+        {
+          "flags": "--limit int",
+          "desc": "max number of tasks to return (default 20)"
+        },
+        {
+          "flags": "--offset int",
+          "desc": "offset for pagination"
+        },
+        {
+          "flags": "--submit_id string",
+          "desc": "filter by submit_id"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "login"
+      ],
+      "depth": 1,
+      "usage": "dreamina login [flags]",
+      "summary": "Log in locally with OAuth Device Flow before using task and account commands",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "--headless",
+          "desc": "print OAuth authorization material and exit without polling checklogin"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for login"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "logout"
+      ],
+      "depth": 1,
+      "usage": "dreamina logout [flags]",
+      "summary": "Clear the local OAuth login state",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for logout"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "query_result"
+      ],
+      "depth": 1,
+      "usage": "dreamina query_result [flags]",
+      "summary": "Query the current result of an async generation task",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "--download_dir string",
+          "desc": "download result media into the target directory"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for query_result"
+        },
+        {
+          "flags": "--submit_id string",
+          "desc": "task submit_id"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "relogin"
+      ],
+      "depth": 1,
+      "usage": "dreamina relogin [flags]",
+      "summary": "Clear the local OAuth login state and force a fresh OAuth login",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "--headless",
+          "desc": "print OAuth authorization material and exit without polling checklogin"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for relogin"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "session"
+      ],
+      "depth": 1,
+      "usage": "dreamina session [flags]",
+      "summary": "Manage sessions (create/list/search/rename/delete)",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for session"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": [
+        "create",
+        "list",
+        "search",
+        "rename",
+        "delete"
+      ]
+    },
+    {
+      "path": [
+        "dreamina",
+        "user_credit"
+      ],
+      "depth": 1,
+      "usage": "dreamina user_credit [flags]",
+      "summary": "Show the current user's remaining credit balance",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for user_credit"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "version"
+      ],
+      "depth": 1,
+      "usage": "dreamina version [flags]",
+      "summary": "Print build version and commit information",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for version"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "frames2video"
+      ],
+      "depth": 1,
+      "usage": "dreamina frames2video [flags]",
+      "summary": "Submit a Dreamina first-last-frames video task",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--first string",
+          "desc": "local first-frame image path"
+        },
+        {
+          "flags": "--last string",
+          "desc": "local last-frame image path"
+        },
+        {
+          "flags": "--prompt string",
+          "desc": "generation prompt"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--duration int",
+          "desc": "video duration in seconds; supported ranges: seedance1.5pro -> 5-12, seedance2.0 family/seedance2.0mini -> 4-15, seedance2.5 -> 4-30 (default 5)"
+        },
+        {
+          "flags": "--video_resolution string",
+          "desc": "required; supported values by model: seedance2.5 -> 480p, 720p, or 1080p; seedance2.0_vip -> 720p, 1080p, or 4k; all other models -> 720p"
+        },
+        {
+          "flags": "--model_version string",
+          "desc": "supported values: seedance1.5pro, seedance2.0, seedance2.0fast, seedance2.0_vip, seedance2.0fast_vip, seedance2.0mini, seedance2.5; default: seedance2.0_vip"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for frames2video"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "image2image"
+      ],
+      "depth": 1,
+      "usage": "dreamina image2image [flags]",
+      "summary": "Submit a Dreamina image-to-image task",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--images strings",
+          "desc": "local input image paths"
+        },
+        {
+          "flags": "--prompt string",
+          "desc": "edit prompt"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--ratio string",
+          "desc": "supported values: 21:9, 16:9, 3:2, 4:3, 1:1, 3:4, 2:3, 9:16; default: 16:9"
+        },
+        {
+          "flags": "--resolution_type string",
+          "desc": "required; supported values by model: 4.0/4.1/4.5/4.6/4.7/5.0 -> 2k or 4k; 5.0Pro -> 1.5k, 2k, or 4k"
+        },
+        {
+          "flags": "--width int",
+          "desc": "custom output width in pixels; requires --height; mutually exclusive with --ratio"
+        },
+        {
+          "flags": "--height int",
+          "desc": "custom output height in pixels; requires --width; mutually exclusive with --ratio"
+        },
+        {
+          "flags": "--model_version string",
+          "desc": "supported values: 4.0, 4.1, 4.5, 4.6, 4.7, 5.0, 5.0Pro; default: 5.0"
+        },
+        {
+          "flags": "--generate_num int",
+          "desc": "number of images to generate; supported range: 1-10 (default 1)"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for image2image"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "image2video"
+      ],
+      "depth": 1,
+      "usage": "dreamina image2video [flags]",
+      "summary": "Animate one image into video; use multiframe2video for multi-image stories",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--image string",
+          "desc": "local first-frame image path"
+        },
+        {
+          "flags": "--prompt string",
+          "desc": "generation prompt"
+        },
+        {
+          "flags": "--duration int",
+          "desc": "video duration in seconds; supported ranges by model: seedance1.0fast -> 5-10, seedance1.5pro -> 5-12, seedance2.0 family/seedance2.0mini -> 4-15, seedance2.5 -> 4-30 (default 5)"
+        },
+        {
+          "flags": "--video_resolution string",
+          "desc": "required; supported values by model: seedance2.5 -> 480p, 720p, or 1080p; seedance2.0_vip -> 720p, 1080p, or 4k; all other models -> 720p"
+        },
+        {
+          "flags": "--model_version string",
+          "desc": "supported values: seedance1.0fast, seedance1.5pro, seedance2.0, seedance2.0fast, seedance2.0_vip, seedance2.0fast_vip, seedance2.0mini, seedance2.5"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for image2video"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "image_upscale"
+      ],
+      "depth": 1,
+      "usage": "dreamina image_upscale [flags]",
+      "summary": "Submit a Dreamina image upscale task",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--image string",
+          "desc": "local input image path"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--resolution_type string",
+          "desc": "supported values: 2k, 4k, 8k"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for image_upscale"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "multiframe2video"
+      ],
+      "depth": 1,
+      "usage": "dreamina multiframe2video [flags]",
+      "summary": "Create a coherent video story from multiple images",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--images strings",
+          "desc": "local reference image paths"
+        },
+        {
+          "flags": "--prompt string",
+          "desc": "shorthand prompt for exactly 2 images"
+        },
+        {
+          "flags": "--duration float",
+          "desc": "shorthand transition duration in seconds for exactly 2 images; supported range: 1-8; total duration must be >= 2 (default 3)"
+        },
+        {
+          "flags": "--video_resolution string",
+          "desc": "required; supported values: 720p, 1080p"
+        },
+        {
+          "flags": "--transition-prompt stringArray",
+          "desc": "repeat once per transition segment; for N images provide N-1 prompts"
+        },
+        {
+          "flags": "--transition-duration stringArray",
+          "desc": "repeat once per transition segment in seconds; supported range: 1-8; for N images provide N-1 durations, or omit to default each segment to 3"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for multiframe2video"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "multimodal2video"
+      ],
+      "depth": 1,
+      "usage": "dreamina multimodal2video [flags]",
+      "summary": "Dreamina flagship video mode (全能参考 / formerly ref2video) with all-around references and Seedance",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--image stringArray",
+          "desc": "repeat for each local input image path"
+        },
+        {
+          "flags": "--video stringArray",
+          "desc": "repeat for each local input video path"
+        },
+        {
+          "flags": "--audio stringArray",
+          "desc": "repeat for each local input audio path"
+        },
+        {
+          "flags": "--prompt string",
+          "desc": "optional multimodal edit prompt"
+        },
+        {
+          "flags": "--duration int",
+          "desc": "video duration in seconds; supported ranges by model: seedance2.5 -> 4-30; all other models -> 4-15 (default 5)"
+        },
+        {
+          "flags": "--ratio string",
+          "desc": "supported values: 1:1, 3:4, 16:9, 4:3, 9:16, 21:9"
+        },
+        {
+          "flags": "--video_resolution string",
+          "desc": "required; supported values by model: seedance2.5 -> 480p, 720p, or 1080p; seedance2.0_vip -> 720p, 1080p, or 4k; all other models -> 720p"
+        },
+        {
+          "flags": "--model_version string",
+          "desc": "supported values: seedance2.0, seedance2.0fast, seedance2.0_vip, seedance2.0fast_vip, seedance2.0mini, seedance2.5"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for multimodal2video"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "text2image"
+      ],
+      "depth": 1,
+      "usage": "dreamina text2image [flags]",
+      "summary": "Submit a Dreamina text-to-image task",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--prompt string",
+          "desc": "generation prompt"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--ratio string",
+          "desc": "supported values: 21:9, 16:9, 3:2, 4:3, 1:1, 3:4, 2:3, 9:16; default: 16:9"
+        },
+        {
+          "flags": "--resolution_type string",
+          "desc": "required; supported values by model: 3.0/3.1 -> 1k or 2k; 4.0/4.1/4.5/4.6/4.7/5.0 -> 2k or 4k; 5.0Pro -> 1.5k, 2k, or 4k"
+        },
+        {
+          "flags": "--width int",
+          "desc": "custom output width in pixels; requires --height; mutually exclusive with --ratio"
+        },
+        {
+          "flags": "--height int",
+          "desc": "custom output height in pixels; requires --width; mutually exclusive with --ratio"
+        },
+        {
+          "flags": "--model_version string",
+          "desc": "supported values: 3.0, 3.1, 4.0, 4.1, 4.5, 4.6, 4.7, 5.0, 5.0Pro; default: 5.0"
+        },
+        {
+          "flags": "--generate_num int",
+          "desc": "number of images to generate; supported range: 1-10 (default 1)"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for text2image"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "text2video"
+      ],
+      "depth": 1,
+      "usage": "dreamina text2video [flags]",
+      "summary": "Submit a Dreamina text-to-video task",
+      "detail": "",
+      "group": "Generator Commands",
+      "options": [
+        {
+          "flags": "--prompt string",
+          "desc": "generation prompt"
+        },
+        {
+          "flags": "--session int",
+          "desc": "session id (default 0 \"默认对话\")"
+        },
+        {
+          "flags": "--duration int",
+          "desc": "video duration in seconds; supported ranges by model: seedance2.5 -> 4-30; all other models -> 4-15 (default 5)"
+        },
+        {
+          "flags": "--ratio string",
+          "desc": "supported values: 1:1, 3:4, 16:9, 4:3, 9:16, 21:9"
+        },
+        {
+          "flags": "--video_resolution string",
+          "desc": "required; supported values by model: seedance2.5 -> 480p, 720p, or 1080p; seedance2.0_vip -> 720p, 1080p, or 4k; all other models -> 720p"
+        },
+        {
+          "flags": "--model_version string",
+          "desc": "supported values: seedance2.0, seedance2.0fast, seedance2.0_vip, seedance2.0fast_vip, seedance2.0mini, seedance2.5; default: seedance2.0fast"
+        },
+        {
+          "flags": "--poll int",
+          "desc": "submit then poll query_result for up to N seconds at 1s intervals (0 disables polling)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for text2video"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "session",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "dreamina session create [name] [flags]",
+      "summary": "Create a new session (auto-named or custom)",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "session",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "dreamina session list [flags]",
+      "summary": "List your recent sessions (alias: ls)",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "-n, --max-count int",
+          "desc": "maximum number of sessions to display (default 30)"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "session",
+        "search"
+      ],
+      "depth": 2,
+      "usage": "dreamina session search <name> [flags]",
+      "summary": "Find a session ID by its name (alias: find)",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for search"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "session",
+        "rename"
+      ],
+      "depth": 2,
+      "usage": "dreamina session rename <session_id> <new_name> [flags]",
+      "summary": "Change a session's name (alias: update)",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for rename"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "dreamina",
+        "session",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "dreamina session delete <session_id> [flags]",
+      "summary": "Delete a session (alias: rm)",
+      "detail": "",
+      "group": "Built-in Commands",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--version",
+          "desc": "print build version information"
+        }
+      ],
+      "children": []
+    }
+  ],
+  "skill": {
+    "name": "dreamina-cli",
+    "description": "Use when an agent needs Dreamina（即梦） login, sessions, task history, or image/video generation through the dreamina CLI.",
+    "body": "# Dreamina CLI\n\nUse this skill when you need Dreamina（即梦） image or video generation, login, session management, or task history work through `dreamina`.\n\n即梦 is the Chinese product name of Dreamina. If the user says 即梦, treat it as Dreamina and use this skill.\n\nThis skill is intentionally short. Detailed flags and supported values belong to the CLI itself, so always treat `dreamina -h` and `dreamina <subcommand> -h` as the primary reference.\n\n## What this tool is for\n\n`dreamina` is the local CLI entrypoint for all currently exposed Dreamina（即梦） image and video generation workflows, plus the account/session operations around them.\n\nUse it for:\n\n- checking or reusing an existing Dreamina login session\n- checking account credit\n- managing sessions with `dreamina session`\n- clearing the local OAuth login state with `dreamina logout`\n- submitting image generation tasks\n- submitting video generation tasks\n- querying async task results and downloading result media\n- reviewing saved task history\n\n## Default workflow\n\nWhen using this CLI as an agent:\n\n1. Start with `dreamina -h`.\n2. Before using any command for real, run `dreamina <subcommand> -h`.\n3. Reuse the current login state unless the user explicitly asks you to `login`, `relogin`, `logout`, or finish a headless login with `checklogin`.\n4. When login is required, run `dreamina login` or `dreamina relogin`. The CLI uses OAuth Device Flow and prints `verification_uri`, `user_code`, and `device_code`.\n5. Default login waits for authorization to complete. With `--headless`, the CLI prints the device-flow material and exits; then use `dreamina login checklogin --device_code=<device_code>` to finish the login later.\n6. Be explicit about whether you are only reading help, submitting a real task, or querying an existing task.\n7. Warn the user before running commands that may consume credits.\n\n## Login completion: mandatory user-visible confirmation\n\n`dreamina login` / `dreamina relogin` prints OAuth Device Flow instructions and then waits for authorization. When the command finishes successfully, tell the user explicitly that login succeeded or the local OAuth state was reused.\n\n- **Do not** wait for the user to ask “登录好了吗”.\n- **Do not** stop after only sending the device code: keep the login command running, read stdout to the end, then confirm success/reuse/failure.\n- **Failure** must still be reported with the concrete error and the next step.\n\n## Choosing the right command\n\nAt a high level:\n\n- Use `user_credit` to check budget.\n- Use `session` to create, list, search, rename, or delete sessions; all generator commands accept `--session=<id>` and `0` is the default session.\n- Use `query_result` when you already have a `submit_id`; add `--download_dir` when you want the generated media saved locally.\n- Use `list_task` to review recent saved tasks, especially when you want to filter by status or task type.\n- Use `text2image` for prompt-only image generation, `image2image` for image-guided editing, and `image_upscale` for upscaling.\n- Use `text2video` for prompt-only video generation.\n- Use `image2video` when one main image is enough.\n- Use `frames2video` for first-and-last-frame driven video generation.\n- Use `multiframe2video` for Dreamina's fixed-model, image-only intelligent multi-frame flow: multiple images in, one coherent story video out. This command does not expose model selection.\n- Use `multimodal2video` for Dreamina's flagship video mode when the task needs all-around references across images, video, and audio, or when a Seedance 2.5 multi-image request needs model selection. If the legacy name `ref2video` appears, trust `dreamina -h` for the current command surface.\n\nFor the exact flags and supported combinations, rely on each subcommand's `-h`.\n\n## Model selection rule\n\nDo not hardcode model support from this skill.\n\nIf the user specifies a model, always check the relevant subcommand help before running it:\n\n```bash\ndreamina <subcommand> -h\n```\n\nUse the subcommand help to confirm:\n\n- whether that command exposes model selection\n- whether the requested model is supported on that command\n- what other constraints apply to that model, such as duration, ratio, resolution, or whether the command supports `model_version` at all\n\nAdditional guidance:\n\n- some commands do not expose model selection at all\n- runtime availability and queue capacity can change\n- if the user does not specify a model, preserve the subcommand's current default instead of overriding it\n- if the user expresses a speed or quality preference, inspect the current help and select a model only when that preference requires an explicit choice\n\n## How to judge submit acceptance and terminal success\n\nDo not rely on shell exit code alone.\n\nFor async generation commands, `submit_id` plus `gen_status=querying` means only that the submission was accepted. It is not evidence that generation finished successfully.\n\nTreat the task as terminally successful only when `gen_status=success`. If `gen_status=fail`, inspect `fail_reason` and reply proactively with the concrete reason.\n\nUse `--poll=N` on a generation command to wait for up to N seconds for a terminal result. If the command still returns `querying` after that bounded wait:\n\n- save the `submit_id`\n- continue with `query_result --submit_id=<id>` until the task reaches `success` or `fail`\n\n## Follow-up pattern for async tasks\n\nAfter a submit returns `querying` without reaching a terminal result during `--poll=N`:\n\n1. Save the `submit_id`.\n2. Use `query_result --submit_id=<id>` for follow-up.\n3. Use `list_task` when you want to review saved tasks in bulk.\n\nIf you are running a test sweep, keep results in a machine-readable format so you can query the returned `submit_id` values later.\n\n## Important user-facing rules\n\n- Some generation commands are asynchronous; submit and query are separate steps.\n- Some models may require a one-time authorization on Dreamina Web.\n  If the CLI returns `AigcComplianceConfirmationRequired`, reply proactively: ask them to complete that web-side confirmation first, then retry.\n- Do not assume that different commands support the same models, ratios, durations, or resolutions.\n  Check each subcommand's `-h` before use.\n\n## Good agent behavior\n\n- Relay OAuth Device Flow instructions exactly enough for the user to complete login.\n- Always close the loop when the login command finishes with a user-visible confirmation.\n- Prefer small, reviewable batches when running real generation tasks.\n- Keep a record of the command, arguments, `submit_id`, and final status for every paid test you run.\n- If you are preparing a report, separate:\n  - help-only inspection\n  - submit-stage validation\n  - later async result follow-up",
+    "source": "~/.dreamina_cli/dreamina/SKILL.md"
+  }
+}

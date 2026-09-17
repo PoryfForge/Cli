@@ -1,0 +1,21 @@
+获取指定用户所在的部门列表，仅支持应用身份。
+
+Usage:
+  wps365-cli user dept list <user-id> [flags]
+
+Examples:
+wps365-cli user dept list u123456
+
+Flags:
+  -h, --help                help for list
+      --id-type string      ID 类型
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

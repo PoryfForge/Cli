@@ -1,0 +1,23 @@
+{
+  "name": "dreamina",
+  "title": "即梦 CLI",
+  "command": "dreamina",
+  "version": "673dd28-dirty",
+  "description": "即梦（Dreamina）官方 AIGC CLI：文生图 / 图生图 / 文生视频 / 图生视频 / 多模态参考，含账号、会话与任务管理",
+  "scannedAt": "2026-09-17 06:53:16",
+  "depth": 2,
+  "source": "local-bin + help-tree + official-skill",
+  "nodes": 23,
+  "repo": "https://jimeng.jianying.com/cli",
+  "license": "厂商专有",
+  "install": "curl -fsSL https://jimeng.jianying.com/cli | bash",
+  "officialSkill": {
+    "name": "dreamina-cli",
+    "source": "~/.dreamina_cli/dreamina/SKILL.md"
+  },
+  "domains": 2,
+  "commands": 23,
+  "apiMethods": 0,
+  "refs": 0,
+  "manual": true
+}

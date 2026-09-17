@@ -1,0 +1,25 @@
+获取指定时间范围的会议简要信息列表（60天内）。不传 join-code 返回已结束会议，传 join-code 返回进行中会议。
+
+Usage:
+  wps365-cli meeting list [flags]
+
+Examples:
+wps365-cli meeting list --start "1700000000" --end "1700086400"
+
+Flags:
+      --end string          (required) 查询结束时间（unix 时间，单位 sec）
+  -h, --help                help for list
+      --join-code string    入会码；传入时只返回进行中的会议，不传时只返回已结束的会议。应用身份下必须传入
+      --page-size int       分页大小，默认 20，最大 50 (default 20)
+      --page-token string   分页标记
+      --start string        (required) 查询开始时间（unix 时间，单位 sec）
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

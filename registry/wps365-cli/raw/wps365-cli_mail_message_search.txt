@@ -1,0 +1,32 @@
+高级搜索邮件，支持多条件组合。仅支持用户登录后访问自己的邮箱。
+
+Usage:
+  wps365-cli mail message search [flags]
+
+Examples:
+wps365-cli mail message search --mailbox-ids "mbx_xxx" --keyword "项目报告"
+wps365-cli mail message search --mailbox-ids "mbx_xxx" --from "boss@example.com" --has-attachment true
+
+Flags:
+      --end int              结束时间戳
+      --folders string       搜索目录范围
+      --from string          按发件人搜索
+      --has-attachment       是否有附件
+  -h, --help                 help for search
+      --keyword string       搜索关键词
+      --mailbox-ids string   (required) 邮箱 ID，多个用逗号分隔
+      --page-size int        每页数量，1–10 (default 5)
+      --page-token string    分页标记
+      --start int            起始时间戳
+      --subject string       按标题搜索
+      --to string            按收件人搜索
+      --token-type string    authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

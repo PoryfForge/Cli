@@ -1,0 +1,24 @@
+答复日程邀请，支持接受、拒绝、暂定。
+
+Usage:
+  wps365-cli calendar event respond <calendar-id> <event-id> [flags]
+
+Examples:
+wps365-cli calendar event respond primary "evt_xxx" --status accepted --which-day-time "1705305000000"
+wps365-cli calendar event respond primary "evt_xxx" --status declined --which-day-time "1705305000000"
+
+Flags:
+  -h, --help                    help for respond
+      --mod-type string         (required) 答复范围，可选 normal、one、all (default "normal")
+      --status string           (required) 答复状态，可选 accepted、declined、tentative
+      --token-type string       authentication identity: delegated|app
+      --which-day-time string   (required) 日程开始时间戳（毫秒）
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

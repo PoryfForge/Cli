@@ -1,0 +1,24 @@
+使用 v2 结构化 JSON 替换目标段落的行内文本（POST /v7/airpage/v2/{file_id}/blocks/update）。
+--content 是一段纯文本，不是 Markdown。目标须是段落块 ID（可用 airpage block get 查看）。
+表格等复杂更新请用 api post /v7/airpage/v2/{file_id}/blocks/update。
+
+Usage:
+  wps365-cli airpage block update <file-id> [flags]
+
+Examples:
+wps365-cli airpage block update f_001 --block-id blk_001 --content "更新后的文本"
+
+Flags:
+      --block-id string     (required) 要更新的段落块 ID
+      --content string      (required) 替换后的一段纯文本（不是 Markdown）
+  -h, --help                help for update
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,21 @@
+主日历批量查询
+
+Usage:
+  wps365-cli calendar primary [command]
+
+Available Commands:
+  batch-get   批量获取主日历
+
+Flags:
+  -h, --help   help for primary
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)
+
+Use "wps365-cli calendar primary [command] --help" for more information about a command.

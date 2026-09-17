@@ -1,0 +1,27 @@
+查询企业用户列表，支持按状态过滤和分页，仅支持应用身份。
+
+Usage:
+  wps365-cli user list [flags]
+
+Examples:
+wps365-cli user list --status active
+wps365-cli user list --status active --status disabled --page-size 50
+
+Flags:
+  -h, --help                 help for list
+      --id-type string       ID 类型
+      --page-size int        分页大小，默认 10，最大 50 (default 10)
+      --page-token string    分页标记
+      --status stringArray   用户状态，可选值：active、notactive、disabled (default [active])
+      --token-type string    authentication identity: delegated|app
+      --with-dept            是否返回部门信息
+      --with-total           是否返回总数
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

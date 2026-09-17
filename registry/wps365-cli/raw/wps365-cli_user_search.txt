@@ -1,0 +1,31 @@
+搜索企业用户，支持按关键字和字段过滤。
+
+Usage:
+  wps365-cli user search [flags]
+
+Examples:
+wps365-cli user search --keyword "张" --page-size 20
+wps365-cli user search --keyword "zhang@example.com" --page-size 10 --search-field email
+
+Flags:
+  -h, --help                           help for search
+      --id-type string                 ID 类型
+      --keyword string                 (required) 搜索关键字
+      --page-size int                  分页大小
+      --page-token string              分页标记
+      --search-field stringArray       搜索字段，可选值：email、phone、user_name、login_name (default [user_name])
+      --search-source stringArray      搜索来源，可选值：company_user、enterprise_partner (default [company_user])
+      --search-source-v2 stringArray   搜索来源 v2，可选值：company_user、enterprise_partner
+      --status stringArray             用户状态过滤，可选值：active、notactive、disabled、dimission (default [active])
+      --token-type string              authentication identity: delegated|app
+      --user-type stringArray          用户类型，可选值：company_member、external_guest
+      --with-total                     是否返回总数
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

@@ -1,0 +1,350 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * skill-digest — 按 clis.json 清单采集一个 CLI 的能力快照。
+ *
+ * 它只做四件事：读清单 → 取源 → 交给对应解析档 → 写产物。
+ * 「不同厂商把能力写在哪儿」的差异全部收在 profiles/ 里，本文件不掺业务判断。
+ *
+ * 用法:
+ *   bin/skill-digest <名字>            采集清单里的一个 CLI
+ *   bin/skill-digest --all             采集全部
+ *   bin/skill-digest <名字> --fetch    强制重新下载源码/二进制
+ *   bin/skill-digest --list            列出清单内容
+ *
+ * 产物（registry/<名字>/）:
+ *   CAPABILITY.md        给 AI 查的能力快照
+ *   capability.json      结构化数据
+ *   capability.meta.json 索引用的元数据
+ *   raw/                 原始留档（源码 skills.json / help 原文）
+ *   vendor/              官方 SKILL.md 等原文（如有）
+ */
+
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const ROOT = path.resolve(__dirname, '..');
+const capmodel = require(path.join(ROOT, 'lib', 'capmodel.js'));
+const fetchsource = require(path.join(ROOT, 'lib', 'fetchsource.js'));
+
+const MANIFEST = path.join(ROOT, 'clis.json');
+const REGISTRY = path.join(ROOT, 'registry');
+
+// ---------------------------------------------------------------- 清单
+
+function loadManifest() {
+  if (!fs.existsSync(MANIFEST)) throw new Error(`找不到清单文件 ${MANIFEST}`);
+  const j = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
+  if (!Array.isArray(j.clis) || !j.clis.length) throw new Error('clis.json 里没有 clis 条目');
+  return j.clis;
+}
+
+function loadProfile(id) {
+  const p = path.join(ROOT, 'profiles', `${id}.js`);
+  if (!fs.existsSync(p)) {
+    const have = fs.existsSync(path.join(ROOT, 'profiles'))
+      ? fs.readdirSync(path.join(ROOT, 'profiles')).filter((f) => f.endsWith('.js')).map((f) => f.replace(/\.js$/, ''))
+      : [];
+    throw new Error(`没有名为 ${id} 的解析档。现有的：${have.join(', ') || '（无）'}`);
+  }
+  return require(p);
+}
+
+/** 从源码里的某个 JSON 文件读版本号 */
+function readVersion(srcDir, from) {
+  if (!from) return '';
+  const p = path.join(srcDir, from);
+  if (!fs.existsSync(p)) return '';
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8')).version || '';
+  } catch {
+    return '';
+  }
+}
+
+// ---------------------------------------------------------------- 采集
+
+/** skill-repo 型：下载源码 → 解析档解析 → 渲染 */
+async function runSkillRepo(entry, { force }) {
+  const spec = entry.acquire;
+  const srcDir = path.resolve(ROOT, spec.srcDir);
+  const outDir = path.join(REGISTRY, entry.name);
+
+  await fetchsource.fetchSkillRepo(spec, { dest: srcDir, force });
+  const commit = await fetchsource.resolveCommit(entry.repo, spec.ref || 'main');
+
+  const profile = loadProfile(spec.profile);
+  const { model, extraFiles } = profile.parse({
+    srcDir,
+    pkgVersion: readVersion(srcDir, spec.versionFrom),
+    entry,
+  });
+
+  // 清单是溯源信息的唯一来源，避免每个解析档各写一份
+  Object.assign(model.meta, {
+    title: model.meta.title || entry.title,
+    repo: entry.repo,
+    license: entry.license || model.meta.license,
+    install: entry.install || model.meta.install,
+  });
+  if (commit) model.meta.commit = commit.slice(0, 12);
+  if (commit) model.overview.push(['对应 commit', `\`${commit.slice(0, 12)}\``]);
+
+  fs.mkdirSync(path.join(outDir, 'raw'), { recursive: true });
+
+  // 把解析出来的中间结果留档，便于比对两次采集的差异
+  fs.writeFileSync(
+    path.join(outDir, 'raw', 'digest.json'),
+    JSON.stringify(
+      {
+        meta: model.meta,
+        domains: (model.domains || []).map((d) => ({
+          id: d.id,
+          label: d.label,
+          prefix: d.prefix,
+          commands: d.commands,
+        })),
+      },
+      null,
+      2
+    )
+  );
+
+  // 官方原文留档
+  const vendorDir = path.join(outDir, 'vendor');
+  fs.mkdirSync(vendorDir, { recursive: true });
+  for (const rel of spec.vendor || ['AGENTS.md']) {
+    const src = path.join(srcDir, rel);
+    if (fs.existsSync(src)) {
+      const dest = path.join(vendorDir, rel.replace(/[/\\]/g, '__'));
+      fs.copyFileSync(src, dest);
+    }
+  }
+
+  const files = {
+    'CAPABILITY.md': capmodel.render(model),
+    'capability.json': JSON.stringify(model, null, 2),
+    'capability.meta.json': JSON.stringify(capmodel.indexMeta(model), null, 2),
+    ...(extraFiles || {}),
+  };
+  for (const [name, content] of Object.entries(files)) {
+    fs.writeFileSync(path.join(outDir, name), content);
+  }
+
+  const cmdCount = [...(model.domains || []), ...(model.extras || [])].reduce(
+    (a, d) => a + (d.commands ? d.commands.length : 0),
+    0
+  );
+  process.stdout.write(
+    `✓ ${entry.title}（${entry.name}）能力快照 → registry/${entry.name}/\n` +
+      `  ${(model.domains || []).length} 个域 · ${cmdCount} 条命令 · 版本 ${model.meta.version || '—'}\n`
+  );
+  return { meta: model.meta, count: cmdCount };
+}
+
+/**
+ * release-bin 型：取官方 release 可执行文件，交给 cli-cap 跑 help 全树。
+ * 这里刻意不重新实现 help 解析 —— cli-cap 已经把它做扎实了。
+ */
+async function runReleaseBin(entry, { force }) {
+  const spec = entry.acquire;
+  const binDir = path.resolve(ROOT, spec.binDir);
+  // repo 写在清单条目顶层（所有 CLI 通用），采集层只认 acquire 内的 spec，这里补一下
+  const { binPath, version } = await fetchsource.fetchReleaseBinary(
+    { ...spec, repo: entry.repo },
+    { dest: binDir, force }
+  );
+  const scan = spec.scan || {};
+
+  const args = [
+    path.join(ROOT, 'bin', 'cli-cap'),
+    'scan',
+    binPath,
+    '--name', entry.name,
+    '--desc', scan.desc || entry.title,
+    '--depth', String(scan.depth ?? 1),
+    '--max', String(scan.max ?? 300),
+    '--no-index',
+    '--title', entry.title,
+    '--repo', entry.repo,
+  ];
+  if (entry.license) args.push('--license', entry.license);
+  if (entry.install) args.push('--install', entry.install);
+
+  const r = spawnSync(process.execPath, args, { stdio: ['ignore', 'inherit', 'inherit'], cwd: ROOT });
+  if (r.status !== 0) throw new Error(`help 全树扫描失败（退出码 ${r.status}）`);
+
+  // cli-cap 写的 meta 缺 title/repo，这里补齐后再写回，保证与其他 CLI 一致
+  const outDir = path.join(REGISTRY, entry.name);
+  const jsonPath = path.join(outDir, 'capability.json');
+  const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  Object.assign(data.meta, {
+    title: entry.title,
+    repo: entry.repo,
+    license: entry.license || '',
+    install: entry.install || '',
+    source: 'release-bin + help-tree',
+    release: version,
+  });
+  fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
+  fs.writeFileSync(
+    path.join(outDir, 'capability.meta.json'),
+    JSON.stringify({ ...normalizeMeta(data), manual: true }, null, 2)
+  );
+
+  process.stdout.write(`✓ ${entry.title}（${entry.name}）能力快照已就绪，release ${version}\n`);
+  return { meta: data.meta, count: (data.nodes || []).length };
+}
+
+/**
+ * local-bin 型：CLI 由厂商安装器装进 PATH，随包带了官方 SKILL.md。
+ * 即梦 CLI 走这条路 —— 能力在 help 全树里，行为规则在随包的 SKILL.md 里。
+ */
+async function runLocalBin(entry, { force }) {
+  const spec = entry.acquire;
+  const scan = spec.scan || {};
+  const which = spawnSync('sh', ['-c', `command -v ${entry.command}`], { encoding: 'utf8' });
+  const located = (which.stdout || '').trim();
+  if (!located && !force) {
+    throw new Error(
+      `PATH 里没有 ${entry.command}。先按官方方式安装：${entry.install || '见官网'}`
+    );
+  }
+
+  const args = [
+    path.join(ROOT, 'bin', 'cli-cap'),
+    'scan',
+    entry.command,
+    '--name', entry.name,
+    '--desc', scan.desc || entry.title,
+    '--depth', String(scan.depth ?? 1),
+    '--max', String(scan.max ?? 100),
+    '--no-index',
+    '--title', entry.title,
+    '--repo', entry.repo,
+    '--license', entry.license || '',
+  ];
+  if (entry.install) args.push('--install', entry.install);
+  const skillPath = spec.skill ? expandHome(spec.skill) : '';
+  if (skillPath && fs.existsSync(skillPath)) args.push('--skill', skillPath);
+
+  const r = spawnSync(process.execPath, args, { stdio: ['ignore', 'inherit', 'inherit'], cwd: ROOT });
+  if (r.status !== 0) throw new Error(`help 全树扫描失败（退出码 ${r.status}）`);
+
+  const outDir = path.join(REGISTRY, entry.name);
+  const jsonPath = path.join(outDir, 'capability.json');
+  const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  Object.assign(data.meta, {
+    title: entry.title,
+    repo: entry.repo,
+    license: entry.license || '',
+    install: entry.install || '',
+    source: skillPath && fs.existsSync(skillPath) ? 'local-bin + help-tree + official-skill' : 'local-bin + help-tree',
+  });
+  fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
+  fs.writeFileSync(
+    path.join(outDir, 'capability.meta.json'),
+    JSON.stringify({ ...normalizeMeta(data), manual: true }, null, 2)
+  );
+
+  // 官方原文留档
+  const vendorDir = path.join(outDir, 'vendor');
+  fs.mkdirSync(vendorDir, { recursive: true });
+  for (const rel of spec.vendor || []) {
+    const src = expandHome(rel);
+    if (fs.existsSync(src)) fs.copyFileSync(src, path.join(vendorDir, path.basename(src)));
+  }
+
+  process.stdout.write(`✓ ${entry.title}（${entry.name}）能力快照已就绪\n`);
+  return { meta: data.meta, count: (data.nodes || []).length };
+}
+
+/**
+ * help-tree 型的 meta 没有 domains/commands 这组归一化键，索引会读不到。
+ * skill 型由 lib/capmodel.js 的 indexMeta 负责，这里补齐 help 型。
+ */
+/**
+ * help-tree 型的 meta 没有 domains/commands 这组归一化键，索引会读不到。
+ * skill 型由 lib/capmodel.js 的 indexMeta 负责，这里补齐 help 型。
+ *
+ * domains 在 help 型里没有现成概念，按「顶层命令里带子命令、且不是工具链命令」来数 ——
+ * 这就是厂商自己说的「业务域」。数不出来时退回顶层命令的分组数（如即梦的
+ * Built-in / Generator Commands）。
+ */
+const INFRA_COMMANDS = new Set([
+  'help', 'version', 'completion', 'config', 'auth', 'login', 'logout', 'relogin',
+  'provider', 'spec', 'update', 'upgrade', 'mcp', 'api', 'session', 'cache', 'init',
+  'whoami', 'doctor', 'debug',
+]);
+
+function normalizeMeta(data) {
+  const meta = data.meta || {};
+  const nodes = data.nodes || [];
+  const d1 = nodes.filter((n) => (n.depth || 0) === 1);
+  let domains = d1.filter((n) => (n.children || []).length && !INFRA_COMMANDS.has(n.path[1])).length;
+  if (!domains) domains = new Set(d1.map((n) => n.group).filter(Boolean)).size;
+  return {
+    ...meta,
+    domains,
+    commands: meta.nodes || nodes.length || 0,
+    apiMethods: 0,
+    refs: 0,
+  };
+}
+
+function expandHome(p) {
+  return String(p || '').replace(/^~(?=\/|$)/, process.env.HOME || '');
+}
+
+async function collect(entry, opts) {
+  const kind = entry.acquire && entry.acquire.kind;
+  if (kind === 'skill-repo') return runSkillRepo(entry, opts);
+  if (kind === 'release-bin') return runReleaseBin(entry, opts);
+  if (kind === 'local-bin') return runLocalBin(entry, opts);
+  throw new Error(`clis.json 里 ${entry.name} 的 acquire.kind 不认识：${kind}`);
+}
+
+// ---------------------------------------------------------------- 入口
+
+async function main() {
+  const argv = process.argv.slice(2);
+  const force = argv.includes('--fetch') || argv.includes('--force');
+  const all = argv.includes('--all');
+  const positional = argv.filter((a) => !a.startsWith('--'));
+
+  const clis = loadManifest();
+
+  if (argv.includes('--list') || (!all && !positional.length)) {
+    process.stdout.write('清单（clis.json）：\n\n');
+    for (const c of clis) {
+      const kind = c.acquire.kind;
+      const how =
+        kind === 'skill-repo'
+          ? `skill-repo / ${c.acquire.profile} / ${c.acquire.ref || 'main'}`
+          : `${kind} / ${c.acquire.profile}`;
+      process.stdout.write(`  ${c.name.padEnd(14)} ${String(c.title).padEnd(14)} ${how}\n`);
+    }
+    process.stdout.write(
+      '\n用法：bin/skill-digest <名字> | --all | --list [--fetch]\n' +
+        '提示：采集完别忘了重建索引 —— bin/cli-cap index\n'
+    );
+    return;
+  }
+
+  const targets = all ? clis : positional.map((n) => {
+    const e = clis.find((c) => c.name === n);
+    if (!e) throw new Error(`清单里没有 ${n}。现有：${clis.map((c) => c.name).join(', ')}`);
+    return e;
+  });
+
+  for (const entry of targets) {
+    await collect(entry, { force });
+  }
+}
+
+main().catch((e) => {
+  process.stderr.write(`✗ ${e.message}\n`);
+  process.exit(1);
+});

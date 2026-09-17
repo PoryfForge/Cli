@@ -1,0 +1,847 @@
+{
+  "meta": {
+    "name": "wecom-cli",
+    "title": "企业微信 CLI",
+    "command": "wecom-cli",
+    "version": "1.3.0",
+    "repo": "https://github.com/WecomTeam/wecom-cli",
+    "license": "MIT",
+    "install": "npm install -g @wecom/cli",
+    "scannedAt": "2026-09-17 06:52:39",
+    "source": "skill-repo",
+    "nodes": 93,
+    "stats": {
+      "技能域": 12,
+      "文档内命令": 93,
+      "参考文档": 51
+    },
+    "commit": "dcf6929884b5"
+  },
+  "tagline": "企业微信官方 CLI（Rust 实现，经 npm 包 `@wecom/cli` 分发），覆盖消息、邮件、在线文档、在线表格、智能表格、智能文档、待办、日程、会议、微盘、通讯录等办公能力。命令树由服务端 discovery 动态下发，随附 **14 个官方 Agent Skills**。",
+  "howToUse": [
+    "先读下面「全局约定」的第一节，把三个前置检查做完 —— 这个 CLI 的命令树需要凭证才能列出。",
+    "按场景在「能力域总表」里找到对应域，再到「命令全量清单」里取命令。",
+    "命令是 `<service> [resource...] <method>` 形态，请求体优先用 `--json`；具体参数跑 `wecom-cli <service> <method> --help`。",
+    "本篇记录的是官方技能文档里写明的命令。**真实可用的服务列表以 `wecom-cli --help` 为准**（需先授权）。"
+  ],
+  "overview": [
+    [
+      "可执行文件",
+      "`wecom-cli`"
+    ],
+    [
+      "版本",
+      "`1.3.0`"
+    ],
+    [
+      "仓库",
+      "https://github.com/WecomTeam/wecom-cli"
+    ],
+    [
+      "官方 Agent Skills",
+      "14 个（12 个业务域 + 2 个辅助）"
+    ],
+    [
+      "文档内命令",
+      "93 条"
+    ],
+    [
+      "深度参考文档",
+      "51 篇"
+    ],
+    [
+      "快照时间",
+      "2026-09-17 06:52:39"
+    ],
+    [
+      "命令树来源",
+      "服务端 discovery 动态下发（**需凭证与网络**）"
+    ],
+    [
+      "对应 commit",
+      "`dcf6929884b5`"
+    ]
+  ],
+  "install": {
+    "code": "# 1. 安装 CLI（需要 Node.js >= 18）\nnpm install -g @wecom/cli\n\n# 2. 安装官方 Agent Skills（必需，否则 AI 读不到各域用法）\nnpx skills add WeComTeam/wecom-cli -y -g\n\n# 3. 初始化凭证：扫码或手填 Bot ID + Secret（仅需一次）\nwecom-cli auth init\n\n# 4. 确认授权状态（authorized 即就绪）\nwecom-cli auth show --status\n\n# 5. 确认 CLI 版本 >= 1.2.1（官方技能的硬要求）\nwecom-cli --version",
+    "notes": [
+      "凭证需要企业微信侧创建**智能机器人**并拿到 Bot ID / Secret（扫码接入可自动创建绑定）。",
+      "凭据加密存在 `~/.config/wecom/credentials.enc`（AES-256-GCM，0600），明文密钥不落盘。"
+    ]
+  },
+  "model": {
+    "title": "四类命令形态",
+    "intro": "这个 CLI 不像飞书那样有语义化的 `+快捷命令` 层，而是「服务方法调用」为主。命令树由服务端 discovery 下发后在本地构建，所以**没有网络和凭证就看不了帮助**。",
+    "rows": [
+      [
+        "形态",
+        "说明",
+        "备注"
+      ],
+      [
+        "`wecom-cli <service> [resource...] <method>`",
+        "调用远程服务方法",
+        "主力形态，方法可带嵌套资源路径"
+      ],
+      [
+        "`wecom-cli <service> +<helper>`",
+        "本地 helper",
+        "由产品层注册的本地组合动作"
+      ],
+      [
+        "`wecom-cli auth <init|show>`",
+        "授权管理",
+        "内建扩展命令"
+      ],
+      [
+        "`wecom-cli schema …` / `wecom-cli cache …`",
+        "schema 查询与缓存管理",
+        "**隐藏在 `--help` 之外**，调试与集成用"
+      ]
+    ],
+    "code": "# 列出所有服务与品类（需已授权）\nwecom-cli --help\n\n# 列出某服务下的全部方法\nwecom-cli <service> --help\n\n# 列出某方法需要的输入（含 TS 类型声明）\nwecom-cli <service> [resource...] <method> --help\nwecom-cli <service> <method> --doc\n\n# 内建：直接拿 schema\nwecom-cli schema list\nwecom-cli schema get <service.resource.method>",
+    "note": "`--schema` / `--doc` 在服务级与方法级都可用，是比翻文档更可靠的参数来源。"
+  },
+  "domainsIntro": "「能做什么（含触发场景）」这一列取自官方 skill 的 description 原文，是最可靠的路由依据。",
+  "domains": [
+    {
+      "id": "calendar",
+      "label": "calendar",
+      "prefix": "calendar` / `meeting",
+      "description": "企业微信日程管理。当用户需要预约日程、预订会议室、查看/更新/取消日程或查忙闲时触发。本技能负责『日程』——即不含在线会议链接的安排（也涵盖纯线下面对面碰头）；若用户要的是『在线会议』（含会议号/入会链接、可远程或视频参会），改用 wecomcli-meeting 技能。用户仅说'开会/约个会/某会'等、未明确要创建的是日程还是在线会议时，必须先读取本技能并按其中的消歧流程向用户追问确认后再处理，不可臆断直接创建。",
+      "note": "**适用**：预约 / 创建日程（含纯线下面对面碰头，即不带在线会议链接的安排）；查看 / 浏览日程（今天有什么安排、查本周日程）；搜索日程（按关键词、按组织人、按参与人找某个日程）；更新 / 修改日程（改时间、改地点、加减人、换会议室；不支持更新周期日程）；取消日程（不支持取消周期日程）　\n**不适用**：创建、更新、取消周期 / 重复日程（每周 / 每月 / 每天重复）→ 均不支持，引导用户在企业微信客户端手动操作；回复 / 拒绝日程邀请（接受 / 拒绝 / 待定，含\"拒绝这个日程\"\"不参加\"）→ 不支持，引导用户在企业微信客户端操作或私信发起人",
+      "commands": [
+        {
+          "name": "wecom-cli calendar schedules cancel",
+          "desc": "取消日程",
+          "ref": "references/calendar-cancel.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules create",
+          "desc": "",
+          "ref": "references/calendar-create.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules free list",
+          "desc": "查询参与人共同空闲",
+          "ref": "references/calendar-freebusy.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules get",
+          "desc": "读取日程详情",
+          "ref": "references/calendar-agenda.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules list",
+          "desc": "读取日程列表",
+          "ref": "references/calendar-agenda.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules search",
+          "desc": "搜索日程",
+          "ref": "references/calendar-search.md"
+        },
+        {
+          "name": "wecom-cli calendar schedules update",
+          "desc": "更新日程",
+          "ref": "references/calendar-update.md"
+        },
+        {
+          "name": "wecom-cli meeting rooms buildings list",
+          "desc": "",
+          "ref": "references/calendar-meeting-room.md"
+        },
+        {
+          "name": "wecom-cli meeting rooms search",
+          "desc": "",
+          "ref": "references/calendar-meeting-room.md"
+        }
+      ],
+      "_refs": 7
+    },
+    {
+      "id": "contact",
+      "label": "contact",
+      "prefix": "contact",
+      "description": "使用 wecom-cli 按姓名、拼音、英文名或别名搜索企业微信通讯录中的人员，并查询匹配人员的 userid、部门和职务。适用于查找联系人、区分同名人员、获取用户 userid，以及列出全部同名人员。",
+      "note": "",
+      "commands": [
+        {
+          "name": "wecom-cli contact users search",
+          "desc": "企业微信联系人搜索",
+          "ref": "SKILL.md"
+        }
+      ],
+      "_refs": 0
+    },
+    {
+      "id": "disk",
+      "label": "disk",
+      "prefix": "disk",
+      "description": "企业微信微盘（Disk / 网盘）文件操作技能。承接\"微盘 / 网盘\"里的文件列出、搜索、读取元信息、上传、下载、重命名、新建文件夹操作。用户明确提到\"微盘\"/\"网盘\"/\"共享空间\"时必须先读取本技能获取完整指引，不得凭记忆处理。用户说\"上传到微盘\"、\"帮我在微盘里搜一下 xxx\"、\"微盘那个 PPT 在哪\"、\"下载微盘那个文件\"、\"把微盘那个文件重命名成 xxx\"、或直接给出 `https://drive.weixin.qq.com/s?k=...` 形式的微盘文件链接时使用本技能。与 `wecomcli-doc` / `wecomcli-sheet` / `wecomcli-smartsheet` / `wecomcli-smartpage` 的区别：本技能处理微盘里所有文件（含在线文档）的搜索/列表/基础信息/位置/路径/重命名等文件级操作；在线文档（`doc/sheet/smartsheet/smartpage` 类型）的内容读写走对应文档技能，不由本技能接管。当用户问「这个文档在微盘哪里」或问某文件在微盘的位置时，由本技能用 get 返回空间名/文件夹名/路径等元信息。",
+      "note": "**适用**：列出微盘最近查看的文件；按关键词/类型/创建者/共享空间搜索微盘文件或文件夹；读取微盘文件基础信息；上传本地文件到微盘指定文件夹；下载微盘文件到本地　\n**不适用**：移动微盘文件或文件夹 → 告知用户暂未支持，建议前往企业微信客户端手动操作；删除微盘文件 / 复制微盘文件 → 告知用户暂未支持，建议前往企业微信客户端手动操作；删除 / 重命名微盘文件夹（`folder`）、调整目录树结构 → 告知用户暂未支持，建议前往企业微信客户端手动操作；创建 / 删除共享空间（`space`）、修改空间成员与空间设置 → 告知用户暂未支持，建议前往企业微信客户端手动操作",
+      "commands": [
+        {
+          "name": "wecom-cli disk files download",
+          "desc": "下载文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files get",
+          "desc": "读取文件信息",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files list",
+          "desc": "列出文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files rename",
+          "desc": "重命名文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files search",
+          "desc": "搜索文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk files upload",
+          "desc": "上传文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli disk folders create",
+          "desc": "创建文件夹",
+          "ref": "SKILL.md"
+        }
+      ],
+      "_refs": 0
+    },
+    {
+      "id": "doc",
+      "label": "doc",
+      "prefix": "doc",
+      "description": "企业微信在线 doc 文档技能。能够新建 doc、导入本地 .doc/.docx/.txt 为 doc、读取 doc 内容、向 doc 追加或覆盖写入。仅当用户明确出现「doc」「docx」「word」「在线文档」「office 文档」等强类型词，或提供 https://doc.weixin.qq.com/doc/xxx 链接时才使用本技能。用户说\"文档\"\"新建文档\"\"写文档\"\"整理成文档\"\"输出到文档\"等未指定类型的泛化表达，一律使用 wecomcli-smartpage。",
+      "note": "**适用**：新建 / 导入企微 doc 文档；读取 doc 文档内容；向 doc 文档追加一行 / 覆盖写入doc 文档　\n**不适用**：搜索文档 / 修改文档权限 / 重命名 / 加成员 → 改用 `wecomcli-doc-manage`；在线表格操作 → 改用 `wecomcli-sheet`；智能表格操作 → 改用 `wecomcli-smartsheet`；含字段 / 记录 / 筛选 / 排序 / 统计 / 分组等结构化数据语义 → 改用 `wecomcli-smartsheet` 或 `wecomcli-smartpage`（禁止用 doc + markdown 静态表格变通）",
+      "commands": [
+        {
+          "name": "wecom-cli doc contents append",
+          "desc": "追加内容到在线文档",
+          "ref": "references/doc-contents-append.md"
+        },
+        {
+          "name": "wecom-cli doc contents get",
+          "desc": "读取doc文档内容",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli doc contents overwrite",
+          "desc": "覆盖在线文档内容",
+          "ref": "references/doc-contents-overwrite.md"
+        },
+        {
+          "name": "wecom-cli doc import",
+          "desc": "导入doc文档",
+          "ref": "SKILL.md"
+        }
+      ],
+      "_refs": 3
+    },
+    {
+      "id": "doc-manage",
+      "label": "doc-manage",
+      "prefix": "doc",
+      "description": "企业微信文档公共管理：搜索文档（最近浏览/创建）、文档改名、添加文档成员权限、设置文档加入规则。适用于所有文档类型（doc文档 / 在线表格 / 智能表格 / 智能文档）。新建或导入doc文档请使用 wecomcli-doc；新建或导入在线表格请使用 wecomcli-sheet；智能表格内容 CRUD 请使用 wecomcli-smartsheet；生成智能文档请使用 wecomcli-smartpage。\"看过哪些文档/浏览历史\"类需求走本技能，不要走 wecom_get_user_memory。",
+      "note": "",
+      "commands": [
+        {
+          "name": "wecom-cli doc members update",
+          "desc": "添加文档成员",
+          "ref": "references/doc-members-update.md"
+        },
+        {
+          "name": "wecom-cli doc names update",
+          "desc": "修改文档名",
+          "ref": "references/doc-names-update.md"
+        },
+        {
+          "name": "wecom-cli doc rules update",
+          "desc": "",
+          "ref": "references/doc-rules-update.md"
+        },
+        {
+          "name": "wecom-cli doc search",
+          "desc": "",
+          "ref": "SKILL.md"
+        }
+      ],
+      "_refs": 3
+    },
+    {
+      "id": "email",
+      "label": "email",
+      "prefix": "mail",
+      "description": "企业微信邮件：发送/回复/转发邮件、搜索邮件列表、获取邮件详情（正文、附件、内嵌图片解析），支持通过邮件发送日程邀约和会议预定。当用户涉及内部邮件收发、邮件查询、邮件管理等需求时使用。注意：日程和会议有单独的技能，仅当用户明确提到\"邮箱\"或\"邮件\"时（如\"通过邮箱发送会议邀请\"、\"发封会议邮件\"），才使用本技能处理会议日程邮件。",
+      "note": "**适用**：发送新邮件：向指定收件人/抄送/密送发送邮件，支持本地附件和内嵌图片；日程邀约 / 会议邮件：通过邮件发送日程邀约和会议预定（仅当用户明确提到\"邮箱\"或\"邮件\"时）；回复邮件：对已有邮件进行回复 / 全部回复；转发邮件：将已有邮件转发给其他收件人；浏览 / 搜索邮件：按关键词 / 发件人 / 时间 / 已读未读 / 文件夹 / 标签 / 附件 / 星标 / 重要等条件查询邮件列表　\n**不适用**：纯日程 / 会议管理（创建、修改、取消、查询日程或会议本身） → 日程改用 `wecomcli-calendar`、在线会议改用 `wecomcli-meeting`；本技能只负责\"通过邮件发送\"的日程 / 会议类邮件（日程邀约、会议邮件），不负责日程 / 会议本身的管理；标记已读 / 未读、删除邮件、保存草稿、邮件标签写操作（打/加/移除/取消标签、tag、label） → 告知用户暂未支持，建议前往企业微信客户端处理（按标签/文件夹搜索邮件是支持的，见\"浏览 / 搜索邮件\"）；邮箱账号设置 / 签名 / 自动回复 / 邮件规则配置 → 告知用户暂未支持，建议前往企业微信客户端处理；撤回已发送邮件 / 修改已发送邮件 → 告知用户暂未支持，建议前往企业微信客户端处理",
+      "commands": [
+        {
+          "name": "wecom-cli mail get",
+          "desc": "读取邮件详情",
+          "ref": "references/get-mail.md"
+        },
+        {
+          "name": "wecom-cli mail search",
+          "desc": "",
+          "ref": "references/reply-mail.md"
+        },
+        {
+          "name": "wecom-cli mail send",
+          "desc": "",
+          "ref": "SKILL.md"
+        }
+      ],
+      "_refs": 7
+    },
+    {
+      "id": "meeting",
+      "label": "meeting",
+      "prefix": "meeting",
+      "description": "企业微信会议管理。本技能负责『在线会议』——即含在线会议链接（含会议号/入会链接、可远程或视频参会）的会议的创建、查询、搜索、获取详情（含会议信息、纪要、待办）、查询会议转写原文（逐字发言记录）、更新、取消等全部操作；若用户要的是不含在线会议链接的『日程』（也涵盖纯线下面对面碰头），改用 wecomcli-calendar 技能。用户仅说'开会/约个会/某会/某会议'等、未明确要创建的是日程还是在线会议时，必须先读取本技能并按其中的消歧流程向用户追问确认后再处理，不可臆断直接创建。",
+      "note": "**适用**：创建 / 新建在线会议（含会议号 / 入会链接，可远程 / 视频参会；含\"线下开 + 外地同事远程接入\"的会）；查看 / 浏览会议列表（最近有什么会、查某时间段的会议）；搜索会议（按关键词、会议名找某个会议）；查看会议详情（主题、时间、参会人等）；更新 / 修改会议（改时间、加减人；不支持更新周期会议）　\n**不适用**：创建、更新、取消周期 / 重复会议（每周 / 每月 / 每天重复）→ 均不支持，引导用户在企业微信客户端手动操作；回复 / 拒绝会议邀请（接受 / 拒绝 / 待定，含\"拒绝这个会\"\"不参加\"）→ 不支持，引导用户在企业微信客户端操作或私信发起人",
+      "commands": [
+        {
+          "name": "wecom-cli meeting cancel",
+          "desc": "取消会议",
+          "ref": "references/meeting-cancel.md"
+        },
+        {
+          "name": "wecom-cli meeting create",
+          "desc": "创建会议",
+          "ref": "references/meeting-create.md"
+        },
+        {
+          "name": "wecom-cli meeting get",
+          "desc": "获取详情",
+          "ref": "references/meeting-search.md"
+        },
+        {
+          "name": "wecom-cli meeting list",
+          "desc": "拉取会议列表",
+          "ref": "references/meeting-list.md"
+        },
+        {
+          "name": "wecom-cli meeting original get",
+          "desc": "拉取转写",
+          "ref": "references/meeting-original-get.md"
+        },
+        {
+          "name": "wecom-cli meeting search",
+          "desc": "搜索会议",
+          "ref": "references/meeting-search.md"
+        },
+        {
+          "name": "wecom-cli meeting update",
+          "desc": "更新会议",
+          "ref": "references/meeting-update.md"
+        }
+      ],
+      "_refs": 6
+    },
+    {
+      "id": "message",
+      "label": "message",
+      "prefix": "message` / `identity",
+      "description": "查询当前可以发送消息的聊天会话范围，并向会话列表中的单聊或群聊发送文本、Markdown、图片、文件、语音、视频消息。用户要求“给某人发消息”“在某个群里通知”“给最近会话发消息”或“把图片/文件/语音/视频发到企业微信”时使用。",
+      "note": "**适用**：适用于给授权人发消息，使用 `wecom-cli identity whoami` 获取授权人ID，可作为 `chat_id` 使用，无需调用 `sessions list`。；适用于查询当前有权限发送消息的聊天会话范围并给这些范围中的成员或群聊发送 Markdown 消息、图片、文件、AMR 语音或视频　\n**不适用**：发送对象不是授权人且不在本次 `sessions list` 返回结果中 → 告知用户当前只能向最近活跃的会话或授权人发送",
+      "commands": [
+        {
+          "name": "wecom-cli identity whoami",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli message aibot send",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli message aibot sessions list",
+          "desc": "",
+          "ref": "SKILL.md"
+        }
+      ],
+      "_refs": 0
+    },
+    {
+      "id": "sheet",
+      "label": "sheet",
+      "prefix": "sheet",
+      "description": "企业微信在线表格文档管理：新建在线表格、导入 CSV/Excel 为在线表格、读取表格信息与数据、修改表格内容、追加行数据、子表管理。当用户提到'表格'、'在线表格'、'excel表格'这些关键词触发，或链接形如 https://doc.weixin.qq.com/sheet/xxx 时触发。文档公共操作请使用 wecomcli-doc-manage；doc文档操作请使用 wecomcli-doc；智能表格内容 CRUD 请使用 wecomcli-smartsheet。",
+      "note": "**适用**：新建 / 导入企微在线表格；读取 / 修改 / 追加在线表格内容；添加 / 删除在线表格子表　\n**不适用**：搜索文档 / 修改文档权限 / 重命名 / 加成员 → 改用 `wecomcli-doc-manage`；用户给的链接是 `https://doc.weixin.qq.com/smartsheet/...` → 改用 `wecomcli-smartsheet`；若遇到的 `docid` 以 `s3` 开头（形如 `s3_xxxx`）→ 改用 `wecomcli-smartsheet`",
+      "commands": [
+        {
+          "name": "wecom-cli sheet contents update",
+          "desc": "修改表格内容",
+          "ref": "references/sheet-contents-update.md"
+        },
+        {
+          "name": "wecom-cli sheet get",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli sheet import",
+          "desc": "新建在线表格",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli sheet ranges get",
+          "desc": "读取子表数据",
+          "ref": "references/sheet-ranges-get.md"
+        },
+        {
+          "name": "wecom-cli sheet rows append",
+          "desc": "追加一行数据",
+          "ref": "references/sheet-rows-append.md"
+        },
+        {
+          "name": "wecom-cli sheet subsheets add",
+          "desc": "添加子工作表",
+          "ref": "references/sheet-subsheets-add.md"
+        },
+        {
+          "name": "wecom-cli sheet subsheets delete",
+          "desc": "删除子工作表",
+          "ref": "references/sheet-subsheets-delete.md"
+        }
+      ],
+      "_refs": 5
+    },
+    {
+      "id": "smartpage",
+      "label": "smartpage",
+      "prefix": "smartpage` / `media",
+      "description": "企业微信智能文档（smartpage）操作技能。能够新建文档、导入 .md 为文档、读取文档内容、修改文档内容（整页重写、局部编辑、增删子页面）、上传附件到文档，以及搭建带看板/图表的数据系统页面和信息收集表单页面。当用户提及文档，智能文档，智能主页、提供 https://doc.weixin.qq.com/smartpage/xxx 或 https://page.weixin.qq.com/smartpage/xxx 链接、要求整理成文档，或表达\"新建文档\"\"把 md 导入成文档\"等未指定文档类型的需求时，也应使用本技能。",
+      "note": "",
+      "commands": [
+        {
+          "name": "wecom-cli media download",
+          "desc": "",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage blocks update",
+          "desc": "编辑页面 Block",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage create",
+          "desc": "路径 B：先创建空白再追加内容",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli smartpage databases get",
+          "desc": "获取关联的数据表信息",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage files upload",
+          "desc": "上传附件到文档空间",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage images upload",
+          "desc": "上传附件到文档空间",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage import",
+          "desc": "新建智能文档场景",
+          "ref": "references/mdx-syntax.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages append",
+          "desc": "追加内容到页面",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages get",
+          "desc": "读取所有页面内容",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages overwrite",
+          "desc": "覆盖页面内容",
+          "ref": "references/smartpage-edit.md"
+        },
+        {
+          "name": "wecom-cli smartpage pages update",
+          "desc": "修改页面结构",
+          "ref": "references/smartpage-edit.md"
+        }
+      ],
+      "_refs": 4
+    },
+    {
+      "id": "smartsheet",
+      "label": "smartsheet",
+      "prefix": "smartsheet",
+      "description": "企业微信智能表格内容操作技能——专注于智能表格（smartsheet）的数据、结构与样式管理：读取表结构与记录、管理子表/字段/记录/视图/图表，以及修改行列样式（填色/高亮）；记录新增或更新遇到 851003 / no authority 时通过 Webhook 兜底写入。触发条件：用户提到智能表格、企微表格、smartsheet 的内容操作或样式修改，或链接形如 https://doc.weixin.qq.com/smartsheet/s3_xxx。企业微信表格分为「智能表格」和「在线表格」两种类型，本文档介绍的是智能表格的相关技能。智能表格包含子表（sheet）、视图（view）、字段/列（field），每条记录（record）以 `record_id` 作为主键，结构类似关系型数据库。当用户未明确说明使用「在线表格」时，一律默认使用功能更强大的智能表格（本技能）。",
+      "note": "**适用**：读取智能表格信息与数据（全量/筛选）；修改表结构（子表/字段）；记录类型定义及操作；给单元格/行/列填色、着色、染色、标红、标黄、标绿、高亮、加底色、做条件格式；视图类型定义及操作　\n**不适用**：文件级权限管理、添加成员、设置加入规则 → 转交 `wecomcli-doc-manage` 技能；删除智能表格文件 → 暂不支持；修改智能表格名称 → 转交 `wecomcli-doc-manage` 技能；搜索智能表格 / 按名称查找 / 查看最近浏览或创建的智能表格 → 转交 `wecomcli-doc-manage` 技能",
+      "commands": [
+        {
+          "name": "wecom-cli smartsheet charts add",
+          "desc": "图表操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet charts delete",
+          "desc": "写操作，支持新增/修改/删除仪表盘图表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet charts list",
+          "desc": "查询图表列表",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet charts update",
+          "desc": "写操作，支持新增/修改/删除仪表盘图表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet create",
+          "desc": "新建智能表格",
+          "ref": "references/common.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields",
+          "desc": "",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields add",
+          "desc": "写操作，字段操作独立命令",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields delete",
+          "desc": "写操作，字段操作独立命令",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields list",
+          "desc": "查询字段列表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet fields update",
+          "desc": "写操作，字段操作独立命令",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet files upload",
+          "desc": "",
+          "ref": "references/smart-sheet-record-values.md"
+        },
+        {
+          "name": "wecom-cli smartsheet images upload",
+          "desc": "",
+          "ref": "references/smart-sheet-record-values.md"
+        },
+        {
+          "name": "wecom-cli smartsheet import",
+          "desc": "导入文档为智能表格",
+          "ref": "references/common.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records add",
+          "desc": "记录操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records delete",
+          "desc": "写操作，支持新增/修改/删除行记录",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records list",
+          "desc": "",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records query",
+          "desc": "读取智能表格数据",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet records update",
+          "desc": "写操作，支持新增/修改/删除行记录",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets add",
+          "desc": "子表操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets delete",
+          "desc": "写操作，支持新增/修改/删除子表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets list",
+          "desc": "查询子表列表",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet sheets update",
+          "desc": "写操作，支持新增/修改/删除子表",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views add",
+          "desc": "视图操作",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views delete",
+          "desc": "写操作，支持新增/修改/删除视图",
+          "ref": "references/smart-sheet-edit.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views list",
+          "desc": "查询视图列表",
+          "ref": "references/smart-sheet-read.md"
+        },
+        {
+          "name": "wecom-cli smartsheet views update",
+          "desc": "写操作，支持新增/修改/删除视图",
+          "ref": "references/smart-sheet-edit.md"
+        }
+      ],
+      "_refs": 10
+    },
+    {
+      "id": "todo",
+      "label": "todo",
+      "prefix": "todo",
+      "description": "管理企业微信待办，支持创建、删除或退出、完成、查询和筛选，以及修改标题、描述、参与人名单和截止时间。",
+      "note": "",
+      "commands": [
+        {
+          "name": "wecom-cli todo create",
+          "desc": "创建待办",
+          "ref": "references/todo-create.md"
+        },
+        {
+          "name": "wecom-cli todo delete",
+          "desc": "删除/退出待办",
+          "ref": "references/todo-delete.md"
+        },
+        {
+          "name": "wecom-cli todo finish",
+          "desc": "",
+          "ref": "references/todo-finish.md"
+        },
+        {
+          "name": "wecom-cli todo get",
+          "desc": "批量获取待办详情",
+          "ref": "references/todo-get.md"
+        },
+        {
+          "name": "wecom-cli todo list",
+          "desc": "按时间范围查询待办",
+          "ref": "references/todo-list.md"
+        },
+        {
+          "name": "wecom-cli todo update",
+          "desc": "",
+          "ref": "references/todo-update.md"
+        }
+      ],
+      "_refs": 6
+    }
+  ],
+  "extras": [
+    {
+      "id": "media",
+      "label": "media",
+      "description": "企业微信媒体文件上传/下载技能。承接基于 media_id 下载媒体文件到本地，以及上传本地文件获取 media_id 两类操作。当其他技能（微盘、邮件等）返回了 media_id 需要落地为本地文件，或已有本地文件需要转换为 media_id 供其他技能使用时，必须先读取本技能获取完整指引，不得凭记忆处理。本技能不解析/识别文件内容，仅负责文件本身的搬运。",
+      "commands": [
+        {
+          "name": "wecom-cli media download",
+          "desc": "下载媒体文件",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli media upload",
+          "desc": "上传媒体文件",
+          "ref": "SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "shared",
+      "label": "shared",
+      "description": "wecom-cli 业务技能的公共前置检查、获取机器人及授权真人身份，以及通用输出约束。任何 wecomcli-* 技能首次准备执行 wecom-cli 命令前，都必须同时读取本技能，检查 CLI 是否安装、版本是否不低于 1.2.1，以及企业微信凭证是否已授权；仅在缺失、版本过低或未授权时执行安装或初始化。本技能还定义所有技能通用的 ID 类字段禁止外露约束。本技能不处理具体业务请求。",
+      "commands": [
+        {
+          "name": "wecom-cli auth init",
+          "desc": "Step 3：初始化凭证（仅未授权时）",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli auth show",
+          "desc": "",
+          "ref": "SKILL.md"
+        },
+        {
+          "name": "wecom-cli identity whoami",
+          "desc": "获取个人身份",
+          "ref": "SKILL.md"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    [
+      "给某人 / 某群发消息",
+      "`wecom-cli message aibot sessions list` → 取 `chat_id` → `wecom-cli message aibot send`"
+    ],
+    [
+      "查最近能发消息的会话",
+      "`wecom-cli message aibot sessions list`"
+    ],
+    [
+      "当前身份是谁",
+      "`wecom-cli identity whoami`"
+    ],
+    [
+      "查某人 / 按拼音搜同事",
+      "`wecom-cli contact users search`"
+    ],
+    [
+      "看日程 / 查某天的安排",
+      "`wecom-cli calendar schedules list --json '{\"begin_time\":\"…\",\"end_time\":\"…\"}'`"
+    ],
+    [
+      "约日程 / 建日程",
+      "`wecom-cli calendar schedules create`"
+    ],
+    [
+      "改 / 取消日程",
+      "`wecom-cli calendar schedules update` / `cancel`"
+    ],
+    [
+      "查大家有没有空",
+      "`wecom-cli calendar schedules free list`"
+    ],
+    [
+      "找会议室 / 楼栋",
+      "`wecom-cli meeting rooms search` / `meeting rooms buildings list`"
+    ],
+    [
+      "预约会议",
+      "`wecom-cli meeting create`"
+    ],
+    [
+      "查会议列表 / 详情",
+      "`wecom-cli meeting list` / `get`"
+    ],
+    [
+      "要会议纪要 / 转写原文",
+      "`wecom-cli meeting original get`"
+    ],
+    [
+      "建待办 / 完成任务",
+      "`wecom-cli todo create` / `todo finish`"
+    ],
+    [
+      "看待办列表",
+      "`wecom-cli todo list`"
+    ],
+    [
+      "搜邮件 / 读邮件",
+      "`wecom-cli mail search` / `mail get`"
+    ],
+    [
+      "写在线文档",
+      "`wecom-cli doc import`，再用 `wecom-cli doc contents append` 追加正文"
+    ],
+    [
+      "读 / 覆盖文档正文",
+      "`wecom-cli doc contents get` / `contents overwrite`"
+    ],
+    [
+      "搜文档 / 改名 / 管权限",
+      "`wecom-cli doc search` / `doc names update` / `doc members update`"
+    ],
+    [
+      "读写在线表格",
+      "`wecom-cli sheet ranges get` / `sheet contents update` / `sheet rows append`"
+    ],
+    [
+      "智能表格增删记录",
+      "`wecom-cli smartsheet records …`（先看该域清单）"
+    ],
+    [
+      "建智能文档 / 编辑内容",
+      "`wecom-cli smartpage create` / `smartpage blocks update`"
+    ],
+    [
+      "上传 / 下载文件",
+      "`wecom-cli media upload` / `media download`（拿到 media_id 再发消息）"
+    ],
+    [
+      "微盘文件管理",
+      "`wecom-cli disk files list` / `upload` / `download` / `folders create`"
+    ],
+    [
+      "授权状态不对 / 未安装",
+      "`wecom-cli auth show --status` → `wecom-cli auth init`"
+    ]
+  ],
+  "conventions": [
+    {
+      "title": "使用前置：三步检查（官方硬要求）",
+      "body": "官方 `wecomcli-shared` 技能规定：**首次准备执行任何 `wecom-cli` 命令前，必须先完成这三步**。\n\n```bash\n# Step 1 — 检查安装与版本（要求 >= 1.2.1）\nwecom-cli --version\nnpm install -g @wecom/cli        # 缺失或版本过低时\n\n# Step 2 — 检查授权状态\nwecom-cli auth show --status     # authorized / unauthorized\n\n# Step 3 — 未授权时初始化（扫码，仅需一次）\nwecom-cli auth init --noninteractive\nwecom-cli auth show --status     # 复查，authorized 才继续\n```\n\n- 已安装、版本达标且已授权时，**不重复安装或初始化**。\n- 安装、升级、初始化或复查失败时，**不执行后续业务命令**，把错误告知用户。\n- 授权输出既不是 `authorized` 也不是 `unauthorized` 时，不要猜，直接报错给用户。"
+    },
+    {
+      "title": "ID 类字段禁止外露（优先级最高）",
+      "body": "这条约束对所有域生效，**优先级高于各业务技能的输出格式，且不因用户主动索要而放宽**。\n\n- **禁止**：最终回复里出现 `userid` / `open_vid` / `department_id` / `chat_id` 等标识。\n  凡接口返回的内部标识（`mail_id` / `media_id` / `file_id` / `space_id` / `folder_id` /\n  `docid` / `content_id` / `msg_id` / `cursor` 等，命名以 `_id` 结尾或语义上属于机器标识的）\n  只能内部流转，用于后续调用。\n- **必须**：用可读名称组织回复 —— `name` / `username` / 部门名 / 邮箱 / `subject` /\n  `doc_name` / `chat_name` / `title`。\n- 只拿到 ID 没有可读名称时，先用 `wecomcli-contact` 之类换取名称；换不到就用自然语言指代\n  （「上一封日报邮件」），**禁止退化为展示 ID**。\n- 让用户在多个候选里选时，用「序号 + 名称/主题/时间」构造列表，不要用 ID 让用户辨认。\n- 用户直接要「把 ID 给我」时，说明该标识属于内部字段不便提供，改用可读信息或继续把事办完。\n- 例外：可读链接（`doc_url`、微盘分享链接）不受限，即使链接里本身含标识串。"
+    },
+    {
+      "title": "请求体：三种给法，可组合",
+      "body": "```bash\nwecom-cli <service> [resource...] <method> [--param value ...] [--json '<JSON>'] [flags]\n```\n\n| 方式 | 说明 |\n|---|---|\n| 命名参数 | 由方法 schema 生成的参数（如 `--id root`），类型与必填性以 `--help` 为准 |\n| `--json '<JSON>'` | 直接给定完整请求体 JSON 字符串 |\n| `--set path=value` | 深层路径覆盖，可重复（如 `--set extra.flag=true`）；非法 JSON 片段会自动修复 |\n\n```bash\n# 无参方法（含嵌套资源路径）\nwecom-cli message aibot sessions list\n\n# 用 --json 给请求体\nwecom-cli doc search --json '{\"keywords\":[\"周报\"],\"limit\":10}'\n```"
+    },
+    {
+      "title": "通用执行 flag",
+      "body": "| Flag | 说明 |\n|---|---|\n| `--dry-run` | 仅在本地校验并打印将发送的请求，**不实际调用** |\n| `--page-count <n>` | 启用游标式自动分页，最多拉 n 页；输出为 NDJSON（每行一页） |\n| `--page-delay <ms>` | 分页请求间隔毫秒数，默认 100 |\n| `--output` / `-o <file>` | 将响应体写入文件 |\n| `--output-dir <dir>` | 指定下载文件的落盘目录（默认当前目录） |\n\n输出形态：\n\n- 默认：compact JSON 输出到 stdout。\n- 下载类方法：文件落盘到当前目录（可用 `--output-dir` / `--output` 改），stdout 输出 `DownloadResult` JSON（`content_type` / `file_path` / `size`），文件以 `0600` 落盘。\n- 分页：NDJSON 多行输出。\n- 日志与提示一律走 stderr，不污染 stdout 的 JSON。"
+    },
+    {
+      "title": "退出码与错误格式",
+      "body": "| 退出码 | 含义 |\n|---|---|\n| `0` | 成功（含 `--help` / `--version`） |\n| `1` | 运行时错误（网络、鉴权、IO、后台业务错误） |\n| `2` | 用法错误（参数缺失、未知命令） |\n\n错误以结构化 JSON 输出到 **stdout**：\n\n```json\n{ \"error\": { \"type\": \"AuthError\", \"code\": 893201, \"message\": \"...\" } }\n```\n\n- CLI 自身错误的 code 段：`893000–893099`（lib）、`893100–893199`（transport）、`893200–893299`（bin），`893999` 为兜底。\n- 后台业务错误（`errcode != 0`）直接透传原响应体与 `errcode`。\n- **判断成功看退出码 0，不要只看 `error` 字段是否存在。**"
+    },
+    {
+      "title": "运行时路径、环境变量与配置文件",
+      "body": "| 项目 | 默认位置 | 备注 |\n|---|---|---|\n| 配置目录 | `~/.config/wecom` | 可由 `WECOM_CLI_CONFIG_DIR` 覆盖 |\n| 凭据文件 | `<config_dir>/credentials.enc` | AES-256-GCM（0600） |\n| 加密密钥 | 系统 keyring 或 `<config_dir>/.encryption_key` | 无 keyring 时的文件回退 |\n| discovery 缓存 | `<config_dir>/cache` | 服务目录与 schema 缓存，**TTL 60 秒** |\n| 下载目录 | 当前工作目录 | 单次调用可用 `--output-dir` 覆盖 |\n\n| 环境变量 | 作用 |\n|---|---|\n| `WECOM_CLI_CONFIG_DIR` | 覆盖默认配置目录 |\n| `WECOM_CLI_ADDITIONAL_HEADERS` | 额外请求头，值为 JSON object；也支持 `WECOM_CLI_ADDITIONAL_HEADERS_*` 后缀形式 |\n| `WECOM_CLI_LOG_LEVEL` | 打开 stderr 文本日志并设置过滤级别（如 `debug`） |\n| `WECOM_CLI_LOG_DIR` | 打开 JSON Lines 日志，按天写入 `<dir>/ww.log.<日期>`（UTC+8） |\n\n- 环境变量优先级高于配置文件。\n- **access token 不允许经 `config.json` 配置**，只来自 `credentials.enc`。"
+    },
+    {
+      "title": "消息发送的能力边界（最容易误解）",
+      "body": "机器人**只能向「最近有过消息往来的会话」主动发消息**，不能凭姓名或 ID 任意发送。\n\n1. 先跑 `wecom-cli message aibot sessions list` 拿到本次可用的会话列表。\n2. 从本次返回的 `sessions[]` 里选定目标，把该项的 `chat_id` **原样复制**给 `send`。\n\n以下值**都不能**直接当 `send.chat_id`：用户输入的 ID、历史轮次里存下来的 `chat_id`、\n`wecomcli-contact` 返回的 `userid`、按姓名/群名自行构造的值。它们最多只能当匹配线索。\n\n例外：可以给「授权人」本人发消息 —— 用 `wecom-cli identity whoami` 拿到的授权人 ID\n可直接作为 `chat_id`，无需先跑 `sessions list`。"
+    },
+    {
+      "title": "发送媒体文件的正确顺序",
+      "body": "要发图片/文件/语音/视频且手上只有本地路径时，**必须先换 media_id**：\n\n```bash\nwecom-cli media upload <type> --file <本地路径>   # 先拿 media_id\nwecom-cli message aibot send --json '{...}'        # 再用 media_id 发送\n```\n\n- 上传时的 `type` 必须与发送时的 `msg_type` 对齐。\n`wecomcli-media` 只负责文件搬运，不解析文件内容。"
+    }
+  ],
+  "rules": {
+    "title": "各域官方 Skill 说明与边界（完整原文摘要）",
+    "from": "官方 https://github.com/WecomTeam/wecom-cli 的 skills/*/SKILL.md",
+    "body": "### wecomcli-calendar\n企业微信日程管理。当用户需要预约日程、预订会议室、查看/更新/取消日程或查忙闲时触发。本技能负责『日程』——即不含在线会议链接的安排（也涵盖纯线下面对面碰头）；若用户要的是『在线会议』（含会议号/入会链接、可远程或视频参会），改用 wecomcli-meeting 技能。用户仅说'开会/约个会/某会'等、未明确要创建的是日程还是在线会议时，必须先读取本技能并按其中的消歧流程向用户追问确认后再处理，不可臆断直接创建。\n*规模：9 条命令 · 7 篇深度参考*\n\n**适用**\n- 预约 / 创建日程（含纯线下面对面碰头，即不带在线会议链接的安排）\n- 查看 / 浏览日程（今天有什么安排、查本周日程）\n- 搜索日程（按关键词、按组织人、按参与人找某个日程）\n- 更新 / 修改日程（改时间、改地点、加减人、换会议室；不支持更新周期日程）\n- 取消日程（不支持取消周期日程）\n\n**不适用**\n- 创建、更新、取消周期 / 重复日程（每周 / 每月 / 每天重复）→ 均不支持，引导用户在企业微信客户端手动操作\n- 回复 / 拒绝日程邀请（接受 / 拒绝 / 待定，含\"拒绝这个日程\"\"不参加\"）→ 不支持，引导用户在企业微信客户端操作或私信发起人\n\n### wecomcli-contact\n使用 wecom-cli 按姓名、拼音、英文名或别名搜索企业微信通讯录中的人员，并查询匹配人员的 userid、部门和职务。适用于查找联系人、区分同名人员、获取用户 userid，以及列出全部同名人员。\n*规模：1 条命令*\n\n### wecomcli-disk\n企业微信微盘（Disk / 网盘）文件操作技能。承接\"微盘 / 网盘\"里的文件列出、搜索、读取元信息、上传、下载、重命名、新建文件夹操作。用户明确提到\"微盘\"/\"网盘\"/\"共享空间\"时必须先读取本技能获取完整指引，不得凭记忆处理。用户说\"上传到微盘\"、\"帮我在微盘里搜一下 xxx\"、\"微盘那个 PPT 在哪\"、\"下载微盘那个文件\"、\"把微盘那个文件重命名成 xxx\"、或直接给出 `https://drive.weixin.qq.com/s?k=...` 形式的微盘文件链接时使用本技能。与 `wecomcli-doc` / `wecomcli-sheet` / `wecomcli-smartsheet` / `wecomcli-smartpage` 的区别：本技能处理微盘里所有文件（含在线文档）的搜索/列表/基础信息/位置/路径/重命名等文件级操作；在线文档（`doc/sheet/smartsheet/smartpage` 类型）的内容读写走对应文档技能，不由本技能接管。当用户问「这个文档在微盘哪里」或问某文件在微盘的位置时，由本技能用 get 返回空间名/文件夹名/路径等元信息。\n*规模：7 条命令*\n\n**适用**\n- 列出微盘最近查看的文件\n- 按关键词/类型/创建者/共享空间搜索微盘文件或文件夹\n- 读取微盘文件基础信息\n- 上传本地文件到微盘指定文件夹\n- 下载微盘文件到本地\n\n**不适用**\n- 移动微盘文件或文件夹 → 告知用户暂未支持，建议前往企业微信客户端手动操作\n- 删除微盘文件 / 复制微盘文件 → 告知用户暂未支持，建议前往企业微信客户端手动操作\n- 删除 / 重命名微盘文件夹（`folder`）、调整目录树结构 → 告知用户暂未支持，建议前往企业微信客户端手动操作\n- 创建 / 删除共享空间（`space`）、修改空间成员与空间设置 → 告知用户暂未支持，建议前往企业微信客户端手动操作\n\n### wecomcli-doc\n企业微信在线 doc 文档技能。能够新建 doc、导入本地 .doc/.docx/.txt 为 doc、读取 doc 内容、向 doc 追加或覆盖写入。仅当用户明确出现「doc」「docx」「word」「在线文档」「office 文档」等强类型词，或提供 https://doc.weixin.qq.com/doc/xxx 链接时才使用本技能。用户说\"文档\"\"新建文档\"\"写文档\"\"整理成文档\"\"输出到文档\"等未指定类型的泛化表达，一律使用 wecomcli-smartpage。\n*规模：4 条命令 · 3 篇深度参考*\n\n**适用**\n- 新建 / 导入企微 doc 文档\n- 读取 doc 文档内容\n- 向 doc 文档追加一行 / 覆盖写入doc 文档\n\n**不适用**\n- 搜索文档 / 修改文档权限 / 重命名 / 加成员 → 改用 `wecomcli-doc-manage`\n- 在线表格操作 → 改用 `wecomcli-sheet`\n- 智能表格操作 → 改用 `wecomcli-smartsheet`\n- 含字段 / 记录 / 筛选 / 排序 / 统计 / 分组等结构化数据语义 → 改用 `wecomcli-smartsheet` 或 `wecomcli-smartpage`（禁止用 doc + markdown 静态表格变通）\n\n### wecomcli-doc-manage\n企业微信文档公共管理：搜索文档（最近浏览/创建）、文档改名、添加文档成员权限、设置文档加入规则。适用于所有文档类型（doc文档 / 在线表格 / 智能表格 / 智能文档）。新建或导入doc文档请使用 wecomcli-doc；新建或导入在线表格请使用 wecomcli-sheet；智能表格内容 CRUD 请使用 wecomcli-smartsheet；生成智能文档请使用 wecomcli-smartpage。\"看过哪些文档/浏览历史\"类需求走本技能，不要走 wecom_get_user_memory。\n*规模：4 条命令 · 3 篇深度参考*\n\n### wecomcli-email\n企业微信邮件：发送/回复/转发邮件、搜索邮件列表、获取邮件详情（正文、附件、内嵌图片解析），支持通过邮件发送日程邀约和会议预定。当用户涉及内部邮件收发、邮件查询、邮件管理等需求时使用。注意：日程和会议有单独的技能，仅当用户明确提到\"邮箱\"或\"邮件\"时（如\"通过邮箱发送会议邀请\"、\"发封会议邮件\"），才使用本技能处理会议日程邮件。\n*规模：3 条命令 · 7 篇深度参考*\n\n**适用**\n- 发送新邮件：向指定收件人/抄送/密送发送邮件，支持本地附件和内嵌图片\n- 日程邀约 / 会议邮件：通过邮件发送日程邀约和会议预定（仅当用户明确提到\"邮箱\"或\"邮件\"时）\n- 回复邮件：对已有邮件进行回复 / 全部回复\n- 转发邮件：将已有邮件转发给其他收件人\n- 浏览 / 搜索邮件：按关键词 / 发件人 / 时间 / 已读未读 / 文件夹 / 标签 / 附件 / 星标 / 重要等条件查询邮件列表\n\n**不适用**\n- 纯日程 / 会议管理（创建、修改、取消、查询日程或会议本身） → 日程改用 `wecomcli-calendar`、在线会议改用 `wecomcli-meeting`；本技能只负责\"通过邮件发送\"的日程 / 会议类邮件（日程邀约、会议邮件），不负责日程 / 会议本身的管理\n- 标记已读 / 未读、删除邮件、保存草稿、邮件标签写操作（打/加/移除/取消标签、tag、label） → 告知用户暂未支持，建议前往企业微信客户端处理（按标签/文件夹搜索邮件是支持的，见\"浏览 / 搜索邮件\"）\n- 邮箱账号设置 / 签名 / 自动回复 / 邮件规则配置 → 告知用户暂未支持，建议前往企业微信客户端处理\n- 撤回已发送邮件 / 修改已发送邮件 → 告知用户暂未支持，建议前往企业微信客户端处理\n\n### wecomcli-media\n企业微信媒体文件上传/下载技能。承接基于 media_id 下载媒体文件到本地，以及上传本地文件获取 media_id 两类操作。当其他技能（微盘、邮件等）返回了 media_id 需要落地为本地文件，或已有本地文件需要转换为 media_id 供其他技能使用时，必须先读取本技能获取完整指引，不得凭记忆处理。本技能不解析/识别文件内容，仅负责文件本身的搬运。\n*规模：2 条命令*\n\n**适用**\n- 根据其他技能或用户提供的 `media_id` 下载媒体文件到本地\n- 上传本地文件（本地路径已知）获取 `media_id`，供其他技能后续使用（如微盘上传素材）\n\n**不适用**\n- 解析/识别文件内容（正文提取、OCR、看图问答、PDF/Word/Excel 解析等） → 本 skill 只负责把文件下载到本地拿 `file_path`，如需查看内容请直接通过 `file_path` 读取该本地文件\n- 搜索/发现其他业务场景中已存在的 `media_id`（如邮件附件、微盘文件列表/搜索等） → 由对应业务技能负责产出并返回 `media_id`，本 skill 只接收已有的 `media_id` 做下载；本地文件转`media_id` 的场景仍走本 skill 的 `upload`\n- 编造或猜测 `media_id` / 本地文件路径 → 两者必须来自其他技能返回或用户明确提供，禁止自行构造\n\n### wecomcli-meeting\n企业微信会议管理。本技能负责『在线会议』——即含在线会议链接（含会议号/入会链接、可远程或视频参会）的会议的创建、查询、搜索、获取详情（含会议信息、纪要、待办）、查询会议转写原文（逐字发言记录）、更新、取消等全部操作；若用户要的是不含在线会议链接的『日程』（也涵盖纯线下面对面碰头），改用 wecomcli-calendar 技能。用户仅说'开会/约个会/某会/某会议'等、未明确要创建的是日程还是在线会议时，必须先读取本技能并按其中的消歧流程向用户追问确认后再处理，不可臆断直接创建。\n*规模：7 条命令 · 6 篇深度参考*\n\n**适用**\n- 创建 / 新建在线会议（含会议号 / 入会链接，可远程 / 视频参会；含\"线下开 + 外地同事远程接入\"的会）\n- 查看 / 浏览会议列表（最近有什么会、查某时间段的会议）\n- 搜索会议（按关键词、会议名找某个会议）\n- 查看会议详情（主题、时间、参会人等）\n- 更新 / 修改会议（改时间、加减人；不支持更新周期会议）\n\n**不适用**\n- 创建、更新、取消周期 / 重复会议（每周 / 每月 / 每天重复）→ 均不支持，引导用户在企业微信客户端手动操作\n- 回复 / 拒绝会议邀请（接受 / 拒绝 / 待定，含\"拒绝这个会\"\"不参加\"）→ 不支持，引导用户在企业微信客户端操作或私信发起人\n\n### wecomcli-message\n查询当前可以发送消息的聊天会话范围，并向会话列表中的单聊或群聊发送文本、Markdown、图片、文件、语音、视频消息。用户要求“给某人发消息”“在某个群里通知”“给最近会话发消息”或“把图片/文件/语音/视频发到企业微信”时使用。\n*规模：3 条命令*\n\n**适用**\n- 适用于给授权人发消息，使用 `wecom-cli identity whoami` 获取授权人ID，可作为 `chat_id` 使用，无需调用 `sessions list`。\n- 适用于查询当前有权限发送消息的聊天会话范围并给这些范围中的成员或群聊发送 Markdown 消息、图片、文件、AMR 语音或视频\n\n**不适用**\n- 发送对象不是授权人且不在本次 `sessions list` 返回结果中 → 告知用户当前只能向最近活跃的会话或授权人发送\n\n### wecomcli-shared\nwecom-cli 业务技能的公共前置检查、获取机器人及授权真人身份，以及通用输出约束。任何 wecomcli-* 技能首次准备执行 wecom-cli 命令前，都必须同时读取本技能，检查 CLI 是否安装、版本是否不低于 1.2.1，以及企业微信凭证是否已授权；仅在缺失、版本过低或未授权时执行安装或初始化。本技能还定义所有技能通用的 ID 类字段禁止外露约束。本技能不处理具体业务请求。\n*规模：3 条命令*\n\n### wecomcli-sheet\n企业微信在线表格文档管理：新建在线表格、导入 CSV/Excel 为在线表格、读取表格信息与数据、修改表格内容、追加行数据、子表管理。当用户提到'表格'、'在线表格'、'excel表格'这些关键词触发，或链接形如 https://doc.weixin.qq.com/sheet/xxx 时触发。文档公共操作请使用 wecomcli-doc-manage；doc文档操作请使用 wecomcli-doc；智能表格内容 CRUD 请使用 wecomcli-smartsheet。\n*规模：7 条命令 · 5 篇深度参考*\n\n**适用**\n- 新建 / 导入企微在线表格\n- 读取 / 修改 / 追加在线表格内容\n- 添加 / 删除在线表格子表\n\n**不适用**\n- 搜索文档 / 修改文档权限 / 重命名 / 加成员 → 改用 `wecomcli-doc-manage`\n- 用户给的链接是 `https://doc.weixin.qq.com/smartsheet/...` → 改用 `wecomcli-smartsheet`\n- 若遇到的 `docid` 以 `s3` 开头（形如 `s3_xxxx`）→ 改用 `wecomcli-smartsheet`\n\n### wecomcli-smartpage\n企业微信智能文档（smartpage）操作技能。能够新建文档、导入 .md 为文档、读取文档内容、修改文档内容（整页重写、局部编辑、增删子页面）、上传附件到文档，以及搭建带看板/图表的数据系统页面和信息收集表单页面。当用户提及文档，智能文档，智能主页、提供 https://doc.weixin.qq.com/smartpage/xxx 或 https://page.weixin.qq.com/smartpage/xxx 链接、要求整理成文档，或表达\"新建文档\"\"把 md 导入成文档\"等未指定文档类型的需求时，也应使用本技能。\n*规模：11 条命令 · 4 篇深度参考*\n\n### wecomcli-smartsheet\n企业微信智能表格内容操作技能——专注于智能表格（smartsheet）的数据、结构与样式管理：读取表结构与记录、管理子表/字段/记录/视图/图表，以及修改行列样式（填色/高亮）；记录新增或更新遇到 851003 / no authority 时通过 Webhook 兜底写入。触发条件：用户提到智能表格、企微表格、smartsheet 的内容操作或样式修改，或链接形如 https://doc.weixin.qq.com/smartsheet/s3_xxx。企业微信表格分为「智能表格」和「在线表格」两种类型，本文档介绍的是智能表格的相关技能。智能表格包含子表（sheet）、视图（view）、字段/列（field），每条记录（record）以 `record_id` 作为主键，结构类似关系型数据库。当用户未明确说明使用「在线表格」时，一律默认使用功能更强大的智能表格（本技能）。\n*规模：26 条命令 · 10 篇深度参考*\n\n**适用**\n- 读取智能表格信息与数据（全量/筛选）\n- 修改表结构（子表/字段）\n- 记录类型定义及操作\n- 给单元格/行/列填色、着色、染色、标红、标黄、标绿、高亮、加底色、做条件格式\n- 视图类型定义及操作\n\n**不适用**\n- 文件级权限管理、添加成员、设置加入规则 → 转交 `wecomcli-doc-manage` 技能\n- 删除智能表格文件 → 暂不支持\n- 修改智能表格名称 → 转交 `wecomcli-doc-manage` 技能\n- 搜索智能表格 / 按名称查找 / 查看最近浏览或创建的智能表格 → 转交 `wecomcli-doc-manage` 技能\n\n### wecomcli-todo\n管理企业微信待办，支持创建、删除或退出、完成、查询和筛选，以及修改标题、描述、参与人名单和截止时间。\n*规模：6 条命令 · 6 篇深度参考*"
+  },
+  "footer": "*快照由 `bin/skill-digest wecom-cli` 从 https://github.com/WecomTeam/wecom-cli 源码聚合生成，版本 `1.3.0`，时间 2026-09-17 06:52:39。*\n*命令树随服务端 discovery 变化，拿到凭证后请以 `wecom-cli --help` 为准；升级后刷新：`bin/refresh wecom-cli`*"
+}

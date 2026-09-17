@@ -1,0 +1,22 @@
+获取指定邮箱的所有目录。
+
+Usage:
+  wps365-cli mail mailbox-folder list <mailbox-id> [flags]
+
+Examples:
+wps365-cli mail mailbox-folder list "mbx_xxx"
+
+Flags:
+  -h, --help                help for list
+      --page-size int       每页数量，1–50，默认 10 (default 10)
+      --page-token string   分页标记
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

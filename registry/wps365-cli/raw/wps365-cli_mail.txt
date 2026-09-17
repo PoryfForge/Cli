@@ -1,0 +1,25 @@
+邮箱与邮件管理
+
+Usage:
+  wps365-cli mail [command]
+
+Available Commands:
+  draft             邮件草稿管理
+  mailbox           邮箱列表管理
+  mailbox-folder    邮箱文件夹管理
+  mailbox-subfolder 邮箱子文件夹管理
+  message           邮件消息管理
+
+Flags:
+  -h, --help   help for mail
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)
+
+Use "wps365-cli mail [command] --help" for more information about a command.

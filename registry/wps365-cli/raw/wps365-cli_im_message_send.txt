@@ -1,0 +1,29 @@
+向一类接收对象批量发送 IM 文本消息，默认向用户发送纯文本。
+
+Usage:
+  wps365-cli im message send [flags]
+
+Examples:
+wps365-cli im message send --to "u1,u2" --text "hello"
+wps365-cli im message send --receiver-type dept --to "dept_1,dept_2" --text "请查收通知"
+wps365-cli im message send --to u1 --text "**hello**" --text-format markdown
+
+Flags:
+  -h, --help                   help for send
+      --id-type string         高级参数，对应请求头 X-Kso-Id-Type (default "internal")
+      --mentions-body string   高级参数，传入 mentions JSON，用于 <at ...> 标签对应的 at 信息
+      --partner-id string      关联组织 ID；当 receiver-type 为关联组织类型时使用
+      --receiver-type string   接收者类型，可选 user、dept、company、chat、enterprise_partner、enterprise_partner_dept、enterprise_partner_user (default "user")
+      --text string            (required) 发送的文本内容
+      --text-format string     文本格式，可选 plain 或 markdown (default "plain")
+      --to string              (required) 接收者 ID，多个用逗号分隔；同一次调用中的接收者类型必须一致
+      --token-type string      authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

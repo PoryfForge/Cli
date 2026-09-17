@@ -1,0 +1,24 @@
+读取工作表指定行列范围内的单元格数据。
+
+Usage:
+  wps365-cli airsheet data get <file-id> <worksheet-id> [flags]
+
+Examples:
+wps365-cli airsheet data get f_001 1 --row-from 0 --row-to 10 --col-from 0 --col-to 5
+
+Flags:
+      --col-from int        (required) 起始列
+      --col-to int          (required) 结束列
+  -h, --help                help for get
+      --row-from int        (required) 起始行
+      --row-to int          (required) 结束行
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

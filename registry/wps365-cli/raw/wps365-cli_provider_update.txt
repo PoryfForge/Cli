@@ -1,0 +1,28 @@
+更新 provider
+
+Usage:
+  wps365-cli provider update <name> [flags]
+
+Flags:
+      --auth-client-id string       provider OAuth client_id
+      --auth-header string          运行时认证请求头名称
+      --auth-scheme string          运行时认证 scheme
+      --auth-type string            provider 认证类型：oauth2|api-key
+      --auth-url string             OAuth 授权端点相对路径
+      --base-url string             provider API 基础 URL
+      --enabled                     是否启用该 provider (default true)
+  -h, --help                        help for update
+      --name string                 provider 名称（仅允许英文小写字母与数字）
+      --source-curated-url string   provider 远端 curated URL 或 API 路径
+      --source-type string          provider source 类型：builtin|remote
+      --source-url string           provider 远端 OpenAPI URL 或 API 路径
+      --token-url string            OAuth token 端点相对路径
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

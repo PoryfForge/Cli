@@ -1,0 +1,23 @@
+创建新盘并指定归属身份。
+
+Usage:
+  wps365-cli drive create [flags]
+
+Examples:
+wps365-cli drive create --name "项目盘" --allotee-type user --allotee-id u123
+
+Flags:
+      --allotee-id string     归属身份 ID
+      --allotee-type string   归属类型 (default "user")
+  -h, --help                  help for create
+      --name string           (required) 盘名称
+      --token-type string     authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

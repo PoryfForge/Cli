@@ -1,0 +1,22 @@
+更新指定数据表中的字段。
+
+Usage:
+  wps365-cli dbsheet field update <file-id> <sheet-id> [flags]
+
+Examples:
+wps365-cli dbsheet field update f_abc123 12345 --fields-body '[{"id":"fld_xxx","name":"新字段名"}]'
+
+Flags:
+      --fields-body string   (required) 字段更新 JSON 数组
+  -h, --help                 help for update
+      --prefer-id            是否优先使用指定 ID
+      --token-type string    authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

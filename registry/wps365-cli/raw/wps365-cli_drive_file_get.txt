@@ -1,0 +1,24 @@
+在指定盘内根据文件 ID 获取文件元数据。
+
+Usage:
+  wps365-cli drive file get <drive-id> <file-id> [flags]
+
+Examples:
+wps365-cli drive file get dr_1 f_001
+
+Flags:
+  -h, --help                help for get
+      --id-type string      ID 类型
+      --token-type string   authentication identity: delegated|app
+      --with-drive          是否返回盘信息
+      --with-ext-attrs      是否返回扩展属性
+      --with-permission     是否返回权限信息
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

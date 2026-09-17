@@ -1,0 +1,17 @@
+Help provides help for any command in the application.
+Simply type wps365-cli help [path to command] for full details.
+
+Usage:
+  wps365-cli help [command] [flags]
+
+Flags:
+  -h, --help   help for help
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

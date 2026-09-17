@@ -1,0 +1,1862 @@
+{
+  "meta": {
+    "name": "feishu-cli",
+    "title": "飞书 CLI",
+    "command": "lark-cli",
+    "version": "1.0.96",
+    "repo": "https://github.com/larksuite/cli",
+    "license": "MIT",
+    "install": "npx @larksuite/cli@latest install",
+    "scannedAt": "2026-09-17 06:52:39",
+    "source": "skill-repo",
+    "nodes": 343,
+    "stats": {
+      "业务域": 23,
+      "快捷命令": 343,
+      "API方法": 120,
+      "参考文档": 437
+    },
+    "commit": "cb5a3d704379"
+  },
+  "domains": [
+    {
+      "id": "calendar",
+      "label": "calendar",
+      "prefix": "calendar",
+      "commands": [
+        {
+          "name": "lark-cli calendar +agenda",
+          "desc": "查看日程安排（默认今天）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +chat-search",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +create",
+          "desc": "创建日程并邀请参会人（ISO 8601 时间）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +delete",
+          "desc": "删除日程；重复性日程/例外必须传 --apply-to（详见 重复性日程操作规范）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +detail",
+          "desc": "从日程进一步拿 AI 智能纪要 / 逐字稿 / 妙记产物",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +freebusy",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +get",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +join-event",
+          "desc": "凭分享 token 加入日程（分享链接/二维码/分享卡片/RSVP 卡片）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +list-attendees",
+          "desc": "列出日程的参与人和会议室（支持按 --type 过滤：user / resource / chat / third_party）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +meeting",
+          "desc": "从日程获取关联的视频会议 ID 或用户绑定的会议纪要文档",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +room-find",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +rsvp",
+          "desc": "回复日程（接受/拒绝/待定）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +search-event",
+          "desc": "按关键词搜索日程",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +search-user",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +suggestion",
+          "desc": "根据非明确时间或一段时间范围，推荐多个可用时间块方案",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +transfer",
+          "desc": "转让日程组织者（「把这个日程交给 XX」「组织者改成 XX」「这个会转给我」「bot 建完还给我」）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli calendar +update",
+          "desc": "更新既有日程字段，或独立增量添加/移除参会人和会议室；重复性日程/例外必须传 --apply-to（详见 重复性日程操作规范）",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "im",
+      "label": "im",
+      "prefix": "im",
+      "commands": [
+        {
+          "name": "lark-cli im +chat-create",
+          "desc": "Create a group chat or topic chat; user/bot; --chat-mode group / topic; private/public; invites users/bots; optionally sets bot manager",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +chat-list",
+          "desc": "List chats the current user/bot is a member of; defaults to groups; pass --types=p2p,group to include p2p single chats (user-only); user/bot; supports sorting, auto-pagination, --exclude-muted (user-only)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +chat-members-list",
+          "desc": "List members of a chat; returns separate users[] / bots[] buckets; callable as user or bot; --member-types filters which kinds to return; --page-all pagination; surfaces truncations[] when the server caps a bucket",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +chat-messages-list",
+          "desc": "List messages in a chat or P2P conversation; user/bot; accepts --chat-id or --user-id, resolves P2P chat_id, supports time range, --order asc/desc sorting, auto-pagination",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +chat-search",
+          "desc": "Search visible group chats by --query keyword and/or --member-ids; user/bot; e.g. look up chat_id by group name; supports type filters, sorting, auto-pagination, and --exclude-muted (user identity only)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +chat-update",
+          "desc": "Update group chat name or description; user/bot; updates a chat's name or description",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +feed-group-list",
+          "desc": "List the caller's feed groups (tags); user-only; supports --page-all auto-pagination",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +feed-group-list-item",
+          "desc": "List feed cards in a feed group (tag); user-only; enriches each item with chat_name resolved from feed_id; supports --page-all auto-pagination",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +feed-group-query-item",
+          "desc": "Look up specific feed cards in a feed group (tag) by ID; user-only; enriches each item with chat_name resolved from feed_id",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +feed-shortcut-create",
+          "desc": "Add chats to the user's feed shortcuts; user-only; oc_xxx chat IDs only; batch up to 10 per call; --head/--tail controls insertion order; partial failures return an ok:false ledger",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +feed-shortcut-list",
+          "desc": "List one page of the user's feed shortcuts; user-only; omit --page-token for the first page; default output enriches CHAT entries under detail; pass --no-detail to skip the extra lookup and im:chat:read scope",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +feed-shortcut-remove",
+          "desc": "Remove chats from the user's feed shortcuts; user-only; batch up to 10 per call; removing an absent shortcut is idempotent success; real per-item failures return an ok:false ledger",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +flag-cancel",
+          "desc": "Cancel (remove) a bookmark. When no --flag-type is given, best-effort double-cancel: removes message layer and (when chat_type is determinable) feed layer",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +flag-create",
+          "desc": "Create a bookmark on a message; user-only; defaults to message-layer flag; use --flag-type feed for feed-layer flag (item_type auto-detected from chat mode)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +flag-list",
+          "desc": "List bookmarks; user-only; auto-enriches feed-type thread entries with message content; --page-all is capped by --page-limit (default 20, max 1000), and has_more=true means the result is incomplete",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +message-read-users",
+          "desc": "user: im:message:readonly (recommended), im:message, im:message:basic, or im:message:get_as_user; bot: im:message:readonly",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-edit",
+          "desc": "Edit a message's content (text/post, including the attachment zone); bot-only (user identity is rejected by the server); PUT /open-apis/im/v1/messages/:message_id",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-mget",
+          "desc": "Batch get messages by IDs; user/bot; fetches up to 50 om_ message IDs, formats sender names, expands thread replies",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-read-status",
+          "desc": "Batch query whether the current user read 1–50 messages; user-only; returns readable items and invalid message IDs",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-reply",
+          "desc": "Reply to a message (supports thread replies); user/bot; supports text/markdown/post/media replies, reply-in-thread, idempotency key",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-resources-download",
+          "desc": "Download an image/file from a message; folders are not directly downloadable — expand with im files folder --recursive first, then download the files inside; user/bot",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-search",
+          "desc": "Search messages across chats (supports keyword, sender, time range filters) with user or bot identity; filters by chat/sender/attachment/time, supports auto-pagination via --page-all / --page-limit, enriches results via batched mget and chats batch_query",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +messages-send",
+          "desc": "Send a message to a chat or direct message; user/bot; sends to chat-id or user-id with text/markdown/post/media, supports idempotency key",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli im +threads-messages-list",
+          "desc": "List messages in a thread; user/bot; accepts om_/omt_ input, resolves message IDs to thread_id, supports --order asc/desc sorting, auto-pagination",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "doc",
+      "label": "doc",
+      "prefix": "docs` / `mindnotes",
+      "commands": [
+        {
+          "name": "lark-cli docs +create",
+          "desc": "导入 / 空文档",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli docs +fetch",
+          "desc": "读取 / 摘要",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli docs +media-download",
+          "desc": "下载素材",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli docs +media-insert",
+          "desc": "插入本地素材",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli docs +media-preview",
+          "desc": "预览素材",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli docs +script",
+          "desc": "草稿初始化、解析与统计",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli docs +update",
+          "desc": "编辑 / block 直达链接",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "drive",
+      "label": "drive",
+      "prefix": "drive",
+      "commands": [
+        {
+          "name": "lark-cli drive +add-comment",
+          "desc": "给 doc/docx/file/sheet/slides/base(bitable) 添加全文/局部评论；不支持妙搭 apps。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +add-reply",
+          "desc": "给已有评论添加回复。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +apply-permission",
+          "desc": "以 user 身份向文档 owner 申请访问权限。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +batch-query-comments",
+          "desc": "按评论 ID 批量获取评论。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +copy",
+          "desc": "copy — 复制文件；优先使用 [drive",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +cover",
+          "desc": "查看或下载文件封面图规格。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +create-folder",
+          "desc": "新建 Drive 文件夹，支持父文件夹与 bot 创建后自动授权。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +create-shortcut",
+          "desc": "在另一个文件夹里创建现有 Drive 文件的快捷方式。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +delete",
+          "desc": "删除 Drive 文件或文件夹，文件夹删除会轮询异步任务。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +delete-reply",
+          "desc": "删除评论下的某条回复（高风险，需 --yes）。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +download",
+          "desc": "下载 Drive 文件到本地。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +export",
+          "desc": "将 doc/docx/sheet/bitable/slides 导出为本地文件。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +export-download",
+          "desc": "根据导出产物的 file_token 下载文件。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +fetch",
+          "desc": "读取文档内容",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +import",
+          "desc": "将本地文件导入为飞书在线文档、表格、多维表格或幻灯片。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +inspect",
+          "desc": "检视 URL 的类型、标题和 canonical token；wiki URL 会自动解包到底层文档。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +list-comments",
+          "desc": "分页获取评论列表。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +list-replies",
+          "desc": "分页获取某条评论下的回复。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +member-add",
+          "desc": "添加一个或最多 10 个 Drive 文档、文件、文件夹或 wiki 节点协作者/授权成员；封装 Drive permission member create/batch_create，真实写入需要 --yes。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +member-list",
+          "desc": "查询 Drive 文档、文件、文件夹或 wiki 节点的协作者/授权成员列表。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +member-remove",
+          "desc": "移除一个 Drive 文档、文件、文件夹或 wiki 节点协作者；封装 Drive permission member delete，真实写入需要 --yes。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +move",
+          "desc": "移动 Drive 文件或文件夹；Wiki 层级移动走 lark-wiki。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +node-copy",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +permission-get-setting",
+          "desc": "查询文件、文件夹或云文档自身的公开访问、分享、协作者管理、安全与评论权限设置；支持 URL 或裸 token + --type；不递归读取文件夹子文档权限。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +preview",
+          "desc": "查看或下载文件内容，或者查看文件可用预览格式并获取 PDF / HTML / 文本 / 图片等转换预览产物。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +pull",
+          "desc": "从 Drive 拉取文件到本地目录，支持重复远端路径处理和增量模式。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +push",
+          "desc": "将本地目录推送到 Drive 文件夹，支持 skip / smart / overwrite 与确认后删除远端。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +react-reply",
+          "desc": "给回复加/删表情回应。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +resolve-comment",
+          "desc": "把评论标记为已解决（is_solved=true）。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +restore-comment",
+          "desc": "恢复/重新打开已解决评论（is_solved=false）。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +search",
+          "desc": "搜索文档、Wiki、表格、文件夹等云空间对象；支持 --edited-since、--created-by-me、--mine、--doc-types 等扁平 flag；区分 original creator 与 owner 语义。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +secure-label-list",
+          "desc": "列出当前用户可用的密级标签。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +secure-label-update",
+          "desc": "更新 Drive 文件或文档的密级标签。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +status",
+          "desc": "比较本地目录与 Drive 文件夹差异；默认按 SHA-256 精确比较，--quick 使用修改时间近似比较。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +sync",
+          "desc": "双向同步本地目录与 Drive 文件夹：拉取 new_remote、推送 new_local，modified 按 --on-conflict=remote-wins\\ / local-wins\\ / keep-both\\ / ask 处理；--quick 用修改时间近似比较；--on-duplicate-remote 支持 fail / newest / oldest；只同步 type=file，跳过在线文档和 shortcut，且不会删除两端多余文件。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +task",
+          "desc": "查询 import/export/move/delete 等异步任务结果。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +update-reply",
+          "desc": "整体替换某条回复的内容。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +update-title",
+          "desc": "重命名文件、文件夹、在线文档或知识库。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +upload",
+          "desc": "上传本地文件到 Drive 文件夹或 wiki 节点；修改/重写/更新已有文件时优先覆盖上传，而不是直接上传一个新文件。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +version-delete",
+          "desc": "删除指定历史版本。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +version-get",
+          "desc": "下载指定历史版本。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +version-history",
+          "desc": "查看文件历史版本。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli drive +version-revert",
+          "desc": "回滚到指定历史版本。",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "markdown",
+      "label": "markdown",
+      "prefix": "markdown",
+      "commands": [
+        {
+          "name": "lark-cli markdown +create",
+          "desc": "Create a Markdown file in Drive",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli markdown +diff",
+          "desc": "Compare two remote Markdown versions, or compare remote Markdown against a local file",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli markdown +fetch",
+          "desc": "Fetch a Markdown file from Drive",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli markdown +overwrite",
+          "desc": "Overwrite an existing Markdown file in Drive",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli markdown +patch",
+          "desc": "Patch a Markdown file in Drive via fetch-local-replace-overwrite",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "sheets",
+      "label": "sheets",
+      "prefix": "sheets",
+      "commands": [
+        {
+          "name": "lark-cli sheets +batch-chart-create",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-batch-clear",
+          "desc": "批量清除多区域",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-clear",
+          "desc": "行列操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-get",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-merge",
+          "desc": "行列操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-replace",
+          "desc": "查找 / 替换文本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-search",
+          "desc": "查找 / 替换文本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-set",
+          "desc": "Lark Sheet Write Cells",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-set-image",
+          "desc": "写入数据",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-set-style",
+          "desc": "写入数据",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cells-unmerge",
+          "desc": "行列操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +changeset-get",
+          "desc": "复核编辑变更 / 取版本间差异",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +chart-config-update",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +chart-create",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +chart-create-basic",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +chart-data-update",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +chart-list",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +chart-update",
+          "desc": "画图表 / 可视化 / 柱状图 / 折线图 / 饼图 / 趋势 / 占比",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cols-resize",
+          "desc": "行列操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +cond-format-create",
+          "desc": "条件格式 / 条件高亮 / 数据条 / 色阶",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +csv-get",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +csv-put",
+          "desc": "Lark Sheet Write Cells",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +dim-delete",
+          "desc": "子表结构",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +dim-insert",
+          "desc": "格式继承（新列/新行）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +filter-create",
+          "desc": "保存多份筛选状态 / 命名筛选视图",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +filter-view-create",
+          "desc": "保存多份筛选状态 / 命名筛选视图",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +float-image-create",
+          "desc": "插图：自由摆放的装饰",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +history-list",
+          "desc": "查编辑历史 / 回滚到历史版本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +history-revert",
+          "desc": "查编辑历史 / 回滚到历史版本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +history-revert-status",
+          "desc": "查编辑历史 / 回滚到历史版本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +pivot-create",
+          "desc": "分组汇总 / 透视",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +range-copy",
+          "desc": "格式继承（新列/新行）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +range-sort",
+          "desc": "行列操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +revision-get",
+          "desc": "工作簿操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +rows-resize",
+          "desc": "行列操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +sheet-copy",
+          "desc": "工作簿操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +sheet-info",
+          "desc": "子表结构",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +sparkline-create",
+          "desc": "迷你图 / 单元格内趋势线",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +styles-put",
+          "desc": "美化收尾",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +table-put",
+          "desc": "Lark Sheet Sheet Structure",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +workbook-create",
+          "desc": "Lark Sheet Styles Put",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +workbook-export",
+          "desc": "工作簿操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +workbook-import",
+          "desc": "工作簿操作",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli sheets +workbook-info",
+          "desc": "工作簿操作",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "slides",
+      "label": "slides",
+      "prefix": "slides",
+      "commands": [
+        {
+          "name": "lark-cli slides +add-slide",
+          "desc": "向已有演示文稿追加或插入一页（--before-slide-id 控制位置），XML 支持 @file / stdin，<img src=\"@./path\"> 占位符自动上传",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +create",
+          "desc": "2. 创建流程：新建演示文稿用 slides",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +delete-slide",
+          "desc": "按 slide_id 删除一页",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +history-list",
+          "desc": "查看或回滚历史版本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +history-revert",
+          "desc": "查看或回滚历史版本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +history-revert-status",
+          "desc": "查看或回滚历史版本",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +media-download",
+          "desc": "根据 Slides 图片 file_token 下载本地图片；--output 选填，未传时使用 --output-dir 默认值 .lark-slides/media 并自动生成文件名；调用后使用返回的 path，不要猜测实际路径；直连下载无权限时自动回退到源文件预览",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +media-upload",
+          "desc": "上传本地图片到指定演示文稿，返回 file_token（用作 <img src=\"...\">），最大 20 MB",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +node-get",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +replace-slide",
+          "desc": "对已有幻灯片页面进行块级替换/插入（block_replace / block_insert），自动注入 id 和 <content/>，不改变页序",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +screenshot",
+          "desc": "把幻灯片页面截图保存为本地图片；用 --slide-number 指定页码（从 1 开始，多页重复传入）或用 --slide-id 指定页面；单张用 --output .lark-slides/screenshots/<deck-or-task-id>/page-01，批量用 --output-dir .lark-slides/screenshots/<deck-or-task-id>（一次最多 10 页）；后续必须读取返回的 output / screenshots[].path",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +update-slide",
+          "desc": "把一整页 XML 交给已有页面，页面变成 --content 描述的样子；能一次改样式/插入/删除/备注/背景，slide_id 和页序不变。没写进 --content 的元素会被删除",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli slides +xml-get",
+          "desc": "读取全文或单页 XML；用 --presentation 指定演示文稿，单页传 --slide-id 或 --slide-number；用 --output 把 XML 存到本地文件（必须是 CWD 内的相对路径，如 .lark-slides/plan/<deck>/readback.xml）",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "base",
+      "label": "base",
+      "prefix": "base",
+      "commands": [
+        {
+          "name": "lark-cli base +app-page-list",
+          "desc": "3. 页面： 使用",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +base-get",
+          "desc": "读取 Base： Base 信息用",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +dashboard-block-get-data",
+          "desc": "3. 读取内容：",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +record-batch-create",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +record-batch-update",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +record-get",
+          "desc": "已知若干个 record_id：",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +record-list",
+          "desc": "其余读取：",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +record-search",
+          "desc": "关键词搜索：",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +search",
+          "desc": "最近访问：lark-cli drive",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +title-resolve",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli base +url-resolve",
+          "desc": "",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "task",
+      "label": "task",
+      "prefix": "task",
+      "commands": [
+        {
+          "name": "lark-cli task +assign",
+          "desc": "assign or remove task members",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +comment",
+          "desc": "add a comment to a task",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +complete",
+          "desc": "mark a task as complete",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +create",
+          "desc": "create a task",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +followers",
+          "desc": "manage task followers",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +get-my-tasks",
+          "desc": "List tasks assigned to me",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +get-related-tasks",
+          "desc": "list tasks related to me",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +reminder",
+          "desc": "manage task reminders",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +reopen",
+          "desc": "reopen a completed task",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +search",
+          "desc": "> 任务搜索相关性提示：",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +set-ancestor",
+          "desc": "set or clear a task ancestor",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +tasklist-create",
+          "desc": "create a tasklist and optionally add tasks",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +tasklist-members",
+          "desc": "manage tasklist members",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +tasklist-search",
+          "desc": "search tasklists",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +tasklist-task-add",
+          "desc": "add tasks to a tasklist",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +update",
+          "desc": "update task attributes",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli task +upload-attachment",
+          "desc": "upload a local file as an attachment to a task",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "mail",
+      "label": "mail",
+      "prefix": "mail",
+      "commands": [
+        {
+          "name": "lark-cli mail +decline-receipt",
+          "desc": "Dismiss the read-receipt request banner on an incoming mail by clearing its READ_RECEIPT_REQUEST label, without sending a receipt. Use when the user wants to silence the prompt but refuse to confirm they have read it. Idempotent — safe to re-run.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +draft-create",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +draft-edit",
+          "desc": "Use when updating an existing mail draft without sending it. Prefer this shortcut over calling raw drafts.get or drafts.update directly, because it performs draft-safe MIME read/patch/write editing while preserving unchanged structure, attachments, and headers where possible.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +forward",
+          "desc": "Forward a message and save as draft (default). Use --confirm-send to send immediately after user confirmation. Original message block included automatically.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +lint-html",
+          "desc": "Lint mail HTML body for compatibility / safety / Feishu-native rules. Returns warnings/errors and (default) auto-fixed HTML. Read-only: no draft, no API call. Use this BEFORE creating a draft to preview what the writing-path lint would change, or as a CI gate for static HTML templates.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +message",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +message-trash",
+          "desc": "3. 用户确认后 →",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +messages",
+          "desc": "Use when reading full content for multiple emails by message ID. Accepts comma-separated message IDs; CLI handles more than 20 IDs in batches and merges output.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +reply",
+          "desc": "Reply to a message and save as draft (default). Use --confirm-send to send immediately after user confirmation. Sets Re: subject, In-Reply-To, and References headers automatically.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +reply-all",
+          "desc": "Reply to all recipients and save as draft (default). Use --confirm-send to send immediately after user confirmation. Includes all original To and CC automatically.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +send",
+          "desc": "Compose a new email and save as draft (default). Use --confirm-send to send immediately after user confirmation.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +send-receipt",
+          "desc": "Send a read-receipt reply for an incoming message that requested one (i.e. carries the READ_RECEIPT_REQUEST label). Body is auto-generated (subject / recipient / send time / read time) to match the Lark client's receipt format — callers cannot customize it, matching the industry norm that read-receipt bodies are system-generated templates, not free-form replies. Intended for agent use after the user confirms.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +share-to-chat",
+          "desc": "Share an email or thread as a card to a Lark IM chat.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +signature",
+          "desc": "List or view email signatures with default usage info.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +template-create",
+          "desc": "Create a personal mail template. Scans HTML <img src> local paths (reusing draft inline-image detection), uploads inline images and non-inline attachments to Drive, rewrites HTML to cid: references, and POSTs a Template payload to mail.user_mailbox.templates.create.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +template-update",
+          "desc": "Update an existing mail template. Supports --inspect (read-only projection), --print-patch-template (prints a JSON skeleton for --patch-file), and flat flags (--set-subject / --set-name / etc). Internally it GETs the template, applies the patch, rewrites <img> local paths to cid: refs, and PUTs a full-replace update (no optimistic locking: last-write-wins).",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +thread",
+          "desc": "Use when querying a full mail conversation/thread by thread ID. Returns all messages in chronological order, including replies and drafts, with body content and attachments metadata, including inline images.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +thread-modify",
+          "desc": "Modify existing mail threads by adding/removing label IDs or moving them to a folder. Batches thread IDs in groups of 20 and returns success_thread_ids / failed_thread_ids.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +thread-trash",
+          "desc": "Soft-delete existing mail threads. Batches thread IDs in groups of 20 and returns success_thread_ids / failed_thread_ids. Requires --yes.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +triage",
+          "desc": "List mail summaries (date/from/subject/message_id). Use --query for full-text search, --filter for exact-match conditions.",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli mail +watch",
+          "desc": "Watch for incoming mail events via WebSocket (requires scope mail:event and bot event mail.user_mailbox.event.message_received_v1 added). Run with --print-output-schema to see per-format field reference before parsing output.",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "contact",
+      "prefix": "contact",
+      "commands": [
+        {
+          "name": "lark-cli contact +get-user",
+          "desc": "已知 open_id 取他人资料",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli contact +messages-send",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli contact +search-bot",
+          "desc": "按关键词搜索当前用户可见的机器人 / 智能体",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli contact +search-user",
+          "desc": "按姓名 / 邮箱搜员工拿 open_id",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "wiki",
+      "label": "wiki",
+      "prefix": "wiki",
+      "commands": [
+        {
+          "name": "lark-cli wiki +delete-space",
+          "desc": "Delete a wiki space, polling the async delete task when needed",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +member-add",
+          "desc": "Add a member to a wiki space",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +member-list",
+          "desc": "List members of a wiki space (supports pagination)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +member-remove",
+          "desc": "Remove a member from a wiki space",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +move",
+          "desc": "Move a wiki node, or move a Drive document into Wiki",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +move-to-drive",
+          "desc": "Move a wiki node to a Drive folder and poll the async task",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +node-copy",
+          "desc": "Copy a wiki node to a target space or parent node",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +node-create",
+          "desc": "Create a wiki node with automatic space resolution",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +node-delete",
+          "desc": "Delete a wiki node, polling the async delete task when needed",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +node-get",
+          "desc": "Get a wiki node's details by node_token / obj_token / Lark URL",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +node-list",
+          "desc": "List wiki nodes in a space or under a parent node (supports pagination)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +space-create",
+          "desc": "Create a wiki space (user identity only)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli wiki +space-list",
+          "desc": "List all wiki spaces accessible to the caller",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "meeting",
+      "label": "meeting",
+      "prefix": "vc` / `minutes` / `note",
+      "commands": [
+        {
+          "name": "lark-cli vc +apply-permission",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +detail",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +download",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-countdown",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-end",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-events",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-invite",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-join",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-leave",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-list-active",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-message-send",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +meeting-screenshot",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +member-add",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +member-list",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +recording",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +search",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +speaker-replace",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +summary",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +todo",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +transcript",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +update",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +upload",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli vc +word-replace",
+          "desc": "",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "vc",
+      "label": "vc",
+      "prefix": "vc",
+      "commands": []
+    },
+    {
+      "id": "minutes",
+      "label": "minutes",
+      "prefix": "minutes",
+      "commands": []
+    },
+    {
+      "id": "note",
+      "label": "note",
+      "prefix": "note",
+      "commands": []
+    },
+    {
+      "id": "whiteboard",
+      "label": "whiteboard",
+      "prefix": "whiteboard",
+      "commands": [
+        {
+          "name": "lark-cli whiteboard +export",
+          "desc": "导出画板为预览图片、SVG 矢量图、代码或原始节点结构。",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli whiteboard +update",
+          "desc": "更新画板，支持 PlantUML、Mermaid、SVG 或 OpenAPI 原生格式",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "attendance",
+      "label": "attendance",
+      "prefix": "attendance",
+      "commands": []
+    },
+    {
+      "id": "approval",
+      "label": "approval",
+      "prefix": "approval",
+      "commands": []
+    },
+    {
+      "id": "okr",
+      "label": "okr",
+      "prefix": "okr",
+      "commands": [
+        {
+          "name": "lark-cli okr +batch-create",
+          "desc": "批量创建 Objective（可带备注）和 KR",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-create",
+          "desc": "创建新评论或回复已有评论(仅支持 --as user)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-delete",
+          "desc": "永久删除单条评论(仅支持 --as user)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-detail",
+          "desc": "获取周期下 Cycle/Objective/KeyResult/Progress 的全部评论",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-get",
+          "desc": "获取单条评论详情",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-list",
+          "desc": "查询/创建/修改/解决 OKR 评论",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-patch",
+          "desc": "修改评论内容(仅支持 --as user)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-reopen",
+          "desc": "重新打开评论或划词评论串(仅支持 --as user)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +comment-solve",
+          "desc": "解决评论或划词评论串(仅支持 --as user)",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +create",
+          "desc": "创建单个 Objective（可带备注），或向已有 Objective 新增 KR",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +cycle-detail",
+          "desc": "获取特定 OKR 中所有目标和关键结果的内容",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +cycle-list",
+          "desc": "分页获取特定用户的 OKR 周期列表，可以用 --time-range 对当前页后置筛选",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +indicator-update",
+          "desc": "更新 Objective 或 KR 的当前进度指标。更复杂的量化指标操作见 量化指标管理",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +patch",
+          "desc": "部分更新 Objective 或 KR（content、notes、score、deadline）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +progress-create",
+          "desc": "为目标或关键结果创建进展记录",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +progress-delete",
+          "desc": "删除指定 ID 的进展记录（不可恢复）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +progress-get",
+          "desc": "根据 ID 获取单条 OKR 进展记录",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +progress-list",
+          "desc": "分页获取目标或关键结果的进展记录列表",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +progress-update",
+          "desc": "更新指定 ID 的进展记录内容",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +reorder",
+          "desc": "调整 Objective 或 KR 的顺位",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +search-user",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +upload-image",
+          "desc": "上传图片用于 OKR 进展记录的富文本内容",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli okr +weight",
+          "desc": "调整 Objective 或 KR 的权重",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "apps",
+      "label": "apps",
+      "prefix": "apps` / `apps",
+      "commands": [
+        {
+          "name": "lark-cli apps +access-scope-get",
+          "desc": "设置或查看运行时可见范围",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +access-scope-set",
+          "desc": "设置或查看运行时可见范围",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +analytics-list",
+          "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +automation-list",
+          "desc": "管理妙搭应用自动化触发器（定时/记录变更/Webhook/飞书审批四类触发器的查询/创建/更新/启停；Webhook URL·Token 一次性回显、不落盘）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +cache-clear",
+          "desc": "调试应用运行时缓存：查看/删除单个业务 key、清空指定环境缓存",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +cache-delete",
+          "desc": "调试应用运行时缓存：查看/删除单个业务 key、清空指定环境缓存",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +cache-get",
+          "desc": "调试应用运行时缓存：查看/删除单个业务 key、清空指定环境缓存",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +chat",
+          "desc": "云端 Agent 生成/迭代应用（开发方式已定为云端后）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +create",
+          "desc": "创建新应用资产、拿 app_id",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-audit-disable",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-audit-enable",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-audit-list",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-audit-status",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-changelog-list",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-data-export",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-data-import",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-env-create",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-env-diff",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-env-migrate",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-execute",
+          "desc": "逐条执行 SQL（SELECT / DML / DDL）；建表 / 改表 / 写 SQL 的平台规范",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-quota-get",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-recovery-apply",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-recovery-diff",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-table-get",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +db-table-list",
+          "desc": "看表 / 看结构 / 初始化多环境 / 导入导出数据 / 变更追溯 / 行级审计 / dev→online 发布 / 时间点恢复 / 查 DB 用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +env-delete",
+          "desc": "管理应用环境变量（查看/设置/删除）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +env-list",
+          "desc": "管理应用环境变量（查看/设置/删除）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +env-pull",
+          "desc": "本地开发时 .env.local 损坏/丢失，重新拉取启动期环境变量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +env-set",
+          "desc": "管理应用环境变量（查看/设置/删除）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +export",
+          "desc": "只要一份源码快照、不做本地开发；或要取别人分享给你的应用源码（你对其仓库无权限）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-delete",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-download",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-get",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-list",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-quota-get",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-sign",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +file-upload",
+          "desc": "管理应用文件存储：上传/下载本地文件、列出/查看/删除已存文件、生成临时分享链接、查存储用量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +get",
+          "desc": "查单个应用详情（类型、名称、发布状态等）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +git-credential-init",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +html-publish",
+          "desc": "旧版存量 HTML 应用（无 Git 管理）继续上传已有静态产物",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +init",
+          "desc": "只要一份源码快照、不做本地开发；或要取别人分享给你的应用源码（你对其仓库无权限）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +list",
+          "desc": "找已有 app_id、按名字过滤应用",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +log-get",
+          "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +log-list",
+          "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +member-add",
+          "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +member-list",
+          "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +member-remove",
+          "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +member-settings-get",
+          "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +member-settings-set",
+          "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +member-update",
+          "desc": "管理应用协作者（列出/添加/改权限/移除）或协作权限设置",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +metric-list",
+          "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +openapi-key-list",
+          "desc": "管理妙搭应用开放 API Key（创建/查看/启停/重置/删除凭证；密钥仅 create/reset 一次性返回）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +plugin-install",
+          "desc": "外部能力(AI模型能力和飞书平台能力)集成/插件/Plugin/Capability",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +plugin-list",
+          "desc": "外部能力(AI模型能力和飞书平台能力)集成/插件/Plugin/Capability",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +plugin-uninstall",
+          "desc": "外部能力(AI模型能力和飞书平台能力)集成/插件/Plugin/Capability",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +release-create",
+          "desc": "部署/上线应用（\"部署\"\"上线\"\"推上去并部署\"\"发布到云端\"）；查发布状态/历史",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +release-get",
+          "desc": "部署/上线应用（\"部署\"\"上线\"\"推上去并部署\"\"发布到云端\"）；查发布状态/历史",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +release-list",
+          "desc": "部署/上线应用（\"部署\"\"上线\"\"推上去并部署\"\"发布到云端\"）；查发布状态/历史",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +role",
+          "desc": "apps",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +role-",
+          "desc": "",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +role-list",
+          "desc": "管理 app_... 应用内角色、角色成员，或查询用户匹配角色",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +role-match-list",
+          "desc": "管理 app_... 应用内角色、角色成员，或查询用户匹配角色",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +role-member-list",
+          "desc": "管理 app_... 应用内角色、角色成员，或查询用户匹配角色",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +session-create",
+          "desc": "云端 Agent 生成/迭代应用（开发方式已定为云端后）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +session-get",
+          "desc": "查看某次会话某一轮（turn）的回复消息（含仍在生成中的本轮）/ 导出上一轮模型回复（\"这一轮回复了什么\"\"上一轮的回复\"\"导出某轮消息\"）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +session-messages-list",
+          "desc": "查看某次会话某一轮（turn）的回复消息（含仍在生成中的本轮）/ 导出上一轮模型回复（\"这一轮回复了什么\"\"上一轮的回复\"\"导出某轮消息\"）",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +trace-get",
+          "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +trace-list",
+          "desc": "查线上日志、Trace、请求数、错误率、延迟、CPU、memory、PV/UV/访问量",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +update",
+          "desc": "改应用名或描述",
+          "ref": ""
+        },
+        {
+          "name": "lark-cli apps +user-id-convert",
+          "desc": "把一批 ID 在妙搭 user_id ↔ 飞书 open_id / union_id / 飞书 user_id 之间互转（例如拿到 open_id 但下游要 user_id）",
+          "ref": ""
+        }
+      ]
+    },
+    {
+      "id": "event",
+      "label": "event",
+      "prefix": "event",
+      "commands": []
+    },
+    {
+      "id": "vc-agent",
+      "label": "vc-agent",
+      "prefix": "vc-agent",
+      "commands": []
+    }
+  ]
+}

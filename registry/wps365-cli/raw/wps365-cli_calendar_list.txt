@@ -1,0 +1,23 @@
+查询当前可访问的日历列表，支持分页。
+
+Usage:
+  wps365-cli calendar list [flags]
+
+Examples:
+wps365-cli calendar list
+wps365-cli calendar list --page-size 10 --page-token "next-token"
+
+Flags:
+  -h, --help                help for list
+      --page-size int       每页返回的日历数量，默认为 20，最大值为 20 (default 20)
+      --page-token string   分页标记，传入上一次响应中的 next_page_token
+      --token-type string   authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

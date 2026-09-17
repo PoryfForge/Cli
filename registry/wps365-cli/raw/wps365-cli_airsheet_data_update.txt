@@ -1,0 +1,21 @@
+用 JSON 更新选区单元格。不要使用内部 CLI 的 build_* 转换器。
+
+Usage:
+  wps365-cli airsheet data update <file-id> <worksheet-id> [flags]
+
+Examples:
+wps365-cli airsheet data update f_001 1 --range-data-body '[{"row":0,"col":0,"op_type":"cell_operation_type_formula","formula":"hello"}]'
+
+Flags:
+  -h, --help                     help for update
+      --range-data-body string   (required) range_data JSON 数组
+      --token-type string        authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

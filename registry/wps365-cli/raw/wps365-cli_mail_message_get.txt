@@ -1,0 +1,22 @@
+获取一封邮件的详细内容。
+
+Usage:
+  wps365-cli mail message get <mailbox-id> <folder-id> <message-id> [flags]
+
+Examples:
+wps365-cli mail message get "mbx_xxx" inbox "msg_xxx"
+
+Flags:
+  -h, --help                   help for get
+      --token-type string      authentication identity: delegated|app
+      --with-importance-flag   是否返回重要性标识
+      --with-ocr-body          是否返回 OCR 正文
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

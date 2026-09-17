@@ -1,0 +1,22 @@
+在数据表中创建记录。
+
+Usage:
+  wps365-cli dbsheet record create <file-id> <sheet-id> [flags]
+
+Examples:
+wps365-cli dbsheet record create f_abc123 12345 --records-body '[{"fields_value":"{\"任务名\":\"完成设计\"}"}]'
+
+Flags:
+  -h, --help                  help for create
+      --prefer-id             是否优先使用指定 ID
+      --records-body string   记录数据 JSON 数组，每项含 fields_value
+      --token-type string     authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)

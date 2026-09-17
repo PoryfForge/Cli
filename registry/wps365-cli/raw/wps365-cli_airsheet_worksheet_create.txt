@@ -1,0 +1,22 @@
+在智能表格中创建工作表。position 为必填对象，用 --position-body 传入 JSON。
+
+Usage:
+  wps365-cli airsheet worksheet create <file-id> [flags]
+
+Examples:
+wps365-cli airsheet worksheet create f_001 --name "Sheet2" --position-body '{"end":true}'
+
+Flags:
+  -h, --help                   help for create
+      --name string            工作表名
+      --position-body string   (required) 插入位置 JSON（after_sheet_id / before_sheet_id / end）
+      --token-type string      authentication identity: delegated|app
+
+Global Flags:
+      --dry-run          print the request without sending it
+      --flatten          flatten nested objects for columnar outputs
+      --jq string        apply a jq filter using the built-in Go engine
+      --no-color         disable colorized output
+  -o, --output string    output format: json|yaml|table|tsv|ndjson|csv
+      --quiet            quiet mode, only output data and errors
+      --timeout string   HTTP request timeout for business API calls (e.g. 30s, 2m, 2min; 0/none = no timeout)
