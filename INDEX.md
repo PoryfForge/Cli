@@ -73,6 +73,7 @@
 | 配置 / 检查腾讯广告 API Key 鉴权 | `tencentads` | `tencentads auth login \| status \| logout` | 凭据落在 ~/.tencent-ads；用 --config-dir 可换目录。API Key 不要回显在对话里 |
 | 查腾讯广告这个 CLI 到底支持哪些命令 | `tencentads` | `tencentads --list-commands` | 命令面按 edition 变化：默认 edition 只有 auth，营销管理相关命令标着 enterprise |
 | 查腾讯广告的账号 / 营销单元 / 创意 / 报表数据 | `tencentads` | `（该 CLI 当前没有对应命令，见 registry/tencentads/CAPABILITY.md）` | 业务能力在腾讯广告官方技能站的 tencentads-* 系列脚本里（skills.ad.qq.com），本库尚未收录，也还没做过业务调用验证 |
+| 给自己发一条飞书消息 | `feishu-cli` | `lark-cli im +messages-send --user-id <自己的 open_id> --text "..." --as bot` | 自发自收走 --user-id 自己的 open_id（与 --chat-id 互斥）。user 身份需要 im:message.send_as_user scope，本机未授权；bot 身份免额外授权即可送达，消息出现在「应用↔本人」的 p2p 会话里。 |
 
 ## 已收录的 CLI
 

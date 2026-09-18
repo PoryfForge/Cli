@@ -17,6 +17,7 @@ const {
   parseCommandLine,
   pickVersion,
   shortenHomeInText,
+  stringifyRoutes,
 } = require(path.join(__dirname, '..', 'bin', 'cli-cap'));
 
 // ---------------------------------------------------------------- gh 风格
@@ -157,4 +158,25 @@ assert.equal(
   );
 }
 
-console.log('✓ help 解析回归通过：带冒号的命令名、HELP TOPICS 边界、回退门槛、版本号前缀、路径脱敏');
+// ---------------------------------------------------------------- 路由表写回
+// routes.json 里人工用空行分隔不同 CLI。直接 JSON.stringify 会把空行吃掉，
+// 跑一次 remember 整份表就变成一坨。写回时必须把分组补回来。
+{
+  const doc = {
+    _comment: '说明',
+    routes: [
+      { intent: '甲', cli: 'a', command: 'a1' },
+      { intent: '乙', cli: 'a', command: 'a2' },
+      { intent: '丙', cli: 'b', command: 'b1' },
+    ],
+  };
+  const out = stringifyRoutes(doc);
+  assert.deepEqual(JSON.parse(out), doc, '写回后必须仍是等价 JSON');
+  assert.match(out, /"command": "a2"\n    \},\n\n    \{/, '同 CLI 之间不空行、换 CLI 时空一行');
+  assert.match(out, /"_comment": "说明",\n  "routes":/, '顶层 _comment 要保留并排在 routes 之前');
+  assert.equal(out.at(-1), '\n', '文件以换行结尾');
+}
+
+console.log(
+  '✓ help 解析回归通过：带冒号的命令名、HELP TOPICS 边界、回退门槛、版本号前缀、路径脱敏、路由表写回'
+);

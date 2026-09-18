@@ -203,6 +203,7 @@
       "command": "wps365-cli update；然后 wps365-cli spec update -y",
       "note": "命令定义从 CDN 拉，升级二进制后要再更一次 spec"
     },
+
     {
       "intent": "查 / 建 / 改 / 克隆 GitHub 仓库",
       "cli": "github-cli",
@@ -251,6 +252,7 @@
       "command": "gh secret set | list ；gh variable set | list",
       "note": "写操作影响仓库配置，执行前跟用户确认目标仓库与环境名"
     },
+
     {
       "intent": "取一条密钥 / 密码 / 令牌",
       "cli": "1password-cli",
@@ -287,6 +289,7 @@
       "command": "op plugin list | init | inspect",
       "note": "shell plugin 机制，凭证不进 shell history"
     },
+
     {
       "intent": "把任务派给某台机器上的编码 Agent 跑",
       "cli": "multica",
@@ -329,6 +332,7 @@
       "command": "multica agent create | list | update | skills ；multica skill import | list",
       "note": "agent env 里的自定义环境变量存在服务端，别往里塞明文密钥"
     },
+
     {
       "intent": "非交互地跑一次 Grok（脚本 / CI 里用）",
       "cli": "grok-cli",
@@ -365,6 +369,7 @@
       "command": "grok doctor ；grok inspect",
       "note": "inspect 显示当前目录下 Grok 实际发现的配置，配置没生效时先看它"
     },
+
     {
       "intent": "配置 / 检查腾讯广告 API Key 鉴权",
       "cli": "tencentads",
@@ -382,6 +387,15 @@
       "cli": "tencentads",
       "command": "（该 CLI 当前没有对应命令，见 registry/tencentads/CAPABILITY.md）",
       "note": "业务能力在腾讯广告官方技能站的 tencentads-* 系列脚本里（skills.ad.qq.com），本库尚未收录，也还没做过业务调用验证"
+    },
+
+    {
+      "cli": "feishu-cli",
+      "intent": "给自己发一条飞书消息",
+      "command": "lark-cli im +messages-send --user-id <自己的 open_id> --text \"...\" --as bot",
+      "note": "自发自收走 --user-id 自己的 open_id（与 --chat-id 互斥）。user 身份需要 im:message.send_as_user scope，本机未授权；bot 身份免额外授权即可送达，消息出现在「应用↔本人」的 p2p 会话里。",
+      "recordedAt": "2026-09-17T10:55:41.504Z",
+      "snapshotVersion": "1.0.96"
     }
   ]
 }

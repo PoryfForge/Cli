@@ -1018,9 +1018,29 @@ function cmdRemember(name, flags) {
   };
   if (existing) Object.assign(existing, route);
   else document.routes.push(route);
-  fs.writeFileSync(path.join(ROOT, 'routes.json'), JSON.stringify(document, null, 2) + '\n');
+  fs.writeFileSync(path.join(ROOT, 'routes.json'), stringifyRoutes(document));
   console.log(`✓ 已${existing ? '更新' : '保存'}路由：${route.intent} → ${name}（仅保存，未执行或验证业务命令）`);
   cmdIndex();
+}
+
+/**
+ * 路由表的写回。
+ *
+ * 直接 `JSON.stringify` 会把人工用来区分 CLI 的空行吃掉 —— 跑一次 `remember`，
+ * 整份路由表就变成一坨，几百条的映射很难再按工具找。这里在「相邻两条属于不同
+ * CLI」之间补一个空行，让分组在每次写回后仍然成立。
+ * 顶层其它字段（_comment / _scope）原样保留、保持在前。
+ */
+function stringifyRoutes(document) {
+  const head = Object.fromEntries(Object.entries(document).filter(([k]) => k !== 'routes'));
+  const headJson = JSON.stringify(head, null, 2);
+  const routes = (document.routes || []).map((r, i) => {
+    const gap = i > 0 && document.routes[i - 1].cli !== r.cli ? '\n' : '';
+    return gap + '    ' + JSON.stringify(r, null, 2).split('\n').join('\n    ');
+  });
+  const body = routes.join(',\n');
+  const open = headJson === '{}' ? '{\n' : headJson.replace(/\n\}$/, ',\n');
+  return open + '  "routes": [\n' + body + '\n  ]\n}\n';
 }
 
 /** 采集方式的自然语言说法 —— 读者据此判断快照的可信范围 */
@@ -1628,4 +1648,5 @@ module.exports = {
   classifyHeader,
   pickVersion,
   shortenHomeInText,
+  stringifyRoutes,
 };

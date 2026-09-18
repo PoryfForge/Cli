@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-18 06:38:35",
+  "generatedAt": "2026-09-18 06:41:46",
   "count": 9,
   "clis": [
     {
@@ -567,6 +567,12 @@
       "cli": "tencentads",
       "command": "（该 CLI 当前没有对应命令，见 registry/tencentads/CAPABILITY.md）",
       "note": "业务能力在腾讯广告官方技能站的 tencentads-* 系列脚本里（skills.ad.qq.com），本库尚未收录，也还没做过业务调用验证"
+    },
+    {
+      "intent": "给自己发一条飞书消息",
+      "cli": "feishu-cli",
+      "command": "lark-cli im +messages-send --user-id <自己的 open_id> --text \"...\" --as bot",
+      "note": "自发自收走 --user-id 自己的 open_id（与 --chat-id 互斥）。user 身份需要 im:message.send_as_user scope，本机未授权；bot 身份免额外授权即可送达，消息出现在「应用↔本人」的 p2p 会话里。"
     }
   ]
 }
