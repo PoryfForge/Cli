@@ -58,10 +58,10 @@
     <h1>CLI 能力库</h1>
     <p class="sub">把厂商 SaaS 能力型 CLI 的能力面固化成本地文档 —— <strong>Agent 直接查，不再每次现翻 help</strong>。每个 CLI 都标了采集方式，便于判断可信范围。</p>
     <div class="kpis">
-      <div class="kpi"><b>4</b><span>收录的 CLI</span></div>
-      <div class="kpi"><b>659</b><span>命令与快捷命令</span></div>
-      <div class="kpi"><b>46</b><span>业务域</span></div>
-      <div class="kpi"><b>33</b><span>意图路由</span></div>
+      <div class="kpi"><b>9</b><span>收录的 CLI</span></div>
+      <div class="kpi"><b>1149</b><span>命令与快捷命令</span></div>
+      <div class="kpi"><b>102</b><span>业务域</span></div>
+      <div class="kpi"><b>63</b><span>意图路由</span></div>
     </div>
   </header>
 
@@ -268,6 +268,186 @@
         <td><code class="cmd">wps365-cli update；然后 wps365-cli spec update -y</code></td>
         <td class="note">命令定义从 CDN 拉，升级二进制后要再更一次 spec</td>
       </tr>
+      <tr data-s="查 / 建 / 改 / 克隆 github 仓库 github-cli gh repo view | create | fork | edit | clone | list gh 会从当前目录的 git remote 推断仓库；不在仓库目录里就必须写 -r owner/repo">
+        <td>查 / 建 / 改 / 克隆 GitHub 仓库</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh repo view | create | fork | edit | clone | list</code></td>
+        <td class="note">gh 会从当前目录的 git remote 推断仓库；不在仓库目录里就必须写 -R OWNER/REPO</td>
+      </tr>
+      <tr data-s="看 / 审 / 合并 pr github-cli gh pr list | view | diff | checkout | review | merge 非交互环境（agent / ci）下 gh 不会提示补参，直接报错；建 pr 必须显式给 --title 与 --body">
+        <td>看 / 审 / 合并 PR</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh pr list | view | diff | checkout | review | merge</code></td>
+        <td class="note">非交互环境（Agent / CI）下 gh 不会提示补参，直接报错；建 PR 必须显式给 --title 与 --body</td>
+      </tr>
+      <tr data-s="提 issue / 查 issue / 评论关闭 github-cli gh issue list | view | create | comment | close list 默认只回 30 条，要全量加 -l n；gh issue list 拿不到总数，真要总数走 gh api graphql 查 totalcount">
+        <td>提 Issue / 查 Issue / 评论关闭</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh issue list | view | create | comment | close</code></td>
+        <td class="note">list 默认只回 30 条，要全量加 -L N；gh issue list 拿不到总数，真要总数走 gh api graphql 查 totalCount</td>
+      </tr>
+      <tr data-s="看 actions 运行状态 / 日志 / 重跑 github-cli gh run list | view | watch | rerun | cancel 排失败优先 gh run view --log-failed，只取失败步骤的日志">
+        <td>看 Actions 运行状态 / 日志 / 重跑</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh run list | view | watch | rerun | cancel</code></td>
+        <td class="note">排失败优先 gh run view --log-failed，只取失败步骤的日志</td>
+      </tr>
+      <tr data-s="查 / 建 release、传发布产物 github-cli gh release list | view | create | upload | download ">
+        <td>查 / 建 release、传发布产物</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh release list | view | create | upload | download</code></td>
+        <td class="note"></td>
+      </tr>
+      <tr data-s="拿结构化数据 / 调 github api github-cli gh &lt;任意命令&gt; --json &lt;字段列表&gt; [--jq '&lt;expr&gt;']；或 gh api &lt;path&gt; [--paginate] 别自己拼 curl：gh api 会带上当前登录态。不加字段名先跑一次 --json 能列出全部可用字段；列表命令结果会被静默截断，翻页用 gh api --paginate">
+        <td>拿结构化数据 / 调 GitHub API</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh &lt;任意命令&gt; --json &lt;字段列表&gt; [--jq '&lt;expr&gt;']；或 gh api &lt;path&gt; [--paginate]</code></td>
+        <td class="note">别自己拼 curl：gh api 会带上当前登录态。不加字段名先跑一次 --json 能列出全部可用字段；列表命令结果会被静默截断，翻页用 gh api --paginate</td>
+      </tr>
+      <tr data-s="跨 github 搜仓库 / 代码 / issue / pr github-cli gh search repos | code | issues | prs | commits 要仓库内精确结果用 gh &lt;域&gt; list --search，比 gh search 更贴合当前仓库">
+        <td>跨 GitHub 搜仓库 / 代码 / Issue / PR</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh search repos | code | issues | prs | commits</code></td>
+        <td class="note">要仓库内精确结果用 gh &lt;域&gt; list --search，比 gh search 更贴合当前仓库</td>
+      </tr>
+      <tr data-s="github 密钥 / 变量 / 工作流权限管理 github-cli gh secret set | list ；gh variable set | list 写操作影响仓库配置，执行前跟用户确认目标仓库与环境名">
+        <td>GitHub 密钥 / 变量 / 工作流权限管理</td>
+        <td><a href="../registry/github-cli/CAPABILITY.md"><code>github-cli</code></a></td>
+        <td><code class="cmd">gh secret set | list ；gh variable set | list</code></td>
+        <td class="note">写操作影响仓库配置，执行前跟用户确认目标仓库与环境名</td>
+      </tr>
+      <tr data-s="取一条密钥 / 密码 / 令牌 1password-cli op read op://&lt;vault&gt;/&lt;item&gt;/&lt;field&gt; 输出即明文。不要把结果回显到对话、日志或提交里 —— 需要给程序用时直接管道给下一步">
+        <td>取一条密钥 / 密码 / 令牌</td>
+        <td><a href="../registry/1password-cli/CAPABILITY.md"><code>1password-cli</code></a></td>
+        <td><code class="cmd">op read op://&lt;vault&gt;/&lt;item&gt;/&lt;field&gt;</code></td>
+        <td class="note">输出即明文。不要把结果回显到对话、日志或提交里 —— 需要给程序用时直接管道给下一步</td>
+      </tr>
+      <tr data-s="把密钥以环境变量注入某个进程 1password-cli op run --env-file=.env -- &lt;cmd&gt; 明文只存在于子进程环境里，比先 op read 再 export 安全">
+        <td>把密钥以环境变量注入某个进程</td>
+        <td><a href="../registry/1password-cli/CAPABILITY.md"><code>1password-cli</code></a></td>
+        <td><code class="cmd">op run --env-file=.env -- &lt;cmd&gt;</code></td>
+        <td class="note">明文只存在于子进程环境里，比先 op read 再 export 安全</td>
+      </tr>
+      <tr data-s="把密钥填进配置文件模板 1password-cli op inject -i &lt;模板&gt; -o &lt;输出&gt; 模板里写 op:// 引用，生成的真实文件要加进 .gitignore">
+        <td>把密钥填进配置文件模板</td>
+        <td><a href="../registry/1password-cli/CAPABILITY.md"><code>1password-cli</code></a></td>
+        <td><code class="cmd">op inject -i &lt;模板&gt; -o &lt;输出&gt;</code></td>
+        <td class="note">模板里写 op:// 引用，生成的真实文件要加进 .gitignore</td>
+      </tr>
+      <tr data-s="增删改查 1password 条目 / 保险库 1password-cli op item get | create | edit | delete | list ；op vault list | create 删条目 / 改权限是不可逆操作，执行前逐条跟用户确认">
+        <td>增删改查 1Password 条目 / 保险库</td>
+        <td><a href="../registry/1password-cli/CAPABILITY.md"><code>1password-cli</code></a></td>
+        <td><code class="cmd">op item get | create | edit | delete | list ；op vault list | create</code></td>
+        <td class="note">删条目 / 改权限是不可逆操作，执行前逐条跟用户确认</td>
+      </tr>
+      <tr data-s="查当前登录的是哪个 1password 账号 1password-cli op whoami ；op account list 多账号时先确认，避免把密钥读到错误的账号下">
+        <td>查当前登录的是哪个 1Password 账号</td>
+        <td><a href="../registry/1password-cli/CAPABILITY.md"><code>1password-cli</code></a></td>
+        <td><code class="cmd">op whoami ；op account list</code></td>
+        <td class="note">多账号时先确认，避免把密钥读到错误的账号下</td>
+      </tr>
+      <tr data-s="让第三方 cli 用 1password 认证 1password-cli op plugin list | init | inspect shell plugin 机制，凭证不进 shell history">
+        <td>让第三方 CLI 用 1Password 认证</td>
+        <td><a href="../registry/1password-cli/CAPABILITY.md"><code>1password-cli</code></a></td>
+        <td><code class="cmd">op plugin list | init | inspect</code></td>
+        <td class="note">shell plugin 机制，凭证不进 shell history</td>
+      </tr>
+      <tr data-s="把任务派给某台机器上的编码 agent 跑 multica multica issue create ；multica issue assign 先确认目标 runtime 在线（multica runtime list），离线的 runtime 上任务只会排队">
+        <td>把任务派给某台机器上的编码 Agent 跑</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica issue create ；multica issue assign</code></td>
+        <td class="note">先确认目标 runtime 在线（multica runtime list），离线的 runtime 上任务只会排队</td>
+      </tr>
+      <tr data-s="看任务跑到哪了 / 结果是什么 multica multica issue runs ；multica issue run-messages ；multica issue timeline timeline 给的是状态与归属变更的时间线，具体输出在 run-messages">
+        <td>看任务跑到哪了 / 结果是什么</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica issue runs ；multica issue run-messages ；multica issue timeline</code></td>
+        <td class="note">timeline 给的是状态与归属变更的时间线，具体输出在 run-messages</td>
+      </tr>
+      <tr data-s="中断 / 重跑某个任务 multica multica issue cancel-task ；multica issue rerun 现在还有在跑的 run；cancel 会打断正在执行的 agent">
+        <td>中断 / 重跑某个任务</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica issue cancel-task ；multica issue rerun</code></td>
+        <td class="note">现在还有在跑的 run；cancel 会打断正在执行的 Agent</td>
+      </tr>
+      <tr data-s="把这台机器接进 multica 当执行节点 multica multica setup ；multica daemon start | status | logs daemon 只认本机 path 里已有的编码 cli（claude / codex 等），装完要 restart 才会重新探测">
+        <td>把这台机器接进 Multica 当执行节点</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica setup ；multica daemon start | status | logs</code></td>
+        <td class="note">daemon 只认本机 PATH 里已有的编码 CLI（claude / codex 等），装完要 restart 才会重新探测</td>
+      </tr>
+      <tr data-s="看工作区里有哪些可用执行环境 multica multica runtime list ；multica runtime activity 一个 runtime = 一台机器 + 一个编码 cli，不是一台机器一个">
+        <td>看工作区里有哪些可用执行环境</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica runtime list ；multica runtime activity</code></td>
+        <td class="note">一个 runtime = 一台机器 + 一个编码 CLI，不是一台机器一个</td>
+      </tr>
+      <tr data-s="定时 / 事件触发跑 agent multica multica autopilot create ；multica autopilot trigger-add webhook 触发要先跟用户确认对外暴露的 url 与凭据">
+        <td>定时 / 事件触发跑 Agent</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica autopilot create ；multica autopilot trigger-add</code></td>
+        <td class="note">webhook 触发要先跟用户确认对外暴露的 URL 与凭据</td>
+      </tr>
+      <tr data-s="管 multica 上的 agent 定义与技能 multica multica agent create | list | update | skills ；multica skill import | list agent env 里的自定义环境变量存在服务端，别往里塞明文密钥">
+        <td>管 Multica 上的 Agent 定义与技能</td>
+        <td><a href="../registry/multica/CAPABILITY.md"><code>multica</code></a></td>
+        <td><code class="cmd">multica agent create | list | update | skills ；multica skill import | list</code></td>
+        <td class="note">agent env 里的自定义环境变量存在服务端，别往里塞明文密钥</td>
+      </tr>
+      <tr data-s="非交互地跑一次 grok（脚本 / ci 里用） grok-cli grok -p &quot;&lt;prompt&gt;&quot; [--output-format json] [--max-turns n] headless 单轮模式，跑完就退出。默认会弹权限确认，脚本里要显式加 --yolo 或配 --tools 白名单">
+        <td>非交互地跑一次 Grok（脚本 / CI 里用）</td>
+        <td><a href="../registry/grok-cli/CAPABILITY.md"><code>grok-cli</code></a></td>
+        <td><code class="cmd">grok -p &quot;&lt;prompt&gt;&quot; [--output-format json] [--max-turns N]</code></td>
+        <td class="note">headless 单轮模式，跑完就退出。默认会弹权限确认，脚本里要显式加 --yolo 或配 --tools 白名单</td>
+      </tr>
+      <tr data-s="让 grok 联网查资料（含 x 平台） grok-cli grok -p &quot;&lt;问题&gt;&quot; 联网检索是模型的内置工具，不是独立子命令；要限制检索范围就在 prompt 里写明">
+        <td>让 Grok 联网查资料（含 X 平台）</td>
+        <td><a href="../registry/grok-cli/CAPABILITY.md"><code>grok-cli</code></a></td>
+        <td><code class="cmd">grok -p &quot;&lt;问题&gt;&quot;</code></td>
+        <td class="note">联网检索是模型的内置工具，不是独立子命令；要限制检索范围就在 prompt 里写明</td>
+      </tr>
+      <tr data-s="把 grok 嵌进编辑器 / 自建宿主 grok-cli grok agent stdio | serve | headless 走 acp（json-rpc over stdio），宿主负责 ui；stdio 是主要方式">
+        <td>把 Grok 嵌进编辑器 / 自建宿主</td>
+        <td><a href="../registry/grok-cli/CAPABILITY.md"><code>grok-cli</code></a></td>
+        <td><code class="cmd">grok agent stdio | serve | headless</code></td>
+        <td class="note">走 ACP（JSON-RPC over stdio），宿主负责 UI；stdio 是主要方式</td>
+      </tr>
+      <tr data-s="给 grok 挂 mcp 服务器 / 插件 grok-cli grok mcp add | list | enable ；grok plugin install | list | marketplace mcp 配置写在 ~/.grok/config.toml；改完要重启会话">
+        <td>给 Grok 挂 MCP 服务器 / 插件</td>
+        <td><a href="../registry/grok-cli/CAPABILITY.md"><code>grok-cli</code></a></td>
+        <td><code class="cmd">grok mcp add | list | enable ；grok plugin install | list | marketplace</code></td>
+        <td class="note">MCP 配置写在 ~/.grok/config.toml；改完要重启会话</td>
+      </tr>
+      <tr data-s="回看 / 导出 grok 的历史会话 grok-cli grok sessions list | search ；grok export &lt;session&gt; 会话按工作目录归档；导出的是 markdown 转录">
+        <td>回看 / 导出 Grok 的历史会话</td>
+        <td><a href="../registry/grok-cli/CAPABILITY.md"><code>grok-cli</code></a></td>
+        <td><code class="cmd">grok sessions list | search ；grok export &lt;session&gt;</code></td>
+        <td class="note">会话按工作目录归档；导出的是 Markdown 转录</td>
+      </tr>
+      <tr data-s="排查 grok 本机环境问题 grok-cli grok doctor ；grok inspect inspect 显示当前目录下 grok 实际发现的配置，配置没生效时先看它">
+        <td>排查 Grok 本机环境问题</td>
+        <td><a href="../registry/grok-cli/CAPABILITY.md"><code>grok-cli</code></a></td>
+        <td><code class="cmd">grok doctor ；grok inspect</code></td>
+        <td class="note">inspect 显示当前目录下 Grok 实际发现的配置，配置没生效时先看它</td>
+      </tr>
+      <tr data-s="配置 / 检查腾讯广告 api key 鉴权 tencentads tencentads auth login | status | logout 凭据落在 ~/.tencent-ads；用 --config-dir 可换目录。api key 不要回显在对话里">
+        <td>配置 / 检查腾讯广告 API Key 鉴权</td>
+        <td><a href="../registry/tencentads/CAPABILITY.md"><code>tencentads</code></a></td>
+        <td><code class="cmd">tencentads auth login | status | logout</code></td>
+        <td class="note">凭据落在 ~/.tencent-ads；用 --config-dir 可换目录。API Key 不要回显在对话里</td>
+      </tr>
+      <tr data-s="查腾讯广告这个 cli 到底支持哪些命令 tencentads tencentads --list-commands 命令面按 edition 变化：默认 edition 只有 auth，营销管理相关命令标着 enterprise">
+        <td>查腾讯广告这个 CLI 到底支持哪些命令</td>
+        <td><a href="../registry/tencentads/CAPABILITY.md"><code>tencentads</code></a></td>
+        <td><code class="cmd">tencentads --list-commands</code></td>
+        <td class="note">命令面按 edition 变化：默认 edition 只有 auth，营销管理相关命令标着 enterprise</td>
+      </tr>
+      <tr data-s="查腾讯广告的账号 / 营销单元 / 创意 / 报表数据 tencentads （该 cli 当前没有对应命令，见 registry/tencentads/capability.md） 业务能力在腾讯广告官方技能站的 tencentads-* 系列脚本里（skills.ad.qq.com），本库尚未收录，也还没做过业务调用验证">
+        <td>查腾讯广告的账号 / 营销单元 / 创意 / 报表数据</td>
+        <td><a href="../registry/tencentads/CAPABILITY.md"><code>tencentads</code></a></td>
+        <td><code class="cmd">（该 CLI 当前没有对应命令，见 registry/tencentads/CAPABILITY.md）</code></td>
+        <td class="note">业务能力在腾讯广告官方技能站的 tencentads-* 系列脚本里（skills.ad.qq.com），本库尚未收录，也还没做过业务调用验证</td>
+      </tr>
     </tbody>
   </table>
   <div class="empty" id="empty">没有匹配的路由。要加一条？编辑 <code>routes.json</code> 后跑 <code>bin/cli-cap index</code>。</div>
@@ -275,11 +455,25 @@
   <h2>已收录的 CLI</h2>
   <div class="grid">
       <div class="card">
+        <div class="card-head"><span class="name">github-cli</span><span class="ver">2.101.0</span></div>
+        <p class="desc">GitHub 官方 CLI：仓库 / Issue / PR / Actions 工作流 / release / 搜索 / gist / codespace / project 等协作能力，另含 gh api 直连 REST 与 GraphQL 的兜底入口</p>
+        <div class="chips"><span class="chip">24 个业务域</span><span class="chip">214 条命令</span></div>
+        <div class="meta"><span>release 二进制 help 全树 + 官方 SKILL.md</span><span>2026-09-18</span></div>
+        <div class="links"><a href="../registry/github-cli/CAPABILITY.md">能力快照</a> · <a href="https://github.com/cli/cli" target="_blank" rel="noopener">官方仓库</a></div>
+      </div>
+      <div class="card">
         <div class="card-head"><span class="name">feishu-cli</span><span class="ver">1.0.96</span></div>
         <p class="desc">飞书/Lark 官方开源的命令行工具，把开放平台能力封装成终端命令，原生面向 AI Agent。覆盖 23 个业务域、343 个快捷命令、120 个 API 方法，底层可达 2500+ 开放平台端点。</p>
         <div class="chips"><span class="chip">23 个业务域</span><span class="chip">343 条命令</span><span class="chip">120 个 API 方法</span><span class="chip">437 篇参考</span></div>
         <div class="meta"><span>仓库 skill 文档</span><span>2026-09-17</span></div>
         <div class="links"><a href="../registry/feishu-cli/CAPABILITY.md">能力快照</a> · <a href="../registry/feishu-cli/api-resources.md">API 清单</a> · <a href="https://github.com/larksuite/cli" target="_blank" rel="noopener">官方仓库</a></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="name">multica</span><span class="ver">0.4.44</span></div>
+        <p class="desc">Multica 官方 CLI：把任务派发到已连接的机器上执行、管理 workspace 与 issue，daemon 负责发现本机可用的编码 Agent 并回传运行状态与结果</p>
+        <div class="chips"><span class="chip">16 个业务域</span><span class="chip">134 条命令</span></div>
+        <div class="meta"><span>release 二进制 help 全树</span><span>2026-09-18</span></div>
+        <div class="links"><a href="../registry/multica/CAPABILITY.md">能力快照</a> · <a href="https://github.com/multica-ai/multica" target="_blank" rel="noopener">官方仓库</a></div>
       </div>
       <div class="card">
         <div class="card-head"><span class="name">wecom-cli</span><span class="ver">1.3.0</span></div>
@@ -292,15 +486,36 @@
         <div class="card-head"><span class="name">wps365-cli</span><span class="ver">0.3.5</span></div>
         <p class="desc">WPS 365 官方 CLI：日历、消息、通讯录、邮箱、云文档、智能文档、智能表格、多维表、会议 9 大业务域，另含 api 兜底命令与 spec 管理</p>
         <div class="chips"><span class="chip">9 个业务域</span><span class="chip">200 条命令</span></div>
-        <div class="meta"><span>release 二进制 help 全树</span><span>2026-09-17</span></div>
+        <div class="meta"><span>release 二进制 help 全树</span><span>2026-09-18</span></div>
         <div class="links"><a href="../registry/wps365-cli/CAPABILITY.md">能力快照</a> · <a href="https://github.com/wps365-open/cli" target="_blank" rel="noopener">官方仓库</a></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="name">1password-cli</span><span class="ver">2.39.0</span></div>
+        <p class="desc">1Password 官方 CLI：凭据保险库与条目的读写、op run / op inject 把密钥以环境变量或文件形式注入进程，另含 service account、SSH 代理与文档（Document）管理</p>
+        <div class="chips"><span class="chip">9 个业务域</span><span class="chip">68 条命令</span></div>
+        <div class="meta"><span>release 二进制 help 全树</span><span>2026-09-18</span></div>
+        <div class="links"><a href="../registry/1password-cli/CAPABILITY.md">能力快照</a> · <a href="https://app-updates.agilebits.com/product_history/CLI2" target="_blank" rel="noopener">官方仓库</a></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="name">grok-cli</span><span class="ver">1.0.34</span></div>
+        <p class="desc">xAI 官方 Grok CLI：交互式 TUI、单轮 headless 模式与 ACP agent 模式，带联网检索（含 X 平台）、本机文件与命令执行、会话与子 Agent 管理</p>
+        <div class="chips"><span class="chip">7 个业务域</span><span class="chip">63 条命令</span></div>
+        <div class="meta"><span>release 二进制 help 全树</span><span>2026-09-18</span></div>
+        <div class="links"><a href="../registry/grok-cli/CAPABILITY.md">能力快照</a> · <a href="https://x.ai/cli" target="_blank" rel="noopener">官方仓库</a></div>
       </div>
       <div class="card">
         <div class="card-head"><span class="name">dreamina</span><span class="ver">673dd28-dirty</span></div>
         <p class="desc">即梦（Dreamina）官方 AIGC CLI：文生图 / 图生图 / 文生视频 / 图生视频 / 多模态参考，含账号、会话与任务管理</p>
         <div class="chips"><span class="chip">2 个业务域</span><span class="chip">23 条命令</span></div>
-        <div class="meta"><span>本机 CLI help 全树 + 官方 SKILL.md</span><span>2026-09-17</span></div>
+        <div class="meta"><span>本机 CLI help 全树 + 官方 SKILL.md</span><span>2026-09-18</span></div>
         <div class="links"><a href="../registry/dreamina/CAPABILITY.md">能力快照</a> · <a href="https://jimeng.jianying.com/cli" target="_blank" rel="noopener">官方仓库</a></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="name">tencentads</span><span class="ver">1.1.5</span></div>
+        <p class="desc">腾讯广告（腾讯营销）API CLI：登录鉴权与状态查询，其余能力按营销 API v3.0 的资源名暴露——账号与管家、营销单元、创意与组件、素材、报表与人群等</p>
+        <div class="chips"><span class="chip">11 条命令</span></div>
+        <div class="meta"><span>release 二进制 help 全树</span><span>2026-09-18</span></div>
+        <div class="links"><a href="../registry/tencentads/CAPABILITY.md">能力快照</a> · <a href="https://www.npmjs.com/package/tencentads-cli" target="_blank" rel="noopener">官方仓库</a></div>
       </div>
   </div>
 
@@ -312,7 +527,7 @@
   </div>
 
   <h2>新增 / 更新</h2>
-  <p class="hint">加一个新 CLI：往 <code>clis.json</code> 加一条记录，然后跑 <code>bin/refresh &lt;名字&gt;</code>。脚本不用改。</p>
+  <p class="hint">加一个新 CLI：往 <code>clis.json</code> 加一条记录，然后跑 <code>bin/refresh &lt;名字&gt;</code>。同一类分发方式都不用改脚本；只有碰到全新的分发渠道才需要动 <code>lib/fetchsource.js</code>。</p>
   <code class="blk">bin/refresh                      # 刷新全部已收录 CLI，并重建索引
 bin/refresh wecom-cli --force    # 只刷一个，并强制重新下载源
 bin/refresh --list               # 看清单里有什么
@@ -323,7 +538,7 @@ bin/cli-cap remember &lt;名字&gt; --intent "需求" --command "命令模板" -
 bin/cli-cap index                # 只重建索引</code>
   <p class="hint">怎么选采集方式、怎么写解析档，见仓库里的 <code>CONTRIBUTING.md</code>。</p>
 
-  <footer>由 <code>bin/cli-cap</code> 从 <code>registry/</code> 生成 · 索引重建于 2026-09-17</footer>
+  <footer>由 <code>bin/cli-cap</code> 从 <code>registry/</code> 生成 · 索引重建于 2026-09-18</footer>
 </div>
 <script>
   var q = document.getElementById('q'), rows = [].slice.call(document.querySelectorAll('#routes tbody tr'));

@@ -1,0 +1,23 @@
+Work with agent runtimes
+
+USAGE
+  multica runtime <command> [flags]
+
+COMMANDS
+  activity:  Get hourly run activity for a runtime
+  delete:    Delete a runtime from the workspace
+  list:      List runtimes in the workspace
+  profile:   Manage custom runtime profiles
+  rename:    Set a custom display name for a runtime
+  update:    Initiate a CLI update on a runtime
+  usage:     Get token usage for a runtime
+
+
+FLAGS
+  -h, --help   help for runtime
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica runtime <command> --help` for more information about a command.

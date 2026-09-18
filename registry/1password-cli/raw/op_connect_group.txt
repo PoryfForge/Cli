@@ -1,0 +1,14 @@
+Manage group access to Secrets Automation.
+
+Usage:  op connect group [command] [flags]
+
+Commands:
+  grant       Grant a group access to manage Secrets Automation
+  revoke      Revoke a group's access to manage Secrets Automation
+
+Flags:
+  -h, --help   help for group
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op connect group [command] --help' for more information on the command.

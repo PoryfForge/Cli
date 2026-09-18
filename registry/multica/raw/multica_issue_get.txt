@@ -1,0 +1,15 @@
+Get issue details
+
+USAGE
+  multica issue get <id> [flags]
+
+FLAGS
+  -h, --help                                     help for get
+      --output string                            Output format: table or json (default "json")
+      --resolve-properties issue property list   JSON output only: replace the properties id map with the rows issue property list prints (property name and type, option and member names beside the stored ids). Omit for the raw map. No effect on --output table.
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

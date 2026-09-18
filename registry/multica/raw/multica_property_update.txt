@@ -1,0 +1,19 @@
+Update a property definition. --option flags REPLACE the full option list;
+existing options are matched by name so their ids (and issue values) survive.
+
+USAGE
+  multica property update <id-or-name> [flags]
+
+FLAGS
+      --description string   New property description
+  -h, --help                 help for update
+      --icon string          New property icon key from the Web picker; pass an empty value to clear
+      --name string          New property name
+      --option stringArray   Replacement option list as "Name" or "Name:#rrggbb" (repeatable)
+      --output string        Output format: table or json (default "table")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

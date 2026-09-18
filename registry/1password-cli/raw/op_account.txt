@@ -1,0 +1,16 @@
+Manage your locally configured 1Password accounts.
+
+Usage:  op account [command] [flags]
+
+Commands:
+  add         Add an account to sign in to for the first time
+  get         Get details about your account
+  list        List users and accounts set up on this device
+  forget      Remove a 1Password account from this device
+
+Flags:
+  -h, --help   help for account
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op account [command] --help' for more information on the command.

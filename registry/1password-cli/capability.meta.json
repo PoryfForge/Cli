@@ -1,0 +1,20 @@
+{
+  "name": "1password-cli",
+  "title": "1Password CLI",
+  "command": "op",
+  "version": "2.39.0",
+  "description": "1Password 官方 CLI：凭据保险库与条目的读写、op run / op inject 把密钥以环境变量或文件形式注入进程，另含 service account、SSH 代理与文档（Document）管理",
+  "scannedAt": "2026-09-18 06:38:25",
+  "depth": 2,
+  "source": "release-bin + help-tree",
+  "nodes": 68,
+  "repo": "https://app-updates.agilebits.com/product_history/CLI2",
+  "license": "厂商专有",
+  "install": "brew install 1password-cli",
+  "release": "2.39.0",
+  "domains": 9,
+  "commands": 68,
+  "apiMethods": 0,
+  "refs": 0,
+  "manual": true
+}

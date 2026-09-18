@@ -1,0 +1,36 @@
+List vaults.
+
+By default, returns all vaults the current user has read access to.
+
+Usage:  op vault list [flags]
+
+Aliases:
+  list, ls
+
+Examples:
+Get details for all vaults:
+
+	op vault list --format=json | op vault get -
+
+Get details for vaults that a group has access to:
+
+	op vault list --group Security --format=json | op vault get -
+
+Get details for vaults that a user has access to:
+
+	op vault list --user wendy_appleseed@1password.com --format=json | op vault get -
+
+Only list vaults for which the user/group has a specific set of permissions:
+
+	op vault list --user wendy_appleseed@1password.com --permission manage_vault
+
+Learn more about managing vault permissions:
+https://www.1password.dev/cli/vault-permissions/
+
+Flags:
+      --group string             List vaults a group has access to.
+  -h, --help                     help for list
+      --permission permissions   List only vaults that the specified user/group has this permission for.
+      --user string              List vaults that a given user has access to.
+
+To list the global flags available on every command, run  'op --help'.

@@ -1,0 +1,21 @@
+Manage which workspace MCP servers an agent uses
+
+USAGE
+  multica agent mcp <command> [flags]
+
+COMMANDS
+  add:      Give a workspace MCP server to an agent
+  disable:  Turn an assigned MCP server off for this agent
+  enable:   Turn an assigned MCP server back on for this agent
+  list:     List the workspace MCP servers assigned to an agent
+  remove:   Take a workspace MCP server away from an agent
+
+
+FLAGS
+  -h, --help   help for mcp
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica agent mcp <command> --help` for more information about a command.

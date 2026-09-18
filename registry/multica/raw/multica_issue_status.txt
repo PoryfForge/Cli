@@ -1,0 +1,18 @@
+Change an issue's status. The argument is a status KEY, not its display name.
+Built-in keys: backlog, todo, in_progress, in_review, done, blocked, cancelled.
+A workspace may define custom statuses on top of these; their keys are shown in
+Workspace Settings > Issue Statuses, and an unknown value errors with the full list.
+
+USAGE
+  multica issue status <id> <status> [flags]
+
+FLAGS
+  -h, --help            help for status
+      --no-start        Change status without starting an agent run
+      --output string   Output format: table or json (default "table")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

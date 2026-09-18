@@ -1,0 +1,10 @@
+Check for updates to 'op' and download an updated version, if available.
+
+Usage:  op update [flags]
+
+Flags:
+      --channel string     Look for updates from a specific channel. allowed: stable, beta
+      --directory string   Download the update to this ''path''.
+  -h, --help               help for update
+
+To list the global flags available on every command, run  'op --help'.

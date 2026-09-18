@@ -1,0 +1,21 @@
+Manage permissions and perform CRUD operations on your 1Password vaults.
+
+Usage:  op vault [command] [flags]
+
+Management Commands:
+  group       Manage group vault access
+  user        Manage user vault access
+
+Commands:
+  create      Create a new vault
+  get         Get details about a vault
+  edit        Edit a vault's name, description, icon, or Travel Mode status
+  delete      Remove a vault
+  list        List all vaults in the account
+
+Flags:
+  -h, --help   help for vault
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op vault [command] --help' for more information on the command.

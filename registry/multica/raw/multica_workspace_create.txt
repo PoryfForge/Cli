@@ -1,0 +1,26 @@
+Creates a new workspace and adds you as its owner. Both --name and --slug are required; the slug is permanent (lowercase letters, digits, and hyphens) and cannot be changed after creation.
+
+Creating a workspace does NOT change the current default workspace for this profile — run 'multica workspace switch <slug>' afterward if you want subsequent commands to target the new workspace.
+
+USAGE
+  multica workspace create [flags]
+
+FLAGS
+      --context string        Workspace context (decodes \n, \r, \t, \\; pipe via --context-stdin to preserve literal backslashes)
+      --context-stdin         Read context from stdin (preserves multi-line content verbatim)
+      --description string    Workspace description (decodes \n, \r, \t, \\; pipe via --description-stdin to preserve literal backslashes)
+      --description-stdin     Read description from stdin (preserves multi-line content verbatim)
+  -h, --help                  help for create
+      --issue-prefix string   Issue prefix (uppercased server-side)
+      --name string           Workspace name
+      --output string         Output format: table or json (default "json")
+      --slug string           Workspace slug
+
+INHERITED FLAGS
+  --help   Show help for command
+
+EXAMPLES
+  multica workspace create --name "Support Team" --slug support-team --issue-prefix SUP
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

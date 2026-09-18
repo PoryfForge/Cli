@@ -1,0 +1,21 @@
+Explicitly configures the CLI to connect to Multica Cloud (multica.ai).
+
+If you run this command over SSH on a remote machine, keep the localhost
+callback and follow the SSH tunnel hint printed during browser login. If your
+browser can reach this CLI directly on a private network address, pass
+--callback-host <host-or-ip>.
+
+This is equivalent to running 'multica setup' without a subcommand.
+
+USAGE
+  multica setup cloud [flags]
+
+FLAGS
+      --callback-host string   Host/IP the OAuth callback URL points at when the browser can reach this CLI directly. For SSH-only machines, use the printed tunnel hint instead.
+  -h, --help                   help for cloud
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

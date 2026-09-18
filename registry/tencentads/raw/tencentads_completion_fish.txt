@@ -1,0 +1,21 @@
+Generate the autocompletion script for the fish shell.
+
+To load completions in your current shell session:
+
+	tencentads completion fish | source
+
+To load completions for every new session, execute once:
+
+	tencentads completion fish > ~/.config/fish/completions/tencentads.fish
+
+You will need to start a new shell for this setup to take effect.
+
+Usage:
+  tencentads completion fish [flags]
+
+Flags:
+  -h, --help              help for fish
+      --no-descriptions   disable completion descriptions
+
+Global Flags:
+      --config-dir string   Directory for credentials file (default: ~/.tencent-ads)

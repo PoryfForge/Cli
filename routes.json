@@ -202,6 +202,186 @@
       "cli": "wps365-cli",
       "command": "wps365-cli update；然后 wps365-cli spec update -y",
       "note": "命令定义从 CDN 拉，升级二进制后要再更一次 spec"
+    },
+    {
+      "intent": "查 / 建 / 改 / 克隆 GitHub 仓库",
+      "cli": "github-cli",
+      "command": "gh repo view | create | fork | edit | clone | list",
+      "note": "gh 会从当前目录的 git remote 推断仓库；不在仓库目录里就必须写 -R OWNER/REPO"
+    },
+    {
+      "intent": "看 / 审 / 合并 PR",
+      "cli": "github-cli",
+      "command": "gh pr list | view | diff | checkout | review | merge",
+      "note": "非交互环境（Agent / CI）下 gh 不会提示补参，直接报错；建 PR 必须显式给 --title 与 --body"
+    },
+    {
+      "intent": "提 Issue / 查 Issue / 评论关闭",
+      "cli": "github-cli",
+      "command": "gh issue list | view | create | comment | close",
+      "note": "list 默认只回 30 条，要全量加 -L N；gh issue list 拿不到总数，真要总数走 gh api graphql 查 totalCount"
+    },
+    {
+      "intent": "看 Actions 运行状态 / 日志 / 重跑",
+      "cli": "github-cli",
+      "command": "gh run list | view | watch | rerun | cancel",
+      "note": "排失败优先 gh run view --log-failed，只取失败步骤的日志"
+    },
+    {
+      "intent": "查 / 建 release、传发布产物",
+      "cli": "github-cli",
+      "command": "gh release list | view | create | upload | download",
+      "note": ""
+    },
+    {
+      "intent": "拿结构化数据 / 调 GitHub API",
+      "cli": "github-cli",
+      "command": "gh <任意命令> --json <字段列表> [--jq '<expr>']；或 gh api <path> [--paginate]",
+      "note": "别自己拼 curl：gh api 会带上当前登录态。不加字段名先跑一次 --json 能列出全部可用字段；列表命令结果会被静默截断，翻页用 gh api --paginate"
+    },
+    {
+      "intent": "跨 GitHub 搜仓库 / 代码 / Issue / PR",
+      "cli": "github-cli",
+      "command": "gh search repos | code | issues | prs | commits",
+      "note": "要仓库内精确结果用 gh <域> list --search，比 gh search 更贴合当前仓库"
+    },
+    {
+      "intent": "GitHub 密钥 / 变量 / 工作流权限管理",
+      "cli": "github-cli",
+      "command": "gh secret set | list ；gh variable set | list",
+      "note": "写操作影响仓库配置，执行前跟用户确认目标仓库与环境名"
+    },
+    {
+      "intent": "取一条密钥 / 密码 / 令牌",
+      "cli": "1password-cli",
+      "command": "op read op://<vault>/<item>/<field>",
+      "note": "输出即明文。不要把结果回显到对话、日志或提交里 —— 需要给程序用时直接管道给下一步"
+    },
+    {
+      "intent": "把密钥以环境变量注入某个进程",
+      "cli": "1password-cli",
+      "command": "op run --env-file=.env -- <cmd>",
+      "note": "明文只存在于子进程环境里，比先 op read 再 export 安全"
+    },
+    {
+      "intent": "把密钥填进配置文件模板",
+      "cli": "1password-cli",
+      "command": "op inject -i <模板> -o <输出>",
+      "note": "模板里写 op:// 引用，生成的真实文件要加进 .gitignore"
+    },
+    {
+      "intent": "增删改查 1Password 条目 / 保险库",
+      "cli": "1password-cli",
+      "command": "op item get | create | edit | delete | list ；op vault list | create",
+      "note": "删条目 / 改权限是不可逆操作，执行前逐条跟用户确认"
+    },
+    {
+      "intent": "查当前登录的是哪个 1Password 账号",
+      "cli": "1password-cli",
+      "command": "op whoami ；op account list",
+      "note": "多账号时先确认，避免把密钥读到错误的账号下"
+    },
+    {
+      "intent": "让第三方 CLI 用 1Password 认证",
+      "cli": "1password-cli",
+      "command": "op plugin list | init | inspect",
+      "note": "shell plugin 机制，凭证不进 shell history"
+    },
+    {
+      "intent": "把任务派给某台机器上的编码 Agent 跑",
+      "cli": "multica",
+      "command": "multica issue create ；multica issue assign",
+      "note": "先确认目标 runtime 在线（multica runtime list），离线的 runtime 上任务只会排队"
+    },
+    {
+      "intent": "看任务跑到哪了 / 结果是什么",
+      "cli": "multica",
+      "command": "multica issue runs ；multica issue run-messages ；multica issue timeline",
+      "note": "timeline 给的是状态与归属变更的时间线，具体输出在 run-messages"
+    },
+    {
+      "intent": "中断 / 重跑某个任务",
+      "cli": "multica",
+      "command": "multica issue cancel-task ；multica issue rerun",
+      "note": "现在还有在跑的 run；cancel 会打断正在执行的 Agent"
+    },
+    {
+      "intent": "把这台机器接进 Multica 当执行节点",
+      "cli": "multica",
+      "command": "multica setup ；multica daemon start | status | logs",
+      "note": "daemon 只认本机 PATH 里已有的编码 CLI（claude / codex 等），装完要 restart 才会重新探测"
+    },
+    {
+      "intent": "看工作区里有哪些可用执行环境",
+      "cli": "multica",
+      "command": "multica runtime list ；multica runtime activity",
+      "note": "一个 runtime = 一台机器 + 一个编码 CLI，不是一台机器一个"
+    },
+    {
+      "intent": "定时 / 事件触发跑 Agent",
+      "cli": "multica",
+      "command": "multica autopilot create ；multica autopilot trigger-add",
+      "note": "webhook 触发要先跟用户确认对外暴露的 URL 与凭据"
+    },
+    {
+      "intent": "管 Multica 上的 Agent 定义与技能",
+      "cli": "multica",
+      "command": "multica agent create | list | update | skills ；multica skill import | list",
+      "note": "agent env 里的自定义环境变量存在服务端，别往里塞明文密钥"
+    },
+    {
+      "intent": "非交互地跑一次 Grok（脚本 / CI 里用）",
+      "cli": "grok-cli",
+      "command": "grok -p \"<prompt>\" [--output-format json] [--max-turns N]",
+      "note": "headless 单轮模式，跑完就退出。默认会弹权限确认，脚本里要显式加 --yolo 或配 --tools 白名单"
+    },
+    {
+      "intent": "让 Grok 联网查资料（含 X 平台）",
+      "cli": "grok-cli",
+      "command": "grok -p \"<问题>\"",
+      "note": "联网检索是模型的内置工具，不是独立子命令；要限制检索范围就在 prompt 里写明"
+    },
+    {
+      "intent": "把 Grok 嵌进编辑器 / 自建宿主",
+      "cli": "grok-cli",
+      "command": "grok agent stdio | serve | headless",
+      "note": "走 ACP（JSON-RPC over stdio），宿主负责 UI；stdio 是主要方式"
+    },
+    {
+      "intent": "给 Grok 挂 MCP 服务器 / 插件",
+      "cli": "grok-cli",
+      "command": "grok mcp add | list | enable ；grok plugin install | list | marketplace",
+      "note": "MCP 配置写在 ~/.grok/config.toml；改完要重启会话"
+    },
+    {
+      "intent": "回看 / 导出 Grok 的历史会话",
+      "cli": "grok-cli",
+      "command": "grok sessions list | search ；grok export <session>",
+      "note": "会话按工作目录归档；导出的是 Markdown 转录"
+    },
+    {
+      "intent": "排查 Grok 本机环境问题",
+      "cli": "grok-cli",
+      "command": "grok doctor ；grok inspect",
+      "note": "inspect 显示当前目录下 Grok 实际发现的配置，配置没生效时先看它"
+    },
+    {
+      "intent": "配置 / 检查腾讯广告 API Key 鉴权",
+      "cli": "tencentads",
+      "command": "tencentads auth login | status | logout",
+      "note": "凭据落在 ~/.tencent-ads；用 --config-dir 可换目录。API Key 不要回显在对话里"
+    },
+    {
+      "intent": "查腾讯广告这个 CLI 到底支持哪些命令",
+      "cli": "tencentads",
+      "command": "tencentads --list-commands",
+      "note": "命令面按 edition 变化：默认 edition 只有 auth，营销管理相关命令标着 enterprise"
+    },
+    {
+      "intent": "查腾讯广告的账号 / 营销单元 / 创意 / 报表数据",
+      "cli": "tencentads",
+      "command": "（该 CLI 当前没有对应命令，见 registry/tencentads/CAPABILITY.md）",
+      "note": "业务能力在腾讯广告官方技能站的 tencentads-* 系列脚本里（skills.ad.qq.com），本库尚未收录，也还没做过业务调用验证"
     }
   ]
 }

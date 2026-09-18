@@ -1,0 +1,16 @@
+Manage Connect server instances and tokens in your 1Password account.
+
+Usage:  op connect [command] [flags]
+
+Management Commands:
+  group       Manage group access to Secrets Automation
+  server      Manage Connect servers
+  token       Manage Connect server tokens
+  vault       Manage Connect server vault access
+
+Flags:
+  -h, --help   help for connect
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op connect [command] --help' for more information on the command.

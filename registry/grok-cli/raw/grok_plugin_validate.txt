@@ -1,0 +1,12 @@
+Validate a plugin manifest
+
+Usage: grok plugin validate [OPTIONS] [PATH]
+
+Arguments:
+  [PATH]  Path to plugin directory (default: current directory) [default: .]
+
+Options:
+      --debug                 Enable debug logging
+      --debug-file <FILE>     Write debug logs to FILE
+  -h, --help                  Print help
+      --leader-socket <PATH>  Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered

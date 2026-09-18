@@ -1,0 +1,10 @@
+Reactivate a suspended user.
+
+Specify the user by their e-mail address, name, or ID.
+
+Usage:  op user reactivate [{ <email> | <name> | <userID> | - }] [flags]
+
+Flags:
+  -h, --help   help for reactivate
+
+To list the global flags available on every command, run  'op --help'.

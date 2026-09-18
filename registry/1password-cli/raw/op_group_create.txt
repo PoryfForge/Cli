@@ -1,0 +1,9 @@
+Create a group and receive a JSON object with the group's ID.
+
+Usage:  op group create <name> [flags]
+
+Flags:
+      --description string   Set the group's description.
+  -h, --help                 help for create
+
+To list the global flags available on every command, run  'op --help'.

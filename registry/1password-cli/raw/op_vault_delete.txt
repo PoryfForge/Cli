@@ -1,0 +1,11 @@
+Remove a vault. Specify the vault to delete by name or ID.
+
+Usage:  op vault delete [{ <vaultName> | <vaultID> | - }] [flags]
+
+Aliases:
+  delete, remove, rm
+
+Flags:
+  -h, --help   help for delete
+
+To list the global flags available on every command, run  'op --help'.

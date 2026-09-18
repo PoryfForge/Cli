@@ -38,11 +38,17 @@ Agent 用命令行工具时的典型失败模式有两种：
 | CLI | 能干什么 | 规模 | 采集方式 |
 |---|---|---|---|
 | [`feishu-cli`](registry/feishu-cli/CAPABILITY.md) | 飞书 / Lark 全能力：消息、日历、文档、多维表格、任务、审批、考勤… | 23 个业务域 · 343 个快捷命令 · 120 个 API 方法 | 仓库 skill 文档 |
+| [`github-cli`](registry/github-cli/CAPABILITY.md) | GitHub：仓库、PR、Issue、Actions、release、搜索，以及 `gh api` 直连 REST / GraphQL | 24 个业务域 · 214 个命令节点 | release 二进制 help + 官方 SKILL.md |
+| [`multica`](registry/multica/CAPABILITY.md) | 把任务派给已连接机器上的编码 Agent 执行；管 workspace / issue / runtime / agent | 16 个业务域 · 134 个命令节点 | release 二进制 help |
 | [`wecom-cli`](registry/wecom-cli/CAPABILITY.md) | 企业微信：消息、邮件、在线文档、智能表格、待办、日程、会议、微盘、通讯录 | 12 个业务域 · 93 条命令 | 仓库 skill 文档 |
 | [`wps365-cli`](registry/wps365-cli/CAPABILITY.md) | WPS 365：日历、消息、通讯录、邮箱、云文档、智能文档、智能表格、多维表、会议 | 200 个命令节点 | release 二进制 help 全树 |
+| [`1password-cli`](registry/1password-cli/CAPABILITY.md) | 1Password：取密钥、把密钥注入进程或配置文件，管条目 / 保险库 / 账号 | 68 个命令节点 | release 二进制 help 全树 |
+| [`grok-cli`](registry/grok-cli/CAPABILITY.md) | xAI Grok：非交互单轮执行、联网检索、会话与 MCP / 插件管理、嵌进宿主（ACP） | 63 个命令节点 | release 二进制 help 全树 |
 | [`dreamina`](registry/dreamina/CAPABILITY.md) | 即梦 AIGC：文生图 / 图生图 / 文生视频 / 图生视频 / 多模态参考 | 23 个命令节点 | 本机 CLI help + 官方 SKILL.md |
+| [`tencentads`](registry/tencentads/CAPABILITY.md) | 腾讯广告：API Key 鉴权管理（业务调用命令未随默认版发布） | 11 个命令节点 | release 二进制 help 全树 |
 
 **采集方式很重要**，它决定了这份快照能信多少 —— 见 [AGENTS.md 的说明](AGENTS.md#怎么读采集方式它决定你能信多少)。
+还没收录、但已核对过官方来源的候选记在 [CANDIDATES.md](CANDIDATES.md)。
 
 ---
 
@@ -72,15 +78,15 @@ bin/install-skill --dry-run                 # 只看会做什么
 bin/install-skill --uninstall               # 移除
 ```
 
-装完之后，Agent 遇到飞书 / 企业微信 / WPS 365 / 即梦 相关任务时会**先查库**，
-而不是现翻 `--help`、更不是凭印象编命令。想验证：新开一个会话，问「飞书 CLI 能干什么」。
+装完之后，Agent 遇到这些 CLI 相关任务时会**先查库**，而不是现翻 `--help`、
+更不是凭印象编命令。想验证：新开一个会话，问「飞书 CLI 能干什么」。
 
 > 用 **Codex** 这类读 `AGENTS.md` 的 Agent：库根的 `AGENTS.md` 就是写给它的 ——
 > 把本仓库作为工作目录的上下文即可；或把 `AGENTS.md` 的内容并进你的全局指令文件。
 
-> **注意：本库只放「能力面文档」，不含 CLI 本体。** 真要调飞书 / 企业微信 / WPS 365 /
-> 即梦，你得自己装那些 CLI 并完成授权（本库的采集器会把它们临时拉到 `.cache/` 里跑
-> `--help`，但**不会**写进你的 `PATH`、也不碰你的账号配置）。
+> **注意：本库只放「能力面文档」，不含 CLI 本体。** 真要调这些 CLI，你得自己装并完成授权
+> （本库的采集器只会把它们的**发布产物**临时拉到 `.cache/` 里跑 `--help`，
+> 但**不会**写进你的 `PATH`、也不碰你的账号配置）。
 > 本库负责让你和你的 Agent 知道「它有什么、该怎么调」，不代替它们运行。
 > 另外 `bin/` 下的脚本需要 Node.js ≥ 18 —— 只想查文档的话不需要任何环境。
 
@@ -134,13 +140,23 @@ npm test                    # 清单体检 + 渲染契约 + 检索测试
 「这个 CLI 的能力面，--help 能完整列出来吗？」
 
 ├─ 能 → acquire.kind = "release-bin"（或 "local-bin"，若厂商安装器已装进 PATH）
-│        profile = "help-tree"，不用写代码
+│        发在哪都行，都在清单里写：
+│          · GitHub Releases        → 写 repo + asset（默认路径）
+│          · 厂商 CDN 直链          → 写 url（逐平台）+ versionSource（版本端点）
+│          · 裸二进制（无压缩包）    → 再写 archive: "none"
+│          · 只发在 npm 注册表       → 写 url 指向 registry.npmjs.org 的平台子包
+│        厂商另写了给 Agent 的规则文档？→ 加 acquire.docs，它会合并进能力文档
 │
 └─ 不能 → 仓库里有 skills/*/SKILL.md 吗？
           ├─ 有 → acquire.kind = "skill-repo"，写一个 profiles/<名字>.js
           └─ 没有（靠服务端/CDN 下发）→ 取一份 release 装本地跑 help，
                                         并把「文档未覆盖的部分」在快照里写明
 ```
+
+逐平台命名各家不同（`macOS_arm64` / `macos-aarch64` / `darwin_arm64`），
+**清单里逐平台写死，脚本不做任何猜测式映射** —— 猜错会静默下到别的平台的二进制。
+占位符只有 `{version}`（原样，GitHub 的 tag 常带 `v`）和 `{versionBare}`（去掉 `v`），
+资产文件名用后者、下载路径用前者。
 
 解析档只负责「把厂商文档解析成统一的能力模型」，**渲染由 `lib/capmodel.js` 统一完成** ——
 所以新加的 CLI 产出的文档形态天然和已有的对齐。完整步骤与字段说明见
@@ -193,8 +209,14 @@ Agent 会去跑 `--help`；填错了，Agent 会照错的做。
 
 **采集器的红线**
 只执行 `<cmd> --help` / `-h` / `help` / `--version`。不安装、不改用户环境、
-不执行任何会改远端状态或消耗配额的命令。`release-bin` 只把可执行文件解到 `.cache/`，
-不写入 `PATH`。
+不执行任何会改远端状态或消耗配额的命令。无论能力从 GitHub Releases、厂商 CDN
+还是 npm 注册表来，都只是把**发布产物**解到 `.cache/` 里，不写入 `PATH`；
+`skills.ad.qq.com` 那类需要走商店安装的技能包，本库宁可只记来源链接，也不代为安装。
+
+**为什么采集方式要写进文档本身？**
+快照来自「下载的发布二进制」还是「你本机装好的 CLI」，可信范围不一样 ——
+本机那份可能已被厂商安装器改过、版本也可能不同。所以 `CAPABILITY.md` 的
+`source:` 与「采集方式」两处都如实标注，由采集层（不是渲染层）决定写什么。
 
 ---
 
@@ -203,6 +225,16 @@ Agent 会去跑 `--help`；填错了，Agent 会照错的做。
 - 源码按分支拉取，靠 `meta.commit` 记录采集时的提交；要严格可复现请把 `ref` 换成 tag。
 - 动态命令树（服务端 discovery）无法离线穷举，快照只覆盖官方文档写明的部分。
 - `release-bin` 按当前机器平台取二进制，跨平台命令树一般一致，但平台独有命令需在对应平台刷新。
+- **命令面薄 ≠ 能力弱**：`tencentads` 默认版只发布了 `auth` 域，业务能力在腾讯广告官方
+  技能站（`skills.ad.qq.com`）的脚本里 —— 快照如实反映的是 CLI 自己暴露了什么。
+- **发行方需自行核对**：`tencentads-cli` 的 npm 发布者账号是个人账号，虽被官方技能文档
+  列为前置依赖，是否为厂商直接维护待确认；该类存疑之处写在 `clis.json` 的 `scopeNote` 里。
+- 收录的命令面来自官方 `--help`，**不等于当前账号一定能调通**（权限、套餐、地域都可能拦）。
+  本库不做业务调用验证。
+- **快照可能随本机环境变化**：有的 CLI 支持本地扩展（如 `gh copilot`），扩展装没装、
+  哪一版，扫出来的树就不一样。这类缺口在采集前就已知，会写进文档的「采集说明」，
+  以本机 `<命令> --help` 为准。
+- **`raw/` 是本次扫描的全集**：每次扫描清空重写，不留历史版本。要跨版本比对请用 git 历史。
 
 ## 许可证
 

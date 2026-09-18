@@ -6,8 +6,8 @@ version: 0.3.5
 title: WPS 365 CLI
 license: MIT
 repo: https://github.com/wps365-open/cli
-scanned_at: 2026-09-17 06:52:51
-source: help-tree
+scanned_at: 2026-09-18 06:27:54
+source: release-bin + help-tree
 nodes: 200
 ---
 
@@ -29,9 +29,9 @@ nodes: 200
 | 版本 | `0.3.5` |
 | 仓库 | https://github.com/wps365-open/cli |
 | 许可证 | MIT |
-| 采集方式 | help 全树（`--help` 递归） |
+| 采集方式 | 官方 release 二进制（`--help` 递归） |
 | 本轮抓取命令数 | 200（顶层 1） |
-| 抓取时间 | 2026-09-17 06:52:51 |
+| 抓取时间 | 2026-09-18 06:27:54 |
 | 原始 help 留档 | `raw/` |
 
 ## 安装

@@ -1,0 +1,29 @@
+Download a document and print the contents. Specify the document by its name
+or ID.
+
+Prints to standard output (stdout) by default. To print to a file, use the
+'--out-file path/to/file.ext' flag.
+
+SAVE TO A FILE
+
+Use the '--out-file' option to have 'op' save the document. This may
+be useful in some shells as a way to preserve the file's original
+encoding.
+
+Usage:  op document get { <itemName> | <itemID> } [flags]
+
+Examples:
+Save a document to a file called 'secret-plans.text':
+
+	op document get "Top Secret Plan B" --out-file ../documents/secret-plans.text
+
+Flags:
+      --file-mode filemode   Set filemode for the output file. It is ignored without the --out-file flag. (default 0600)
+      --force                Forcibly print an unintelligible document to an interactive terminal. If --out-file is specified, save the
+                             document to a file without prompting for confirmation.
+  -h, --help                 help for get
+      --include-archive      Include document items in the Archive. Can also be set using OP_INCLUDE_ARCHIVE environment variable.
+  -o, --out-file path        Save the document to the file path instead of stdout.
+      --vault vault          Look for the document in this vault.
+
+To list the global flags available on every command, run  'op --help'.

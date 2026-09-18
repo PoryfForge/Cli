@@ -1,0 +1,15 @@
+Create a new vault 
+
+Valid icon keywords are:
+airplane, application, art-supplies, bankers-box, brown-briefcase, brown-gate, buildings, cabin, castle, circle-of-dots, coffee, color-wheel, curtained-window, document, doughnut, fence, galaxy, gears, globe, green-backpack, green-gem, handshake, heart-with-monitor, house, id-card, jet, large-ship, luggage, plant, porthole, puzzle, rainbow, record, round-door, sandals, scales, screwdriver, shop, tall-window, treasure-chest, vault-door, vehicle, wallet, wrench
+
+Usage:  op vault create <name> [flags]
+
+Flags:
+      --allow-admins-to-manage true|false   Set whether administrators can manage the vault. If not provided, the default policy for the
+                                            account applies.
+      --description description             Set the group's description.
+  -h, --help                                help for create
+      --icon string                         Set the vault icon.
+
+To list the global flags available on every command, run  'op --help'.

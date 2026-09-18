@@ -1,0 +1,10 @@
+Edit a group's name or description. Specify the group to edit by its name or ID.
+
+Usage:  op group edit [{ <groupName> | <groupID> | - }] [flags]
+
+Flags:
+      --description description   Change the group's description.
+  -h, --help                      help for edit
+      --name name                 Change the group's name.
+
+To list the global flags available on every command, run  'op --help'.

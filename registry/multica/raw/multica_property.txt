@@ -1,0 +1,22 @@
+Manage workspace custom issue properties
+
+USAGE
+  multica property <command> [flags]
+
+COMMANDS
+  archive:    Archive a property definition (hidden from pickers; values preserved)
+  create:     Create a property definition (workspace owner/admin only)
+  get:        Show one property definition
+  list:       List property definitions
+  unarchive:  Restore an archived property definition
+  update:     Update a property definition (owner/admin only; type is immutable)
+
+
+FLAGS
+  -h, --help   help for property
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica property <command> --help` for more information about a command.

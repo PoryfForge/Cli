@@ -1,0 +1,10 @@
+Show current authentication status
+
+Usage:
+  tencentads auth status [flags]
+
+Flags:
+  -h, --help   help for status
+
+Global Flags:
+      --config-dir string   Directory for credentials file (default: ~/.tencent-ads)

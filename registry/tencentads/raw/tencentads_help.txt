@@ -1,0 +1,11 @@
+Help provides help for any command in the application.
+Simply type tencentads help [path to command] for full details.
+
+Usage:
+  tencentads help [command] [flags]
+
+Flags:
+  -h, --help   help for help
+
+Global Flags:
+      --config-dir string   Directory for credentials file (default: ~/.tencent-ads)

@@ -1,0 +1,18 @@
+Work with attachments
+
+USAGE
+  multica attachment <command> [flags]
+
+COMMANDS
+  download:  Download an attachment to a local file
+  upload:    Upload a file to attach to your chat reply
+
+
+FLAGS
+  -h, --help   help for attachment
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica attachment <command> --help` for more information about a command.

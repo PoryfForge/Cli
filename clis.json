@@ -4,9 +4,19 @@
   "_fields": {
     "name": "注册名，对应 registry/<name>/",
     "command": "可执行文件名",
-    "repo": "官方仓库，用于溯源与 release 查询",
+    "repo": "官方来源，用于溯源与 release 查询",
+    "license": "许可证",
+    "install": "官方安装方式（写进能力文档，方便读者自己装）",
+    "scopeNote": "只有备注，不参与采集。用于记「这个条目的定位有存疑 / 覆盖面有缺口」，会随 clis.json 一起公开",
+    "note": "采集前就已知的覆盖面缺口，会渲染进 CAPABILITY.md 的「采集说明」（读者看的是文档，不是本文件，所以这一类要落进文档）",
     "profile": "解析档，决定能力怎么写进文档。可选：lark / wecom / help-tree",
-    "acquire.kind": "skill-repo（下载仓库源码解出 skills/）或 release-bin（取官方 release 可执行文件跑 --help）"
+    "acquire.kind": "skill-repo（下载仓库源码解出 skills/）、release-bin（取官方发布的可执行文件跑 --help）或 local-bin（厂商安装器已装进 PATH）",
+    "acquire.url": "下载地址。非 GitHub 托管时逐平台写全：{\"darwin-arm64\": \"https://…\"}。也可写单条字符串给所有平台共用",
+    "acquire.asset": "归档内文件名，逐平台映射。占位符 {versionBare} 是裸版本号，{version} 是原样版本（GitHub tag 常带 v）",
+    "acquire.archive": "压缩形态：zip / tar.gz / none（裸二进制）。不写则按 URL 后缀推断，推不出来会直接报错",
+    "acquire.versionSource": "版本端点。GitHub 托管可省；其余写 {kind: url-json|url-text, url, path}",
+    "acquire.binPattern": "归档内的可执行文件名带平台后缀（tencentads_darwin_arm64）时，用它匹配",
+    "acquire.docs": "厂商另外写的 Agent 规则文档。不在发布包里，单独取源码：tarball + stripPrefix + extract，skill 指定哪份合并进能力文档"
   },
   "clis": [
     {
@@ -109,6 +119,180 @@
           "depth": 3,
           "max": 900,
           "desc": "WPS 365 官方 CLI：日历、消息、通讯录、邮箱、云文档、智能文档、智能表格、多维表、会议 9 大业务域，另含 api 兜底命令与 spec 管理"
+        }
+      }
+    },
+    {
+      "name": "github-cli",
+      "title": "GitHub CLI",
+      "command": "gh",
+      "repo": "https://github.com/cli/cli",
+      "license": "MIT",
+      "install": "brew install gh",
+      "homepage": "https://cli.github.com",
+      "scopeNote": "只收 GitHub 的 SaaS 协作能力（仓库 / PR / Issue / Actions / release / 搜索 / API…）。本机通用 git 命令仍不在收录范围内。",
+      "note": "`gh` 的一部分子命令来自**本机安装的扩展**而非内置（最典型的是 `gh copilot`）。扩展装没装、版本不同，扫出来的树就会不一样，对照时以本机 `gh <命令> --help` 为准。",
+      "acquire": {
+        "kind": "release-bin",
+        "profile": "help-tree",
+        "binDir": ".cache/releases/github-cli",
+        "binName": "gh",
+        "version": "latest",
+        "asset": {
+          "darwin-arm64": "gh_{versionBare}_macOS_arm64.zip",
+          "darwin-x64": "gh_{versionBare}_macOS_amd64.zip",
+          "linux-arm64": "gh_{versionBare}_linux_arm64.tar.gz",
+          "linux-x64": "gh_{versionBare}_linux_amd64.tar.gz",
+          "win32-x64": "gh_{versionBare}_windows_amd64.zip"
+        },
+        "docs": {
+          "srcDir": ".cache/src/github-cli-docs",
+          "tarball": "https://codeload.github.com/cli/cli/tar.gz/refs/heads/trunk",
+          "stripPrefix": "cli-trunk",
+          "ref": "trunk",
+          "extract": ["skills/gh/SKILL.md", "skills/gh-skill/SKILL.md", "AGENTS.md"],
+          "skill": "skills/gh/SKILL.md"
+        },
+        "scan": {
+          "depth": 2,
+          "max": 700,
+          "desc": "GitHub 官方 CLI：仓库 / Issue / PR / Actions 工作流 / release / 搜索 / gist / codespace / project 等协作能力，另含 gh api 直连 REST 与 GraphQL 的兜底入口"
+        }
+      }
+    },
+    {
+      "name": "1password-cli",
+      "title": "1Password CLI",
+      "command": "op",
+      "repo": "https://app-updates.agilebits.com/product_history/CLI2",
+      "license": "厂商专有",
+      "install": "brew install 1password-cli",
+      "homepage": "https://developer.1password.com/docs/cli/",
+      "acquire": {
+        "kind": "release-bin",
+        "profile": "help-tree",
+        "binDir": ".cache/releases/1password-cli",
+        "binName": "op",
+        "versionSource": {
+          "kind": "url-json",
+          "url": "https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N",
+          "path": "version"
+        },
+        "url": {
+          "darwin-arm64": "https://cache.agilebits.com/dist/1P/op2/pkg/v{version}/op_darwin_arm64_v{version}.zip",
+          "darwin-x64": "https://cache.agilebits.com/dist/1P/op2/pkg/v{version}/op_darwin_amd64_v{version}.zip",
+          "linux-arm64": "https://cache.agilebits.com/dist/1P/op2/pkg/v{version}/op_linux_arm64_v{version}.zip",
+          "linux-x64": "https://cache.agilebits.com/dist/1P/op2/pkg/v{version}/op_linux_amd64_v{version}.zip",
+          "win32-x64": "https://cache.agilebits.com/dist/1P/op2/pkg/v{version}/op_windows_amd64_v{version}.zip"
+        },
+        "scan": {
+          "depth": 2,
+          "max": 300,
+          "desc": "1Password 官方 CLI：凭据保险库与条目的读写、op run / op inject 把密钥以环境变量或文件形式注入进程，另含 service account、SSH 代理与文档（Document）管理"
+        }
+      }
+    },
+    {
+      "name": "multica",
+      "title": "Multica CLI",
+      "command": "multica",
+      "repo": "https://github.com/multica-ai/multica",
+      "license": "Multica License（Apache-2.0 + 附加条件）",
+      "install": "brew tap multica-ai/tap && brew install multica",
+      "homepage": "https://multica.ai/docs",
+      "acquire": {
+        "kind": "release-bin",
+        "profile": "help-tree",
+        "binDir": ".cache/releases/multica",
+        "binName": "multica",
+        "version": "latest",
+        "asset": {
+          "darwin-arm64": "multica-cli-{versionBare}-darwin-arm64.tar.gz",
+          "darwin-x64": "multica-cli-{version}-darwin-amd64.tar.gz",
+          "linux-arm64": "multica-cli-{version}-linux-arm64.tar.gz",
+          "linux-x64": "multica-cli-{version}-linux-amd64.tar.gz",
+          "win32-x64": "multica-cli-{version}-windows-amd64.zip",
+          "win32-arm64": "multica-cli-{version}-windows-arm64.zip"
+        },
+        "docs": {
+          "srcDir": ".cache/src/multica-docs",
+          "tarball": "https://codeload.github.com/multica-ai/multica/tar.gz/refs/heads/main",
+          "stripPrefix": "multica-main",
+          "ref": "main",
+          "extract": ["CLI_AND_DAEMON.md", "CLI_INSTALL.md", "AGENTS.md"],
+          "skill": ""
+        },
+        "scan": {
+          "depth": 2,
+          "max": 250,
+          "desc": "Multica 官方 CLI：把任务派发到已连接的机器上执行、管理 workspace 与 issue，daemon 负责发现本机可用的编码 Agent 并回传运行状态与结果"
+        }
+      }
+    },
+    {
+      "name": "grok-cli",
+      "title": "Grok CLI",
+      "command": "grok",
+      "repo": "https://x.ai/cli",
+      "license": "厂商专有",
+      "install": "curl -fsSL https://x.ai/cli/install.sh | bash",
+      "homepage": "https://docs.x.ai/build/overview",
+      "acquire": {
+        "kind": "release-bin",
+        "profile": "help-tree",
+        "binDir": ".cache/releases/grok-cli",
+        "binName": "grok",
+        "archive": "none",
+        "versionSource": {
+          "kind": "url-text",
+          "url": "https://x.ai/cli/stable"
+        },
+        "url": {
+          "darwin-arm64": "https://x.ai/cli/grok-{version}-macos-aarch64",
+          "darwin-x64": "https://x.ai/cli/grok-{version}-macos-x86_64",
+          "linux-arm64": "https://x.ai/cli/grok-{version}-linux-aarch64",
+          "linux-x64": "https://x.ai/cli/grok-{version}-linux-x86_64",
+          "win32-x64": "https://x.ai/cli/grok-{version}-windows-x86_64.exe"
+        },
+        "scan": {
+          "depth": 2,
+          "max": 250,
+          "desc": "xAI 官方 Grok CLI：交互式 TUI、单轮 headless 模式与 ACP agent 模式，带联网检索（含 X 平台）、本机文件与命令执行、会话与子 Agent 管理"
+        }
+      }
+    },
+    {
+      "name": "tencentads",
+      "title": "腾讯广告 CLI",
+      "command": "tencentads",
+      "repo": "https://www.npmjs.com/package/tencentads-cli",
+      "license": "MIT",
+      "install": "npm install -g tencentads-cli",
+      "homepage": "https://developers.e.qq.com",
+      "scopeNote": "腾讯广告官方技能站（skills.ad.qq.com）把 tencentads-cli 列为前置依赖，但该 npm 包的发布者账号是个人账号，是否为厂商直接维护待与官方确认。",
+      "acquire": {
+        "kind": "release-bin",
+        "profile": "help-tree",
+        "binDir": ".cache/releases/tencentads",
+        "binName": "tencentads",
+        "binPattern": "^tencentads",
+        "versionSource": {
+          "kind": "url-json",
+          "url": "https://registry.npmjs.org/tencentads-cli/latest",
+          "path": "version"
+        },
+        "url": {
+          "darwin-arm64": "https://registry.npmjs.org/tencentads-darwin-arm64/-/tencentads-darwin-arm64-{version}.tgz",
+          "darwin-x64": "https://registry.npmjs.org/tencentads-darwin-x64/-/tencentads-darwin-x64-{version}.tgz",
+          "linux-arm64": "https://registry.npmjs.org/tencentads-linux-arm64/-/tencentads-linux-arm64-{version}.tgz",
+          "linux-x64": "https://registry.npmjs.org/tencentads-linux-x64/-/tencentads-linux-x64-{version}.tgz",
+          "win32-x64": "https://registry.npmjs.org/tencentads-windows-amd64/-/tencentads-windows-amd64-{version}.tgz",
+          "win32-arm64": "https://registry.npmjs.org/tencentads-windows-arm64/-/tencentads-windows-arm64-{version}.tgz"
+        },
+        "scan": {
+          "depth": 2,
+          "max": 250,
+          "desc": "腾讯广告（腾讯营销）API CLI：登录鉴权与状态查询，其余能力按营销 API v3.0 的资源名暴露——账号与管家、营销单元、创意与组件、素材、报表与人群等"
         }
       }
     }

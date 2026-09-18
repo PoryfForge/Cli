@@ -1,0 +1,49 @@
+Add a new 1Password account to 1Password CLI manually with your account password
+and Secret Key, instead of signing in using your 1Password app.
+
+To sign in to manually-added accounts:
+
+	eval $(op signin)
+
+Turn on the 1Password app integration to sign in with the app instead:
+https://www.1password.dev/cli/app-integration/
+
+Learn more about signing in manually:
+https://www.1password.dev/cli/sign-in-manually/
+
+When you sign in manually, 1Password CLI creates a session token and
+sets the 'OP_SESSION' environment variable to it. Session tokens expire
+after 30 minutes of inactivity, after which you’ll need to sign in again.
+
+If you add multiple 1Password accounts, 1Password CLI determines which
+to use in this order:
+
+1. An account specified with the '--account' flag.
+2. An account specified with the 'OP_ACCOUNT' environment variable.
+3. The account most recently signed in to with 'op signin' in the current
+terminal window.
+
+Usage:  op account add [flags]
+
+Examples:
+Add an account using flags to specify account details:
+
+	op account add --address my.1password.com --email user@example.org
+
+Add an account and immediately sign in to it:
+
+		eval $(op account add --signin)
+
+Sign in to a specific account:
+
+		eval $(op signin --account my)
+
+Flags:
+      --address string     The sign-in address for your account.
+      --email string       The email address associated with your account.
+  -h, --help               help for add
+      --raw                Only return the session token.
+      --shorthand string   Set a custom account shorthand for your account.
+      --signin             Immediately sign in to the added account.
+
+To list the global flags available on every command, run  'op --help'.

@@ -1,0 +1,29 @@
+Get details about a vault. Specify the vault by name or ID.
+
+USE STANDARD INPUT TO SPECIFY OBJECTS
+
+If you enter a hyphen ('-') instead of a single object for this command,
+the tool will read object specifiers from standard input (stdin).
+Separate each specifier with a new line. For more information about how
+to specify objects, run 'op help'.
+
+You can also pass the command a list or array of JSON objects. The tool
+will get an item for any object that has an ID, ignoring line
+breaks. This is useful for passing information from one 'op' command
+to another.
+
+Usage:  op vault get [{ <vaultName> | <vaultID> | - }] [flags]
+
+Examples:
+Get details for all vaults:
+
+	op vault list --format=json | op vault get -
+
+Get details for the vaults that a group has access to:
+
+	op vault list --group security --format=json | op vault get -
+
+Flags:
+  -h, --help   help for get
+
+To list the global flags available on every command, run  'op --help'.

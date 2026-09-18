@@ -1,0 +1,19 @@
+Provision credentials from 1Password and run this command.
+
+'op plugin run' passes your credentials saved in 1Password to the
+underlying CLI and runs the provided command. If you haven't configured
+your default credentials, 1Password CLI will prompt you to select an
+item that contains your credentials.
+
+After this, you will be automagically authenticated with this CLI, and your
+selection will be recorded for future calls to this plugin in the current
+terminal session.
+
+To configure a default credential, see 'op plugin init --help'.
+
+Usage:  op plugin run <command>... [flags]
+
+Flags:
+  -h, --help   help for run
+
+To list the global flags available on every command, run  'op --help'.

@@ -1,0 +1,15 @@
+Supported keys: server_url, app_url, workspace_id, device_name, runtime_name, workspaces_root, max_concurrent_tasks, poll_interval, ws_claim_poll_interval, heartbeat_interval, agent_timeout, codex_semantic_inactivity_timeout, codex_handshake_timeout, disable_auto_update, auto_update_check_interval, disable_auto_reload.
+
+The daemon keys (device_name, runtime_name, workspaces_root, max_concurrent_tasks, poll_interval, ws_claim_poll_interval, heartbeat_interval, agent_timeout, codex_semantic_inactivity_timeout, codex_handshake_timeout, disable_auto_update, auto_update_check_interval, disable_auto_reload) mirror their --flag / env counterparts and are read by `daemon start` when neither the flag nor the env var is set. Precedence: --flag > MULTICA_… env > config.json > built-in default. Duration keys take a positive Go duration (e.g. '10s', '500ms', '1m30s'); '0s' and negative values are rejected — except agent_timeout, where '0s' is meaningful and explicitly disables the wall-clock cap. disable_auto_update and disable_auto_reload take 'true' or 'false' (single-direction: setting one to 'true' turns that behavior off, 'false' clears the override so env/default decides). Pass an empty string to clear a persisted value (e.g. `config set poll_interval ""`).
+
+USAGE
+  multica config set <key> <value> [flags]
+
+FLAGS
+  -h, --help   help for set
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

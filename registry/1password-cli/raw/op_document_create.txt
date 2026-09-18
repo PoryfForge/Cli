@@ -1,0 +1,30 @@
+Create a document item and receive a JSON object that contains the item's ID.
+
+By default, the document is saved in your Personal, Private, or Employee
+vault. Specify a different vault with the '--vault' option.
+
+CREATE A FILE FROM STANDARD INPUT
+
+To create the file contents from standard input (stdin), enter a
+hyphen ('-') instead of a path. You can use the '--file-name' option to
+change the name of the file.
+
+Usage:  op document create [{ <file> | - }] [flags]
+
+Examples:
+Create a document by specifying the file path:
+
+	op document create "../demos/videos/demo.mkv" --title "2020-06-21 Demo Video"
+
+Create a document from standard input:
+
+	cat auth.log.* | op document create - --title "Authlogs 2020-06" --file-name "auth.log.2020.06"
+
+Flags:
+      --file-name name   Set the file's name.
+  -h, --help             help for create
+      --tags tags        Set the tags to the specified (comma-separated) values.
+      --title title      Set the document item's title.
+      --vault vault      Save the document in this vault. Default: Private, Personal, or Employee, depending on your account type.
+
+To list the global flags available on every command, run  'op --help'.

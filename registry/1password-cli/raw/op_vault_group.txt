@@ -1,0 +1,15 @@
+Manage group vault access.
+
+Usage:  op vault group [command] [flags]
+
+Commands:
+  grant       Grant a group permissions to a vault
+  revoke      Revoke a portion or the entire access of a group to a vault
+  list        List all the groups that have access to the given vault
+
+Flags:
+  -h, --help   help for group
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op vault group [command] --help' for more information on the command.

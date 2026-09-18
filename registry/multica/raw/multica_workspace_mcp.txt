@@ -1,0 +1,20 @@
+Manage the workspace's MCP server library
+
+USAGE
+  multica workspace mcp <command> [flags]
+
+COMMANDS
+  add:     Add an MCP server to the workspace library (admin/owner only)
+  list:    List the workspace's MCP servers
+  remove:  Remove an MCP server from the workspace library (admin/owner only)
+  update:  Rename or replace a workspace MCP server (admin/owner only)
+
+
+FLAGS
+  -h, --help   help for mcp
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica workspace mcp <command> --help` for more information about a command.

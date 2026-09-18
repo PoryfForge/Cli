@@ -1,0 +1,37 @@
+Work with issues
+
+USAGE
+  multica issue <command> [flags]
+
+COMMANDS
+  assign:         Assign an issue to a member, agent, or squad
+  cancel-task:    Cancel an in-progress or queued run (interrupts in-flight agent)
+  children:       List an issue's sub-issues grouped by stage
+  comment:        Work with issue comments
+  create:         Create a new issue
+  get:            Get issue details
+  label:          Manage labels on an issue
+  list:           List issues in the workspace
+  metadata:       Manage per-issue metadata (KV)
+  property:       Manage custom property values on an issue
+  pull-requests:  List pull requests linked to an issue
+  reorder:        Move an issue within its status column
+  rerun:          Re-enqueue an issue's current agent assignment as a fresh run
+  run-messages:   List messages for an execution
+  runs:           List execution history for an issue
+  search:         Search issues by title, description, or comments
+  status:         Change issue status
+  subscriber:     Work with issue subscribers
+  timeline:       Chronological issue history — when status/assignee changed, how long it has been stuck
+  update:         Update an issue
+  usage:          Show aggregated token usage for an issue
+
+
+FLAGS
+  -h, --help   help for issue
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica issue <command> --help` for more information about a command.

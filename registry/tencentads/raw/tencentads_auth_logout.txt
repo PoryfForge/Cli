@@ -1,0 +1,11 @@
+Log out and disable the current API key
+
+Usage:
+  tencentads auth logout [flags]
+
+Flags:
+      --force   Clear local credentials even if the server-side disable fails
+  -h, --help    help for logout
+
+Global Flags:
+      --config-dir string   Directory for credentials file (default: ~/.tencent-ads)

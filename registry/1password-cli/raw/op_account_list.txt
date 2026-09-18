@@ -1,0 +1,11 @@
+List users and accounts set up on this device.
+
+Usage:  op account list [flags]
+
+Aliases:
+  list, ls
+
+Flags:
+  -h, --help   help for list
+
+To list the global flags available on every command, run  'op --help'.

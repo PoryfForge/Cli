@@ -145,7 +145,40 @@ async function runSkillRepo(entry, { force }) {
 }
 
 /**
- * release-bin 型：取官方 release 可执行文件，交给 cli-cap 跑 help 全树。
+ * 有些 CLI 的能力采自二进制（help 全树），但厂商另外写了给 Agent 的规则文档
+ * —— 例如 cli/cli 的 `skills/gh/SKILL.md`、multica 的 `AGENTS.md`。
+ * 这些文档不在发布包里，只能再取一份源码；取到的原文留档进 vendor/，
+ * 其中 acquire.docs.skill 指定的那份合并进能力文档。
+ *
+ * 这两类信息的分工：help 说「能做什么」，官方 SKILL.md 说「怎样才算做对」。
+ */
+async function fetchVendorDocs(spec, entry, outDir, { force }) {
+  if (!spec) return null;
+  const srcDir = path.resolve(
+    ROOT,
+    spec.srcDir || path.join('.cache', 'src', `${entry.name}-docs`)
+  );
+  await fetchsource.fetchSkillRepo(spec, { dest: srcDir, force });
+
+  const vendorDir = path.join(outDir, 'vendor');
+  fs.mkdirSync(vendorDir, { recursive: true });
+  for (const rel of spec.extract || []) {
+    const src = path.join(srcDir, rel);
+    // 落盘时把路径压平：vendor/ 是给人翻原文的，不需要还原目录结构
+    if (fs.existsSync(src)) fs.copyFileSync(src, path.join(vendorDir, rel.replace(/[/\\]/g, '__')));
+  }
+  if (!spec.skill) return null;
+  const p = path.join(srcDir, spec.skill);
+  if (!fs.existsSync(p)) {
+    throw new Error(
+      `官方文档里没有 ${spec.skill} —— 检查 acquire.docs.extract 是否包含它，或该文件在厂商仓库里改了名`
+    );
+  }
+  return p;
+}
+
+/**
+ * release-bin 型：取官方发布的可执行文件，交给 cli-cap 跑 help 全树。
  * 这里刻意不重新实现 help 解析 —— cli-cap 已经把它做扎实了。
  */
 async function runReleaseBin(entry, { force }) {
@@ -158,6 +191,17 @@ async function runReleaseBin(entry, { force }) {
   );
   const scan = spec.scan || {};
 
+  const outDir = path.join(REGISTRY, entry.name);
+  fs.mkdirSync(outDir, { recursive: true });
+  const skillPath = await fetchVendorDocs(spec.docs, entry, outDir, { force });
+  const docsCommit = spec.docs
+    ? await fetchsource.resolveCommit(spec.docs.repo || entry.repo, spec.docs.ref || 'main')
+    : '';
+
+  const sourceLabel = skillPath
+    ? 'release-bin + help-tree + official-skill'
+    : 'release-bin + help-tree';
+
   const args = [
     path.join(ROOT, 'bin', 'cli-cap'),
     'scan',
@@ -169,15 +213,21 @@ async function runReleaseBin(entry, { force }) {
     '--no-index',
     '--title', entry.title,
     '--repo', entry.repo,
+    // 「能力采自下载的发布二进制」这件事必须写进文档本身，
+    // 否则读的人会以为是在本机装好的 CLI 上扫的，无从判断快照的可信范围
+    '--source', sourceLabel,
   ];
   if (entry.license) args.push('--license', entry.license);
   if (entry.install) args.push('--install', entry.install);
+  if (entry.note) args.push('--note', entry.note);
+  if (scan.helpFlag) args.push('--help-flag', scan.helpFlag);
+  if (scan.extraCmds) args.push('--extra-cmds', scan.extraCmds);
+  if (skillPath) args.push('--skill', skillPath);
 
   const r = spawnSync(process.execPath, args, { stdio: ['ignore', 'inherit', 'inherit'], cwd: ROOT });
   if (r.status !== 0) throw new Error(`help 全树扫描失败（退出码 ${r.status}）`);
 
   // cli-cap 写的 meta 缺 title/repo，这里补齐后再写回，保证与其他 CLI 一致
-  const outDir = path.join(REGISTRY, entry.name);
   const jsonPath = path.join(outDir, 'capability.json');
   const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
   Object.assign(data.meta, {
@@ -185,16 +235,22 @@ async function runReleaseBin(entry, { force }) {
     repo: entry.repo,
     license: entry.license || '',
     install: entry.install || '',
-    source: 'release-bin + help-tree',
+    source: sourceLabel,
     release: version,
+    // 二进制版的 `--version` 不一定可用（有的 CLI 只在交互式界面里报版本），
+    // 拿不到就用 manifest 解析出的发布版本兜底 —— 空版本号会让索引无从判断快照新旧
+    version: data.meta.version || version,
   });
+  if (docsCommit) data.meta.docsCommit = docsCommit.slice(0, 12);
   fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
   fs.writeFileSync(
     path.join(outDir, 'capability.meta.json'),
     JSON.stringify({ ...normalizeMeta(data), manual: true }, null, 2)
   );
 
-  process.stdout.write(`✓ ${entry.title}（${entry.name}）能力快照已就绪，release ${version}\n`);
+  process.stdout.write(
+    `✓ ${entry.title}（${entry.name}）能力快照已就绪，release ${version}${skillPath ? ' + 官方 SKILL.md' : ''}\n`
+  );
   return { meta: data.meta, count: (data.nodes || []).length };
 }
 
@@ -213,6 +269,10 @@ async function runLocalBin(entry, { force }) {
     );
   }
 
+  const skillPath = spec.skill ? expandHome(spec.skill) : '';
+  const hasSkill = !!(skillPath && fs.existsSync(skillPath));
+  const sourceLabel = hasSkill ? 'local-bin + help-tree + official-skill' : 'local-bin + help-tree';
+
   const args = [
     path.join(ROOT, 'bin', 'cli-cap'),
     'scan',
@@ -225,10 +285,11 @@ async function runLocalBin(entry, { force }) {
     '--title', entry.title,
     '--repo', entry.repo,
     '--license', entry.license || '',
+    '--source', sourceLabel,
   ];
   if (entry.install) args.push('--install', entry.install);
-  const skillPath = spec.skill ? expandHome(spec.skill) : '';
-  if (skillPath && fs.existsSync(skillPath)) args.push('--skill', skillPath);
+  if (entry.note) args.push('--note', entry.note);
+  if (hasSkill) args.push('--skill', skillPath);
 
   const r = spawnSync(process.execPath, args, { stdio: ['ignore', 'inherit', 'inherit'], cwd: ROOT });
   if (r.status !== 0) throw new Error(`help 全树扫描失败（退出码 ${r.status}）`);
@@ -241,7 +302,7 @@ async function runLocalBin(entry, { force }) {
     repo: entry.repo,
     license: entry.license || '',
     install: entry.install || '',
-    source: skillPath && fs.existsSync(skillPath) ? 'local-bin + help-tree + official-skill' : 'local-bin + help-tree',
+    source: sourceLabel,
   });
   fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2));
   fs.writeFileSync(

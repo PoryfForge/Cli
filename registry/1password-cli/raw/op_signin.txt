@@ -1,0 +1,34 @@
+Sign in to 1Password CLI using the 1Password desktop app.
+
+To turn on the 1Password app integration:
+
+1. Open the 1Password app.
+2. Navigate to Settings > Security and turn on Touch ID, Windows Hello, or a
+Linux system authentication option.
+3. Navigate to Developer > Settings and select “Integrate with 1Password CLI”.
+
+Learn more about the app integration:
+https://www.1password.dev/cli/app-integration/
+
+If you add multiple 1Password accounts to the 1Password app, 1Password CLI
+determines which to use in this order:
+
+1. The account specified with the '--account' flag.
+2. The account specified by the 'OP_ACCOUNT' environment variable.
+3. The account you most recently signed in to with 'op signin' in
+any terminal window.
+
+'op signin' is idempotent. It only prompts for authentication if you
+aren't already authenticated.
+
+To sign in to an account without using the app integration, see
+'op account add --help'.
+
+Usage:  op signin [flags]
+
+Flags:
+  -f, --force   Ignore warnings and print raw output from this command.
+  -h, --help    help for signin
+      --raw     Only return the session token.
+
+To list the global flags available on every command, run  'op --help'.

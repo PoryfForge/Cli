@@ -1,0 +1,15 @@
+Upload an avatar image for an agent
+
+USAGE
+  multica agent avatar <id> [flags]
+
+FLAGS
+      --file string     Path to the avatar image file (required)
+  -h, --help            help for avatar
+      --output string   Output format: table or json (default "json")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

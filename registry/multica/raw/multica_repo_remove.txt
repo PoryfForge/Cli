@@ -1,0 +1,15 @@
+Removes one or more repository URLs from the current workspace repository registry.
+
+USAGE
+  multica repo remove [url]... [flags]
+
+FLAGS
+  -h, --help              help for remove
+      --output string     Output format: table or json (default "json")
+      --url stringArray   Repository URL to remove (may be repeated)
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

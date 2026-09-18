@@ -6,8 +6,8 @@ version: 673dd28-dirty
 title: 即梦 CLI
 license: 厂商专有
 repo: https://jimeng.jianying.com/cli
-scanned_at: 2026-09-17 06:53:16
-source: help-tree + official-skill
+scanned_at: 2026-09-18 06:27:45
+source: local-bin + help-tree + official-skill
 nodes: 23
 official_skill: vendor/SKILL.md
 ---
@@ -31,9 +31,9 @@ official_skill: vendor/SKILL.md
 | 版本 | `673dd28-dirty` |
 | 仓库 | https://jimeng.jianying.com/cli |
 | 许可证 | 厂商专有 |
-| 采集方式 | help 全树（`--help` 递归） |
+| 采集方式 | 本机安装的 CLI（`--help` 递归）+ 官方 SKILL.md |
 | 本轮抓取命令数 | 23（顶层 1） |
-| 抓取时间 | 2026-09-17 06:53:16 |
+| 抓取时间 | 2026-09-18 06:27:45 |
 | 原始 help 留档 | `raw/` |
 | 官方 Agent 规则 | `vendor/SKILL.md`（已合并到文末） |
 

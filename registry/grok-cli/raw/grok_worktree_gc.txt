@@ -1,0 +1,12 @@
+Remove expired worktrees, keeping any whose work would not survive
+
+Usage: grok worktree gc [OPTIONS]
+
+Options:
+      --dry-run               Report what would be removed without removing it
+      --max-age <MAX_AGE>     Expire worktrees idle longer than this, e.g. `7d`. Without it, nothing expires
+  -f, --force                 Skip the live-process and protected-path guards. This does not override the safety check; use `grok worktree rm` for that
+      --debug                 Enable debug logging
+      --debug-file <FILE>     Write debug logs to FILE
+  -h, --help                  Print help
+      --leader-socket <PATH>  Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered

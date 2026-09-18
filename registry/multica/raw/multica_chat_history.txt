@@ -1,0 +1,25 @@
+Show the overview of the chat channel (e.g. Slack) this conversation is in: the
+recent top-level messages, and for each thread its thread_id, reply_count, and
+latest_reply. It does NOT expand thread contents — it is the table of contents.
+
+To read a specific thread's messages, take a thread_id from here and run
+"multica chat thread <thread_id>".
+
+It is the SAME command regardless of which channel the conversation came from,
+and it reads only the conversation you are currently running for — it cannot
+read any other session or channel.
+
+USAGE
+  multica chat history [flags]
+
+FLAGS
+      --before string   Opaque cursor (a next_cursor from a prior page) to read older messages
+  -h, --help            help for history
+      --limit int       Maximum number of messages to return (the server clamps the range)
+      --output string   Output format: table or json (default "json")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

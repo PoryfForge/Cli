@@ -1,0 +1,13 @@
+Manage Events API integrations in your 1Password account. Requires a business account.
+
+Usage:  op events-api [command] [flags]
+
+Commands:
+  create      Set up an integration with the Events API
+
+Flags:
+  -h, --help   help for events-api
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op events-api [command] --help' for more information on the command.

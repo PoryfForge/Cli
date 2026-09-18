@@ -1,0 +1,33 @@
+Permanently delete a document. Specify the document to delete by its name or ID.
+Use the '--archive' option to move it to the Archive instead.
+
+SPECIFY ITEMS ON STANDARD INPUT
+
+The command treats each line of information on standard input (stdin) as
+an object specifier. Run 'op help' to learn more about how to specify
+objects.
+
+You can also input a list or array of JSON objects. The command will
+get an item for any object that has an ID. This is useful for
+passing information from one 'op' command to another.
+
+Usage:  op document delete [{ <itemName> | <itemID> | - }] [flags]
+
+Aliases:
+  delete, remove, rm
+
+Examples:
+Permanently delete a document:
+
+	op document delete "2019 Contracts"
+
+Move a document to the Archive:
+
+	op document delete "2019 Contracts" --archive
+
+Flags:
+      --archive       Move the document to the Archive.
+  -h, --help          help for delete
+      --vault vault   Delete the document in this vault.
+
+To list the global flags available on every command, run  'op --help'.

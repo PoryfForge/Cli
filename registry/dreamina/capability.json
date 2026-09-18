@@ -5,7 +5,7 @@
     "command": "dreamina",
     "version": "673dd28-dirty",
     "description": "即梦（Dreamina）官方 AIGC CLI：文生图 / 图生图 / 文生视频 / 图生视频 / 多模态参考，含账号、会话与任务管理",
-    "scannedAt": "2026-09-17 06:53:16",
+    "scannedAt": "2026-09-18 06:27:45",
     "depth": 2,
     "source": "local-bin + help-tree + official-skill",
     "nodes": 23,

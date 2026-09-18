@@ -1,0 +1,25 @@
+Work with skills
+
+USAGE
+  multica skill <command> [flags]
+
+COMMANDS
+  create:   Create a new skill
+  delete:   Delete a skill
+  files:    Work with skill files
+  get:      Get skill details and its file list (use --with-content for the bodies)
+  import:   Import a skill from a URL (clawhub.ai, skills.sh, github.com) or a local .skill/.zip archive
+  list:     List skills in the workspace
+  refresh:  Re-download a skill from its imported source, preserving its id and agent assignments
+  search:   Search for installable skills
+  update:   Update a skill
+
+
+FLAGS
+  -h, --help   help for skill
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica skill <command> --help` for more information about a command.

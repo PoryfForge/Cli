@@ -1,0 +1,15 @@
+Create a release git tag from the plugin's manifest version
+
+Usage: grok plugin tag [OPTIONS] [PATH]
+
+Arguments:
+  [PATH]  Path to plugin directory (default: current directory) [default: .]
+
+Options:
+      --push                  Push the tag to the remote after creating it
+  -f, --force                 Create the tag even if the working tree is dirty or tag exists
+      --dry-run               Print what would be tagged without creating the tag
+      --debug                 Enable debug logging
+      --debug-file <FILE>     Write debug logs to FILE
+  -h, --help                  Print help
+      --leader-socket <PATH>  Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered

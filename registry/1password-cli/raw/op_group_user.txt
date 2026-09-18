@@ -1,0 +1,15 @@
+Manage group membership.
+
+Usage:  op group user [command] [flags]
+
+Commands:
+  grant       Add a user to a group
+  revoke      Remove a user from a group
+  list        Retrieve users that belong to a group
+
+Flags:
+  -h, --help   help for user
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op group user [command] --help' for more information on the command.

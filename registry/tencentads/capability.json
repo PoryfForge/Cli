@@ -1,0 +1,358 @@
+{
+  "meta": {
+    "name": "tencentads",
+    "title": "腾讯广告 CLI",
+    "command": "tencentads",
+    "version": "1.1.5",
+    "description": "腾讯广告（腾讯营销）API CLI：登录鉴权与状态查询，其余能力按营销 API v3.0 的资源名暴露——账号与管家、营销单元、创意与组件、素材、报表与人群等",
+    "scannedAt": "2026-09-18 06:27:41",
+    "depth": 2,
+    "source": "release-bin + help-tree",
+    "nodes": 11,
+    "repo": "https://www.npmjs.com/package/tencentads-cli",
+    "license": "MIT",
+    "install": "npm install -g tencentads-cli",
+    "release": "1.1.5"
+  },
+  "root": {
+    "path": [
+      "tencentads"
+    ],
+    "depth": 0,
+    "usage": "tencentads [flags] tencentads [command]",
+    "summary": "Tencent Ads CLI — command line tool for managing Tencent Ads API.",
+    "options": [
+      {
+        "flags": "--config-dir string",
+        "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+      },
+      {
+        "flags": "--edition string",
+        "desc": "Edition to use with --list-commands (default: build-time edition \"default\")"
+      },
+      {
+        "flags": "-h, --help",
+        "desc": "help for tencentads"
+      },
+      {
+        "flags": "--list-commands",
+        "desc": "Print command tree for the given edition and exit"
+      },
+      {
+        "flags": "-v, --version",
+        "desc": "version for tencentads"
+      }
+    ],
+    "groups": [],
+    "children": [
+      "auth",
+      "completion",
+      "help"
+    ],
+    "helpFlag": "--help"
+  },
+  "nodes": [
+    {
+      "path": [
+        "tencentads"
+      ],
+      "depth": 0,
+      "usage": "tencentads [flags] tencentads [command]",
+      "summary": "Tencent Ads CLI — command line tool for managing Tencent Ads API.",
+      "options": [
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        },
+        {
+          "flags": "--edition string",
+          "desc": "Edition to use with --list-commands (default: build-time edition \"default\")"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for tencentads"
+        },
+        {
+          "flags": "--list-commands",
+          "desc": "Print command tree for the given edition and exit"
+        },
+        {
+          "flags": "-v, --version",
+          "desc": "version for tencentads"
+        }
+      ],
+      "groups": [],
+      "children": [
+        "auth",
+        "completion",
+        "help"
+      ],
+      "helpFlag": "--help"
+    },
+    {
+      "path": [
+        "tencentads",
+        "auth"
+      ],
+      "depth": 1,
+      "usage": "tencentads auth [command]",
+      "summary": "Manage authentication",
+      "detail": "Manage authentication",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for auth"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": [
+        "login",
+        "logout",
+        "status"
+      ]
+    },
+    {
+      "path": [
+        "tencentads",
+        "completion"
+      ],
+      "depth": 1,
+      "usage": "tencentads completion [command]",
+      "summary": "Generate the autocompletion script for the specified shell",
+      "detail": "Generate the autocompletion script for tencentads for the specified shell.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for completion"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": [
+        "bash",
+        "fish",
+        "powershell",
+        "zsh"
+      ]
+    },
+    {
+      "path": [
+        "tencentads",
+        "help"
+      ],
+      "depth": 1,
+      "usage": "tencentads help [command] [flags]",
+      "summary": "Help about any command",
+      "detail": "Help provides help for any command in the application.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for help"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "auth",
+        "login"
+      ],
+      "depth": 2,
+      "usage": "tencentads auth login [flags]",
+      "summary": "Authenticate with Tencent Ads",
+      "detail": "Authenticate with Tencent Ads",
+      "group": "",
+      "options": [
+        {
+          "flags": "--api-key string",
+          "desc": "API key to save directly (skips browser OAuth)"
+        },
+        {
+          "flags": "--description string",
+          "desc": "Key description (defaults to hostname)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for login"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "auth",
+        "logout"
+      ],
+      "depth": 2,
+      "usage": "tencentads auth logout [flags]",
+      "summary": "Log out and disable the current API key",
+      "detail": "Log out and disable the current API key",
+      "group": "",
+      "options": [
+        {
+          "flags": "--force",
+          "desc": "Clear local credentials even if the server-side disable fails"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for logout"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "auth",
+        "status"
+      ],
+      "depth": 2,
+      "usage": "tencentads auth status [flags]",
+      "summary": "Show current authentication status",
+      "detail": "Show current authentication status",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for status"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "completion",
+        "bash"
+      ],
+      "depth": 2,
+      "usage": "tencentads completion bash",
+      "summary": "Generate the autocompletion script for bash",
+      "detail": "Generate the autocompletion script for the bash shell.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for bash"
+        },
+        {
+          "flags": "--no-descriptions",
+          "desc": "disable completion descriptions"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "completion",
+        "fish"
+      ],
+      "depth": 2,
+      "usage": "tencentads completion fish [flags]",
+      "summary": "Generate the autocompletion script for fish",
+      "detail": "Generate the autocompletion script for the fish shell.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for fish"
+        },
+        {
+          "flags": "--no-descriptions",
+          "desc": "disable completion descriptions"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "completion",
+        "powershell"
+      ],
+      "depth": 2,
+      "usage": "tencentads completion powershell [flags]",
+      "summary": "Generate the autocompletion script for powershell",
+      "detail": "Generate the autocompletion script for powershell.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for powershell"
+        },
+        {
+          "flags": "--no-descriptions",
+          "desc": "disable completion descriptions"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "tencentads",
+        "completion",
+        "zsh"
+      ],
+      "depth": 2,
+      "usage": "tencentads completion zsh [flags]",
+      "summary": "Generate the autocompletion script for zsh",
+      "detail": "Generate the autocompletion script for the zsh shell.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for zsh"
+        },
+        {
+          "flags": "--no-descriptions",
+          "desc": "disable completion descriptions"
+        },
+        {
+          "flags": "--config-dir string",
+          "desc": "Directory for credentials file (default: ~/.tencent-ads)"
+        }
+      ],
+      "children": []
+    }
+  ],
+  "skill": null
+}

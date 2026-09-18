@@ -1,0 +1,15 @@
+Get autopilot details (webhook credentials redacted by default)
+
+USAGE
+  multica autopilot get <id> [flags]
+
+FLAGS
+  -h, --help            help for get
+      --output string   Output format: table or json (default "json")
+      --show-secrets    Include live webhook credentials in JSON output (unsafe for logs)
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

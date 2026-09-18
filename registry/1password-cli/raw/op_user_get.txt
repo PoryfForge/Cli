@@ -1,0 +1,46 @@
+Get details about a user.
+
+A user may be specified by their e-mail address, name, or ID.
+
+USE STANDARD INPUT TO SPECIFY OBJECTS
+
+If you enter a hyphen ('-') instead of a single object for this command,
+the tool will read object specifiers from standard input (stdin).
+Separate each specifier with a new line. For more information about how
+to specify objects, run 'op help'.
+
+You can also pass the command a list or array of JSON objects. The tool
+will get an item for any object that has an ID, ignoring line
+breaks. This is useful for passing information from one 'op' command
+to another.
+
+Usage:  op user get [{ <email> | <name> | <userID> | --me | - }] [flags]
+
+Examples:
+Look up a user by name:
+
+	op user get "Wendy Appleseed"
+
+Look up a user by e-mail:
+
+	op user get wendy.appleseed@example.com
+
+Get details for all users:
+
+	op user list --format=json | op user get -
+
+Get the public key for all users in a group:
+
+	op user list --group "Frontend Developers" --format=json | op user get - --public-key
+
+Get details for all users who have access to a vault:
+
+	op user list --vault Staging --format=json | op user get -
+
+Flags:
+      --fingerprint   Get the user's public key fingerprint.
+  -h, --help          help for get
+      --me            Get the authenticated user's details.
+      --public-key    Get the user's public key.
+
+To list the global flags available on every command, run  'op --help'.

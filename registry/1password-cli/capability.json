@@ -1,0 +1,1953 @@
+{
+  "meta": {
+    "name": "1password-cli",
+    "title": "1Password CLI",
+    "command": "op",
+    "version": "2.39.0",
+    "description": "1Password 官方 CLI：凭据保险库与条目的读写、op run / op inject 把密钥以环境变量或文件形式注入进程，另含 service account、SSH 代理与文档（Document）管理",
+    "scannedAt": "2026-09-18 06:38:25",
+    "depth": 2,
+    "source": "release-bin + help-tree",
+    "nodes": 68,
+    "repo": "https://app-updates.agilebits.com/product_history/CLI2",
+    "license": "厂商专有",
+    "install": "brew install 1password-cli",
+    "release": "2.39.0"
+  },
+  "root": {
+    "path": [
+      "op"
+    ],
+    "depth": 0,
+    "usage": "op [command] [flags]",
+    "summary": "1Password CLI brings 1Password to your terminal.",
+    "options": [
+      {
+        "flags": "--account account",
+        "desc": "Select the account to execute the command by account shorthand, sign-in address, account ID, or user ID. For a list"
+      },
+      {
+        "flags": "--cache",
+        "desc": "Store and use cached information. Caching is enabled by default on UNIX-like systems. Caching is not available on"
+      },
+      {
+        "flags": "--config directory",
+        "desc": "Use this configuration directory."
+      },
+      {
+        "flags": "--debug",
+        "desc": "Enable debug mode. Can also be enabled by setting the OP_DEBUG environment variable to true."
+      },
+      {
+        "flags": "--encoding type",
+        "desc": "Use this character encoding type. Default: UTF-8. Supported: SHIFT_JIS, gbk."
+      },
+      {
+        "flags": "--format string",
+        "desc": "Use this output format. Can be 'human-readable' or 'json'. Can be set as the OP_FORMAT environment variable."
+      },
+      {
+        "flags": "-h, --help",
+        "desc": "Get help for op."
+      },
+      {
+        "flags": "--iso-timestamps",
+        "desc": "Format timestamps according to ISO 8601 / RFC 3339. Can be set as the OP_ISO_TIMESTAMPS environment variable."
+      },
+      {
+        "flags": "--no-color",
+        "desc": "Print output without color."
+      },
+      {
+        "flags": "--session token",
+        "desc": "Authenticate with this session token. 1Password CLI outputs session tokens for successful 'op signin' commands when"
+      },
+      {
+        "flags": "-v, --version",
+        "desc": "version for op"
+      }
+    ],
+    "groups": [],
+    "children": [
+      "account",
+      "connect",
+      "document",
+      "events-api",
+      "group",
+      "item",
+      "plugin",
+      "user",
+      "vault",
+      "completion",
+      "inject",
+      "read",
+      "run",
+      "signin",
+      "signout",
+      "update",
+      "whoami"
+    ],
+    "helpFlag": "--help"
+  },
+  "nodes": [
+    {
+      "path": [
+        "op"
+      ],
+      "depth": 0,
+      "usage": "op [command] [flags]",
+      "summary": "1Password CLI brings 1Password to your terminal.",
+      "options": [
+        {
+          "flags": "--account account",
+          "desc": "Select the account to execute the command by account shorthand, sign-in address, account ID, or user ID. For a list"
+        },
+        {
+          "flags": "--cache",
+          "desc": "Store and use cached information. Caching is enabled by default on UNIX-like systems. Caching is not available on"
+        },
+        {
+          "flags": "--config directory",
+          "desc": "Use this configuration directory."
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug mode. Can also be enabled by setting the OP_DEBUG environment variable to true."
+        },
+        {
+          "flags": "--encoding type",
+          "desc": "Use this character encoding type. Default: UTF-8. Supported: SHIFT_JIS, gbk."
+        },
+        {
+          "flags": "--format string",
+          "desc": "Use this output format. Can be 'human-readable' or 'json'. Can be set as the OP_FORMAT environment variable."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Get help for op."
+        },
+        {
+          "flags": "--iso-timestamps",
+          "desc": "Format timestamps according to ISO 8601 / RFC 3339. Can be set as the OP_ISO_TIMESTAMPS environment variable."
+        },
+        {
+          "flags": "--no-color",
+          "desc": "Print output without color."
+        },
+        {
+          "flags": "--session token",
+          "desc": "Authenticate with this session token. 1Password CLI outputs session tokens for successful 'op signin' commands when"
+        },
+        {
+          "flags": "-v, --version",
+          "desc": "version for op"
+        }
+      ],
+      "groups": [],
+      "children": [
+        "account",
+        "connect",
+        "document",
+        "events-api",
+        "group",
+        "item",
+        "plugin",
+        "user",
+        "vault",
+        "completion",
+        "inject",
+        "read",
+        "run",
+        "signin",
+        "signout",
+        "update",
+        "whoami"
+      ],
+      "helpFlag": "--help"
+    },
+    {
+      "path": [
+        "op",
+        "account"
+      ],
+      "depth": 1,
+      "usage": "op account [command] [flags]",
+      "summary": "Manage your locally configured 1Password accounts",
+      "detail": "Manage your locally configured 1Password accounts.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for account"
+        }
+      ],
+      "children": [
+        "add",
+        "get",
+        "list",
+        "forget"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "connect"
+      ],
+      "depth": 1,
+      "usage": "op connect [command] [flags]",
+      "summary": "Manage Connect server instances and tokens in your 1Password account",
+      "detail": "Manage Connect server instances and tokens in your 1Password account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for connect"
+        }
+      ],
+      "children": [
+        "group",
+        "server",
+        "token",
+        "vault"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "document"
+      ],
+      "depth": 1,
+      "usage": "op document [command] [flags]",
+      "summary": "Perform CRUD operations on Document items in your vaults",
+      "detail": "Perform CRUD operations on Document items in your vaults.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for document"
+        }
+      ],
+      "children": [
+        "create",
+        "get",
+        "edit",
+        "delete",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "events-api"
+      ],
+      "depth": 1,
+      "usage": "op events-api [command] [flags]",
+      "summary": "Manage Events API integrations in your 1Password account",
+      "detail": "Manage Events API integrations in your 1Password account. Requires a business account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for events-api"
+        }
+      ],
+      "children": [
+        "create"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "group"
+      ],
+      "depth": 1,
+      "usage": "op group [command] [flags]",
+      "summary": "Manage the groups in your 1Password account",
+      "detail": "Manage the groups in your 1Password account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for group"
+        }
+      ],
+      "children": [
+        "user",
+        "create",
+        "get",
+        "edit",
+        "delete",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "item"
+      ],
+      "depth": 1,
+      "usage": "op item [command] [flags]",
+      "summary": "Perform CRUD operations on the 1Password items in your vaults",
+      "detail": "Perform CRUD operations on the 1Password items in your vaults.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for item"
+        }
+      ],
+      "children": [
+        "template",
+        "create",
+        "get",
+        "edit",
+        "delete",
+        "list",
+        "move",
+        "share"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "plugin"
+      ],
+      "depth": 1,
+      "usage": "op plugin [command] [flags]",
+      "summary": "Manage the shell plugins you use to authenticate third-party CLIs",
+      "detail": "Manage your shell plugin configurations.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for plugin"
+        }
+      ],
+      "children": [
+        "credential",
+        "list",
+        "clear",
+        "init",
+        "inspect",
+        "run"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "user"
+      ],
+      "depth": 1,
+      "usage": "op user [command] [flags]",
+      "summary": "Manage users within this 1Password account",
+      "detail": "Manage users within this 1Password account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for user"
+        }
+      ],
+      "children": [
+        "recovery",
+        "provision",
+        "confirm",
+        "get",
+        "edit",
+        "suspend",
+        "reactivate",
+        "delete",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "vault"
+      ],
+      "depth": 1,
+      "usage": "op vault [command] [flags]",
+      "summary": "Manage permissions and perform CRUD operations on your 1Password vaults",
+      "detail": "Manage permissions and perform CRUD operations on your 1Password vaults.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for vault"
+        }
+      ],
+      "children": [
+        "group",
+        "user",
+        "create",
+        "get",
+        "edit",
+        "delete",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "completion"
+      ],
+      "depth": 1,
+      "usage": "op completion <shell> [flags]",
+      "summary": "Generate shell completion information",
+      "detail": "Generate shell completion information for 1Password CLI.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for completion"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "inject"
+      ],
+      "depth": 1,
+      "usage": "op inject [flags]",
+      "summary": "Inject secrets into a config file",
+      "detail": "Inject secrets into a file templated with secret references.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file-mode filemode",
+          "desc": "Set filemode for the output file. It is ignored without the --out-file flag. (default 0600)"
+        },
+        {
+          "flags": "-f, --force",
+          "desc": "Do not prompt for confirmation."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for inject"
+        },
+        {
+          "flags": "-i, --in-file string",
+          "desc": "The filename of a template file to inject."
+        },
+        {
+          "flags": "-o, --out-file string",
+          "desc": "Write the injected template to a file instead of stdout."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "read"
+      ],
+      "depth": 1,
+      "usage": "op read <reference> [flags]",
+      "summary": "Read a secret reference",
+      "detail": "Read the value of the field in 1Password specified by a secret reference.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file-mode filemode",
+          "desc": "Set filemode for the output file. It is ignored without the --out-file flag. (default 0600)"
+        },
+        {
+          "flags": "-f, --force",
+          "desc": "Do not prompt for confirmation."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for read"
+        },
+        {
+          "flags": "-n, --no-newline",
+          "desc": "Do not print a new line after the secret."
+        },
+        {
+          "flags": "-o, --out-file string",
+          "desc": "Write the secret to a file instead of stdout."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "run"
+      ],
+      "depth": 1,
+      "usage": "op run -- <command> <command>... [flags]",
+      "summary": "Pass secrets as environment variables to a process",
+      "detail": "Pass secrets as environment variables to an application or script.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--env-file stringArray",
+          "desc": "Enable Dotenv integration with specific Dotenv files to parse. For example: --env-file=.env."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for run"
+        },
+        {
+          "flags": "--no-masking",
+          "desc": "Disable masking of secrets on stdout and stderr."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "signin"
+      ],
+      "depth": 1,
+      "usage": "op signin [flags]",
+      "summary": "Sign in to a 1Password account",
+      "detail": "Sign in to 1Password CLI using the 1Password desktop app.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-f, --force",
+          "desc": "Ignore warnings and print raw output from this command."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for signin"
+        },
+        {
+          "flags": "--raw",
+          "desc": "Only return the session token."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "signout"
+      ],
+      "depth": 1,
+      "usage": "op signout [flags]",
+      "summary": "Sign out of a 1Password account",
+      "detail": "Sign out of a 1Password account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--all",
+          "desc": "Sign out of all signed-in accounts."
+        },
+        {
+          "flags": "--forget",
+          "desc": "Remove the details for a 1Password account from this device."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for signout"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "update"
+      ],
+      "depth": 1,
+      "usage": "op update [flags]",
+      "summary": "Check for and download updates.",
+      "detail": "Check for updates to 'op' and download an updated version, if available.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--channel string",
+          "desc": "Look for updates from a specific channel. allowed: stable, beta"
+        },
+        {
+          "flags": "--directory string",
+          "desc": "Download the update to this ''path''."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "whoami"
+      ],
+      "depth": 1,
+      "usage": "op whoami [flags]",
+      "summary": "Get information about a signed-in account",
+      "detail": "Get information about a signed-in account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for whoami"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "account",
+        "add"
+      ],
+      "depth": 2,
+      "usage": "op account add [flags]",
+      "summary": "Add an account to sign in to for the first time",
+      "detail": "Add a new 1Password account to 1Password CLI manually with your account password",
+      "group": "",
+      "options": [
+        {
+          "flags": "--address string",
+          "desc": "The sign-in address for your account."
+        },
+        {
+          "flags": "--email string",
+          "desc": "The email address associated with your account."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for add"
+        },
+        {
+          "flags": "--raw",
+          "desc": "Only return the session token."
+        },
+        {
+          "flags": "--shorthand string",
+          "desc": "Set a custom account shorthand for your account."
+        },
+        {
+          "flags": "--signin",
+          "desc": "Immediately sign in to the added account."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "account",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "op account get [flags]",
+      "summary": "Get details about your account",
+      "detail": "Get details about your account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "account",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op account list [flags]",
+      "summary": "List users and accounts set up on this device",
+      "detail": "List users and accounts set up on this device.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "account",
+        "forget"
+      ],
+      "depth": 2,
+      "usage": "op account forget [ <account> ] [flags]",
+      "summary": "Remove a 1Password account from this device",
+      "detail": "Remove a 1Password account from this device.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--all",
+          "desc": "Forget all authenticated accounts."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for forget"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "connect",
+        "group"
+      ],
+      "depth": 2,
+      "usage": "op connect group [command] [flags]",
+      "summary": "Manage group access to Secrets Automation",
+      "detail": "Manage group access to Secrets Automation.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for group"
+        }
+      ],
+      "children": [
+        "grant",
+        "revoke"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "connect",
+        "server"
+      ],
+      "depth": 2,
+      "usage": "op connect server [command] [flags]",
+      "summary": "Manage Connect servers",
+      "detail": "Manage Connect servers.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for server"
+        }
+      ],
+      "children": [
+        "create",
+        "get",
+        "edit",
+        "delete",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "connect",
+        "token"
+      ],
+      "depth": 2,
+      "usage": "op connect token [command] [flags]",
+      "summary": "Manage Connect server tokens",
+      "detail": "Manage Connect server tokens.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for token"
+        }
+      ],
+      "children": [
+        "create",
+        "edit",
+        "delete",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "connect",
+        "vault"
+      ],
+      "depth": 2,
+      "usage": "op connect vault [command] [flags]",
+      "summary": "Manage Connect server vault access",
+      "detail": "Manage Connect server vault access.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for vault"
+        }
+      ],
+      "children": [
+        "grant",
+        "revoke"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "document",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "op document create [{ <file> | - }] [flags]",
+      "summary": "Create a document item",
+      "detail": "Create a document item and receive a JSON object that contains the item's ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file-name name",
+          "desc": "Set the file's name."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--tags tags",
+          "desc": "Set the tags to the specified (comma-separated) values."
+        },
+        {
+          "flags": "--title title",
+          "desc": "Set the document item's title."
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Save the document in this vault. Default: Private, Personal, or Employee, depending on your account type."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "document",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "op document get { <itemName> | <itemID> } [flags]",
+      "summary": "Download a document",
+      "detail": "Download a document and print the contents. Specify the document by its name",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file-mode filemode",
+          "desc": "Set filemode for the output file. It is ignored without the --out-file flag. (default 0600)"
+        },
+        {
+          "flags": "--force",
+          "desc": "Forcibly print an unintelligible document to an interactive terminal. If --out-file is specified, save the"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--include-archive",
+          "desc": "Include document items in the Archive. Can also be set using OP_INCLUDE_ARCHIVE environment variable."
+        },
+        {
+          "flags": "-o, --out-file path",
+          "desc": "Save the document to the file path instead of stdout."
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Look for the document in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "document",
+        "edit"
+      ],
+      "depth": 2,
+      "usage": "op document edit { <itemName> | <itemID> } [{ <file> | - }] [flags]",
+      "summary": "Edit a document item",
+      "detail": "Edit a document item. Specify the document item to edit by its name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file-name name",
+          "desc": "Set the file's name."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for edit"
+        },
+        {
+          "flags": "--tags tags",
+          "desc": "Set the tags to the specified (comma-separated) values. An empty value removes all tags."
+        },
+        {
+          "flags": "--title title",
+          "desc": "Set the document item's title."
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Look up document in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "document",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "op document delete [{ <itemName> | <itemID> | - }] [flags]",
+      "summary": "Delete or archive a document item",
+      "detail": "Permanently delete a document. Specify the document to delete by its name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--archive",
+          "desc": "Move the document to the Archive."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Delete the document in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "document",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op document list [flags]",
+      "summary": "Get a list of documents",
+      "detail": "List documents.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--include-archive",
+          "desc": "Include document items in the Archive. Can also be set using OP_INCLUDE_ARCHIVE environment variable."
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Only list documents in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "events-api",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "op events-api create <name> [flags]",
+      "summary": "Set up an integration with the Events API",
+      "detail": "Create an Events API integration token.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--expires-in duration",
+          "desc": "Set how the long the events-api token is valid for in (s)econds, (m)inutes, (h)ours, (d)ays, and/or (w)eeks."
+        },
+        {
+          "flags": "--features features",
+          "desc": "Set the comma-separated list of features the integration token can be used for. Options: 'signinattempts',"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "group",
+        "user"
+      ],
+      "depth": 2,
+      "usage": "op group user [command] [flags]",
+      "summary": "Manage group membership",
+      "detail": "Manage group membership.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for user"
+        }
+      ],
+      "children": [
+        "grant",
+        "revoke",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "group",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "op group create <name> [flags]",
+      "summary": "Create a group",
+      "detail": "Create a group and receive a JSON object with the group's ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "Set the group's description."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "group",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "op group get [{ <groupName> | <groupID> | - }] [flags]",
+      "summary": "Get details about a group",
+      "detail": "Get details about a group. Specify the group by its name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "group",
+        "edit"
+      ],
+      "depth": 2,
+      "usage": "op group edit [{ <groupName> | <groupID> | - }] [flags]",
+      "summary": "Edit a group's name or description",
+      "detail": "Edit a group's name or description. Specify the group to edit by its name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description description",
+          "desc": "Change the group's description."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for edit"
+        },
+        {
+          "flags": "--name name",
+          "desc": "Change the group's name."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "group",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "op group delete [{ <groupName> | <groupID> | - }] [flags]",
+      "summary": "Remove a group",
+      "detail": "Remove a group. Specify the group to delete by its name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "group",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op group list [flags]",
+      "summary": "List groups",
+      "detail": "List groups.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--user user",
+          "desc": "List groups that a user belongs to."
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "List groups that have direct access to a vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "template"
+      ],
+      "depth": 2,
+      "usage": "op item template [command] [flags]",
+      "summary": "Manage templates",
+      "detail": "Manage templates.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for template"
+        }
+      ],
+      "children": [
+        "get",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "op item create [ - ] [ <assignment>... ] [flags]",
+      "summary": "Create an item",
+      "detail": "Create a new item.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--category category",
+          "desc": "Set the item's category."
+        },
+        {
+          "flags": "--dry-run",
+          "desc": "Test the command and output a preview of the resulting item."
+        },
+        {
+          "flags": "--favorite",
+          "desc": "Add item to favorites."
+        },
+        {
+          "flags": "--generate-password[=recipe]",
+          "desc": "Add a randomly-generated password to a Login or Password item."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--reveal",
+          "desc": "Don't conceal sensitive fields."
+        },
+        {
+          "flags": "--ssh-generate-key",
+          "desc": "The type of SSH key to create: Ed25519 or RSA. For RSA, specify 2048, 3072, or 4096 (default) bits."
+        },
+        {
+          "flags": "--tags tags",
+          "desc": "Set the tags to the specified (comma-separated) values."
+        },
+        {
+          "flags": "--template string",
+          "desc": "Specify the file path to read an item template from."
+        },
+        {
+          "flags": "--title title",
+          "desc": "Set the item's title."
+        },
+        {
+          "flags": "--url URL",
+          "desc": "Set the URL associated with the item"
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Save the item in this vault. Default: Private, Personal, or Employee, depending on your account type."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "op item get [{ <itemName> | <itemID> | <shareLink> | - }] [flags]",
+      "summary": "Get an item's details",
+      "detail": "Get details about an item. Specify the item by its name, ID, or sharing link.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--fields strings",
+          "desc": "Return data from specific fields. Use 'label=' to get the field by name or 'type=' to filter fields by type. Specify"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--include-archive",
+          "desc": "Include items in the Archive. Can also be set using OP_INCLUDE_ARCHIVE environment variable."
+        },
+        {
+          "flags": "--otp",
+          "desc": "Output the primary one-time password for this item."
+        },
+        {
+          "flags": "--reveal",
+          "desc": "Don't conceal sensitive fields."
+        },
+        {
+          "flags": "--share-link",
+          "desc": "Get a shareable link for the item."
+        },
+        {
+          "flags": "--vault string",
+          "desc": "Look for the item in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "edit"
+      ],
+      "depth": 2,
+      "usage": "op item edit { <itemName> | <itemID> | <shareLink> } [ <assignment> ... ] [flags]",
+      "summary": "Edit an item's details",
+      "detail": "Edit an item's details.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--dry-run",
+          "desc": "Perform a dry run of the command and output a preview of the resulting item."
+        },
+        {
+          "flags": "--favorite",
+          "desc": "Whether this item is a favorite item. Options: true, false"
+        },
+        {
+          "flags": "--generate-password[=recipe]",
+          "desc": "Give the item a randomly generated password."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for edit"
+        },
+        {
+          "flags": "--reveal",
+          "desc": "Don't conceal sensitive fields."
+        },
+        {
+          "flags": "--tags tags",
+          "desc": "Set the tags to the specified (comma-separated) values. An empty value will remove all tags."
+        },
+        {
+          "flags": "--template string",
+          "desc": "Specify the filepath to read an item template from."
+        },
+        {
+          "flags": "--title title",
+          "desc": "Set the item's title."
+        },
+        {
+          "flags": "--url URL",
+          "desc": "Set the URL associated with the item"
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Edit the item in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "op item delete [{ <itemName> | <itemID> | <shareLink> | - }] [flags]",
+      "summary": "Delete or archive an item",
+      "detail": "Delete or archive items you no longer need.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--archive",
+          "desc": "Move the item to the Archive."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--vault string",
+          "desc": "Look for the item in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op item list [flags]",
+      "summary": "List items",
+      "detail": "List items.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--categories categories",
+          "desc": "Only list items in these categories (comma-separated)."
+        },
+        {
+          "flags": "--favorite",
+          "desc": "Only list favorite items"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--include-archive",
+          "desc": "Include items in the Archive. Can also be set using OP_INCLUDE_ARCHIVE environment variable."
+        },
+        {
+          "flags": "--long",
+          "desc": "Output a more detailed item list."
+        },
+        {
+          "flags": "--tags tags",
+          "desc": "Only list items with these tags (comma-separated)."
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "Only list items in this vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "move"
+      ],
+      "depth": 2,
+      "usage": "op item move [{ <itemName> | <itemID> | <shareLink> | - }] [flags]",
+      "summary": "Move an item between vaults",
+      "detail": "Move an item between vaults.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--current-vault string",
+          "desc": "Vault where the item is currently saved."
+        },
+        {
+          "flags": "--destination-vault string",
+          "desc": "The vault you want to move the item to."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for move"
+        },
+        {
+          "flags": "--reveal",
+          "desc": "Don't conceal sensitive fields."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "item",
+        "share"
+      ],
+      "depth": 2,
+      "usage": "op item share { <itemName> | <itemID> } [flags]",
+      "summary": "Share an item",
+      "detail": "Share an item.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--emails strings",
+          "desc": "Email addresses to share with."
+        },
+        {
+          "flags": "--expires-in duration",
+          "desc": "Expire link after the duration specified in (s)econds, (m)inutes, (h)ours, (d)ays, and/or (w)eeks. (default 7d)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for share"
+        },
+        {
+          "flags": "--vault string",
+          "desc": "Look for the item in this vault."
+        },
+        {
+          "flags": "--view-once",
+          "desc": "Expire link after a single view."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "plugin",
+        "credential"
+      ],
+      "depth": 2,
+      "usage": "op plugin credential [command] [flags]",
+      "summary": "Manage credentials for shell plugins",
+      "detail": "Manage credentials for shell plugins.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for credential"
+        }
+      ],
+      "children": [
+        "import"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "plugin",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op plugin list [flags]",
+      "summary": "List all available shell plugins",
+      "detail": "Lists all available shell plugins and details about each plugin, including their",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "plugin",
+        "clear"
+      ],
+      "depth": 2,
+      "usage": "op plugin clear <plugin-name> [flags]",
+      "summary": "Clear shell plugin configuration",
+      "detail": "Clear an existing shell plugin configuration.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--all",
+          "desc": "Clear all configurations for this plugin that apply to this directory and/or terminal session, including the global default."
+        },
+        {
+          "flags": "-f, --force",
+          "desc": "Apply immediately without asking for confirmation."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for clear"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "plugin",
+        "init"
+      ],
+      "depth": 2,
+      "usage": "op plugin init [ <plugin-executable> ] [flags]",
+      "summary": "Configure a shell plugin",
+      "detail": "Choose a shell plugin to install and configure your default credentials. Bash,",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for init"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "plugin",
+        "inspect"
+      ],
+      "depth": 2,
+      "usage": "op plugin inspect [ <plugin-name> ] [flags]",
+      "summary": "Inspect your existing shell plugin configurations",
+      "detail": "Inspect your existing shell plugin configurations.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for inspect"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "plugin",
+        "run"
+      ],
+      "depth": 2,
+      "usage": "op plugin run <command>... [flags]",
+      "summary": "Provision credentials from 1Password and run this command",
+      "detail": "Provision credentials from 1Password and run this command.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for run"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "recovery"
+      ],
+      "depth": 2,
+      "usage": "op user recovery [command] [flags]",
+      "summary": "Manage user recovery in your 1Password account",
+      "detail": "Manage user recovery in your 1Password account",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for recovery"
+        }
+      ],
+      "children": [
+        "begin"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "provision"
+      ],
+      "depth": 2,
+      "usage": "op user provision [flags]",
+      "summary": "Provision a user in the authenticated account",
+      "detail": "Provision a user in the authenticated account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--email string",
+          "desc": "Provide the user's email address."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for provision"
+        },
+        {
+          "flags": "--language string",
+          "desc": "Provide the user's account language. (default \"en\")"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Provide the user's name."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "confirm"
+      ],
+      "depth": 2,
+      "usage": "op user confirm [{ <email> | <name> | <userID> | - }] [flags]",
+      "summary": "Confirm a user",
+      "detail": "Confirm users who have accepted their invitation to the 1Password account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--all",
+          "desc": "Confirm all unconfirmed users."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for confirm"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "op user get [{ <email> | <name> | <userID> | --me | - }] [flags]",
+      "summary": "Get details about a user",
+      "detail": "Get details about a user.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--fingerprint",
+          "desc": "Get the user's public key fingerprint."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--me",
+          "desc": "Get the authenticated user's details."
+        },
+        {
+          "flags": "--public-key",
+          "desc": "Get the user's public key."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "edit"
+      ],
+      "depth": 2,
+      "usage": "op user edit [{ <email> | <name> | <userID> | - }] [flags]",
+      "summary": "Edit a user's name or Travel Mode status",
+      "detail": "Change a user's name or Travel Mode status.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for edit"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Set the user's name."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "suspend"
+      ],
+      "depth": 2,
+      "usage": "op user suspend [{ <email> | <name> | <userID> | - }] [flags]",
+      "summary": "Suspend a user",
+      "detail": "Suspend a user.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--deauthorize-devices-after duration",
+          "desc": "Deauthorize the user's devices after a time (rounded down to seconds)."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for suspend"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "reactivate"
+      ],
+      "depth": 2,
+      "usage": "op user reactivate [{ <email> | <name> | <userID> | - }] [flags]",
+      "summary": "Reactivate a suspended user",
+      "detail": "Reactivate a suspended user.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for reactivate"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "op user delete [{ <email> | <name> | <userID> | - }] [flags]",
+      "summary": "Remove a user and all their data from the account",
+      "detail": "Remove a user and all their data from the account.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "user",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op user list [flags]",
+      "summary": "List users",
+      "detail": "List users.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--group group",
+          "desc": "List users who belong to a group."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--vault vault",
+          "desc": "List users who have direct access to vault."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "group"
+      ],
+      "depth": 2,
+      "usage": "op vault group [command] [flags]",
+      "summary": "Manage group vault access",
+      "detail": "Manage group vault access.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for group"
+        }
+      ],
+      "children": [
+        "grant",
+        "revoke",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "user"
+      ],
+      "depth": 2,
+      "usage": "op vault user [command] [flags]",
+      "summary": "Manage user vault access",
+      "detail": "Manage user vault access.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for user"
+        }
+      ],
+      "children": [
+        "grant",
+        "revoke",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "op vault create <name> [flags]",
+      "summary": "Create a new vault",
+      "detail": "Create a new vault",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description description",
+          "desc": "Set the group's description."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--icon string",
+          "desc": "Set the vault icon."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "op vault get [{ <vaultName> | <vaultID> | - }] [flags]",
+      "summary": "Get details about a vault",
+      "detail": "Get details about a vault. Specify the vault by name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "edit"
+      ],
+      "depth": 2,
+      "usage": "op vault edit [{ <vaultName> | <vaultID> | - }] [flags]",
+      "summary": "Edit a vault's name, description, icon, or Travel Mode status",
+      "detail": "Edit a vault's name, description, icon, or Travel Mode status. Specify the vault by name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description description",
+          "desc": "Change the vault's description."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for edit"
+        },
+        {
+          "flags": "--icon icon",
+          "desc": "Change the vault's icon."
+        },
+        {
+          "flags": "--name name",
+          "desc": "Change the vault's name."
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "op vault delete [{ <vaultName> | <vaultID> | - }] [flags]",
+      "summary": "Remove a vault",
+      "detail": "Remove a vault. Specify the vault to delete by name or ID.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "op",
+        "vault",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "op vault list [flags]",
+      "summary": "List all vaults in the account",
+      "detail": "List vaults.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--group string",
+          "desc": "List vaults a group has access to."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--permission permissions",
+          "desc": "List only vaults that the specified user/group has this permission for."
+        },
+        {
+          "flags": "--user string",
+          "desc": "List vaults that a given user has access to."
+        }
+      ],
+      "children": []
+    }
+  ],
+  "skill": null
+}

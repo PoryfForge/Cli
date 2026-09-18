@@ -1,0 +1,30 @@
+Reposition an issue inside its current status column by computing a new
+ordering position, the same value the board's drag-and-drop sets.
+
+Pick exactly one target:
+  --before <id>  place it directly above another issue in the same column
+  --after  <id>  place it directly below another issue in the same column
+  --top          move it to the top of its column
+  --bottom       move it to the bottom of its column
+
+Reorder stays inside the issue's current column. To move an issue to a
+different column, change its status first with `multica issue status`,
+which lands it at the top of the destination column — no follow-up
+reorder needed.
+
+USAGE
+  multica issue reorder <id> [flags]
+
+FLAGS
+      --after string    Place the issue directly below this issue (same column)
+      --before string   Place the issue directly above this issue (same column)
+      --bottom          Move the issue to the bottom of its status column
+  -h, --help            help for reorder
+      --output string   Output format: table or json (default "json")
+      --top             Move the issue to the top of its status column
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

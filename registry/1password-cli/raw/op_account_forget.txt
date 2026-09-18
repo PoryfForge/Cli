@@ -1,0 +1,9 @@
+Remove a 1Password account from this device.
+
+Usage:  op account forget [ <account> ] [flags]
+
+Flags:
+      --all    Forget all authenticated accounts.
+  -h, --help   help for forget
+
+To list the global flags available on every command, run  'op --help'.

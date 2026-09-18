@@ -1,0 +1,14 @@
+Get information about a signed-in account.
+
+Returns the currently active account or service account. 1Password CLI
+returns an error if no accounts are currently authenticated.
+
+Get information about a specific account with the '--account <accountFilter>'
+flag.
+
+Usage:  op whoami [flags]
+
+Flags:
+  -h, --help   help for whoami
+
+To list the global flags available on every command, run  'op --help'.

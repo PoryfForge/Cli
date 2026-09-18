@@ -1,0 +1,19 @@
+Manage custom property values on an issue
+
+USAGE
+  multica issue property <command> [flags]
+
+COMMANDS
+  list:   List custom property values set on an issue
+  set:    Set a custom property value on an issue
+  unset:  Remove a custom property value from an issue
+
+
+FLAGS
+  -h, --help   help for property
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica issue property <command> --help` for more information about a command.

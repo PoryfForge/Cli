@@ -1,0 +1,22 @@
+Manage the groups in your 1Password account.
+
+Groups can be used to organize your team and delegate administrative responsibilities. You can give groups access to vaults and assign them permissions, so you don't have to keep track of everyone separately.
+
+Usage:  op group [command] [flags]
+
+Management Commands:
+  user        Manage group membership
+
+Commands:
+  create      Create a group
+  get         Get details about a group
+  edit        Edit a group's name or description
+  delete      Remove a group
+  list        List groups
+
+Flags:
+  -h, --help   help for group
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op group [command] --help' for more information on the command.

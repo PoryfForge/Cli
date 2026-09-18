@@ -1,0 +1,27 @@
+Create a property definition. Types: text, number, select, multi_select,
+date, checkbox, url, actor, multi_actor. Select types take repeatable --option
+flags:
+  multica property create --name Severity --type select \
+      --option "Critical:#ef4444" --option "Major:#f59e0b" --option "Minor:#6b7280"
+The ":#rrggbb" color suffix is optional.
+
+The actor types hold workspace members; they take no options:
+  multica property create --name Reviewer --type actor
+
+USAGE
+  multica property create [flags]
+
+FLAGS
+      --description string   Property description
+  -h, --help                 help for create
+      --icon string          Property icon key from the Web picker (for example, flag, tag, or shield)
+      --name string          Property name (required)
+      --option stringArray   Select option as "Name" or "Name:#rrggbb" (repeatable; select types only)
+      --output string        Output format: table or json (default "table")
+      --type string          Property type: text, number, select, multi_select, date, checkbox, url, actor, multi_actor (required)
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

@@ -1,0 +1,13 @@
+Manage user recovery in your 1Password account
+
+Usage:  op user recovery [command] [flags]
+
+Commands:
+  begin       Begin recovery for users in your 1Password account
+
+Flags:
+  -h, --help   help for recovery
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op user recovery [command] --help' for more information on the command.

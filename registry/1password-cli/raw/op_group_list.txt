@@ -1,0 +1,28 @@
+List groups.
+
+Returns all groups in an account by default.
+
+Usage:  op group list [flags]
+
+Aliases:
+  list, ls
+
+Examples:
+Get details for all groups:
+
+	op group list | op group get -
+
+Get details for the groups that have access to a vault:
+
+	op group list --vault Staging --format=json | op group get -
+
+Get details for the groups that a user belongs to:
+
+	op group list --user wendy_appleseed@1password.com --format=json | op group get -
+
+Flags:
+  -h, --help          help for list
+      --user user     List groups that a user belongs to.
+      --vault vault   List groups that have direct access to a vault.
+
+To list the global flags available on every command, run  'op --help'.

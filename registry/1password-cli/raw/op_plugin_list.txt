@@ -1,0 +1,14 @@
+Lists all available shell plugins and details about each plugin, including their
+executable, name, and required fields.
+
+To get started with a shell plugin, run 'op plugin init <plugin-executable>'.
+
+Usage:  op plugin list [flags]
+
+Aliases:
+  list, ls
+
+Flags:
+  -h, --help   help for list
+
+To list the global flags available on every command, run  'op --help'.

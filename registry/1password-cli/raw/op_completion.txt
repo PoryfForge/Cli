@@ -1,0 +1,49 @@
+Generate shell completion information for 1Password CLI.
+
+If you use Bash, Zsh, fish, or PowerShell, you can add shell completion for 1Password CLI. 
+With completions loaded, after you start typing a command, 
+press Tab to see available commands and options.
+
+LOAD SHELL COMPLETION INFORMATION FOR BASH
+
+To always load the completion information for Bash, add this to your
+'.bashrc' file:
+
+	source <(op completion bash)
+
+Note: To use shell completion in Bash, you’ll need the 'bash-completion'
+package.
+
+LOAD SHELL COMPLETION INFORMATION FOR ZSH
+
+To always load the completion information for Zsh, add this to your
+'.zshrc' file:
+
+	eval "$(op completion zsh)"; compdef _op op
+
+LOAD SHELL COMPLETION INFORMATION FOR FISH
+
+To always load the completion information for fish, add this to your
+'.fish' file:
+
+	op completion fish | source
+
+LOAD SHELL COMPLETION INFORMATION FOR POWERSHELL
+
+To always load the completion information for PowerShell, add this
+to your '.ps1' file:
+
+	op completion powershell | Out-String | Invoke-Expression
+
+Note: To use shell completion in PowerShell, you need to enable
+execution of scripts. To do that, start a PowerShell window as
+administrator and run the following command:
+
+	Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+
+Usage:  op completion <shell> [flags]
+
+Flags:
+  -h, --help   help for completion
+
+To list the global flags available on every command, run  'op --help'.

@@ -1,0 +1,12 @@
+Authenticate with Tencent Ads
+
+Usage:
+  tencentads auth login [flags]
+
+Flags:
+      --api-key string       API key to save directly (skips browser OAuth)
+      --description string   Key description (defaults to hostname)
+  -h, --help                 help for login
+
+Global Flags:
+      --config-dir string   Directory for credentials file (default: ~/.tencent-ads)

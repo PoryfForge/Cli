@@ -1,0 +1,28 @@
+Work with agents
+
+USAGE
+  multica agent <command> [flags]
+
+COMMANDS
+  archive:  Archive an agent
+  avatar:   Upload an avatar image for an agent
+  copy:     Copy an existing agent into a new one (optionally on a different runtime)
+  create:   Create a new agent
+  env:      Read and update an agent's custom environment variables (audited)
+  get:      Get agent details
+  list:     List agents in the workspace
+  mcp:      Manage which workspace MCP servers an agent uses
+  restore:  Restore an archived agent
+  skills:   Manage agent skill assignments
+  tasks:    List runs for an agent
+  update:   Update an agent
+
+
+FLAGS
+  -h, --help   help for agent
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica agent <command> --help` for more information about a command.

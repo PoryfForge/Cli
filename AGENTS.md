@@ -11,8 +11,10 @@
 要解决的具体问题：Agent 不知道某个 CLI 到底能做什么，于是每次现场翻 `--help`、翻不到就凭印象编命令。
 查完一次就该存下来 —— 这里就是「存下来」的地方。
 
-**收录范围**：厂商提供的 SaaS 能力型 CLI（飞书 / 企业微信 / WPS 365 / 即梦）。
+**收录范围**：厂商提供的 SaaS 能力型 CLI —— 飞书、GitHub、Multica、企业微信、WPS 365、
+1Password、Grok、即梦、腾讯广告。
 系统自带工具（`git` / `curl`）、包管理器（`brew` / `npm`）、数据库客户端**不在范围内**。
+（`gh` 只收 GitHub 的 SaaS 协作能力，本机通用 `git` 命令仍不收。）
 
 > **想让 Agent 自动来查，而不是每次靠人提醒？**
 > 跑一次 `bin/install-skill`，它会把 `skills/cli-capability-lookup/` 装进本机的
@@ -83,15 +85,31 @@ bin/cli-cap remember <名字> \
 | 采集方式 | 含义 | 可信范围 |
 |---|---|---|
 | **仓库 skill 文档** | 从厂商仓库的 `skills/*/SKILL.md` 聚合 | 命令名与触发条件可靠；**参数细节**要跑 `--help` 确认 |
-| **release 二进制 help 全树** | 取官方 release 可执行文件递归跑 `--help` | 命令树与 flag 完整；描述可能来自父命令摘要 |
-| **本机 CLI help 全树 + 官方 SKILL.md** | 本机已装 CLI 的 help + 随包 SKILL.md | 同上，另含厂商行为规则 |
+| **release 二进制 help 全树** | 取官方发布的可执行文件递归跑 `--help` | 命令树与 flag 完整；描述可能来自父命令摘要 |
+| **release 二进制 help 全树 + 官方 SKILL.md** | 同上，另从厂商仓库取来写给 Agent 的规则 | 命令树完整，且含厂商的行为约定 |
+| **本机 CLI help 全树 + 官方 SKILL.md** | 本机已装 CLI 的 help + 随包 SKILL.md | 同上，但**版本随你本机**，可能与官方发布不一致 |
+
+`CAPABILITY.md` 的 frontmatter 与「采集方式」两处都标了这一项，以文档里写的为准 ——
+文档是快照，**Agent 读的是文档，不是本机那个 CLI**。
 
 **关键**：企业微信 CLI 的服务目录由**服务端 discovery 动态下发**，离线无法穷举 ——
 快照只覆盖官方技能文档写明的命令，文档里已如实标注。别把快照当全集。
 
+**另有一类「采集说明」要看**：`CAPABILITY.md` 概览正下方若出现 `> **采集说明**：…`，
+那是这份快照**已知的边界**，往往意味着某部分命令不稳定或不可照字面信 ——
+例如 `gh` 的部分子命令来自**本机安装的扩展**，别人机器上未必有。
+遇到这类说明，**以本机 `<命令> --help` 为准**，不要拿快照当权威。
+（不是每份文档都有；没有就说明没有已知缺口。）
+
 ---
 
 ## 各 CLI 的硬性规则
+
+规则来源分两类，**下面会分别标出来**：
+- **官方**：厂商写给 Agent 的文档（已在 `registry/<名字>/vendor/` 留档）。优先级最高。
+- **本库约束**：把「调用有副作用」这件事落到可执行的操作纪律上，多为安全与不可逆操作的护栏。
+
+完整内容一律在 `registry/<名字>/CAPABILITY.md`，这里只挑最容易踩的。
 
 ### 飞书 CLI（`lark-cli`）
 
@@ -149,6 +167,96 @@ bin/cli-cap remember <名字> \
 5. **不要从文档里硬编码模型支持范围**，先跑 `dreamina <子命令> -h` 确认。
 6. **不同命令支持的模型 / 比例 / 时长 / 分辨率互不相同**，别假设一致。
 7. 遇到 `AigcComplianceConfirmationRequired`：请用户先去即梦网页端完成一次性确认，再重试。
+
+### GitHub CLI（`gh`）
+
+完整规则见 `registry/github-cli/CAPABILITY.md` 文末「官方 Agent 使用规则」
+（原文取自官方仓库的 `skills/gh/SKILL.md`）。最容易踩的六条：
+
+1. **不要给它加防交互的补丁**（官方）。`gh` 在非 TTY 下本来就跳过 pager、去掉 ANSI、
+   需要必填参数时直接报错而不是挂起提示 —— 别去设 `GH_PAGER`，也不存在 `--no-pager` 这个 flag。
+2. **要结构化输出就用 `--json`，别去解析列对齐的表格**（官方）。
+   不确定有哪些字段时先跑一次 `--json` 不带字段名，它会打印全部可用字段；
+   过滤用 `--jq`，套模板用 `--template`。
+3. **`-T` 在有些命令上是另一个意思**（官方）。`gh pr create -T` / `gh issue create -T`
+   指的是 body 模板，不是 `--template` —— 用之前先确认。
+4. **列表会静默截断，默认通常只有 30 条**（官方）。`gh issue list` / `gh pr list` / `gh search`
+   要加 `-L N`；这两个 list 也拿不到 `totalCount`，真要总数走 `gh api graphql`。
+   调原始 API 翻页用 `gh api --paginate`。
+5. **搜索限定词要拆成独立 token**（官方）。`gh search issues repo:x/y is:open` 可以，
+   `gh search issues "repo:x/y is:open"` 会被当成一整串关键词并报 `Invalid search query`；
+   只有多词的自由文本才加引号。想按人 / 标签 / 跨仓筛，优先用 `gh search` 而不是 `list --search`。
+6. **仓库归属靠当前目录推断**（官方）。不在仓库目录里，或要操作别的仓库，
+   必须显式写 `-R OWNER/REPO`，否则会操作错仓库。
+   （本库约束：涉及 `gh secret set`、`gh release`、`pr merge` 等写操作前，先跟用户确认目标仓库与环境。）
+
+### Multica CLI（`multica`）
+
+规则来自官方文档（`multica.ai/docs`）与仓库里随版本分发的 `CLI_AND_DAEMON.md`。最容易踩的六条：
+
+1. **任务是在「runtime」上跑的，不是在这台机器上**。一个 runtime = **一台机器 + 一个编码 CLI**；
+   同一台机器装了 Claude Code 和 Codex，就是两个 runtime。
+   派任务前先 `multica runtime list` 确认目标在线（离线 runtime 上的任务只会排队）。
+2. **daemon 只认本机 PATH 里已有的编码 CLI**，而且**一个都没有时 daemon 起不来**。
+   新装或新登录某个 Agent 之后，必须 `multica daemon restart` 才会被探测到。
+3. **离线的代价不对称**：已排队的任务最多等 2 小时；**正在跑的任务直接失败**
+   （符合条件的会自动重试）。心跳 15 秒一次，异常退出后约 3 分钟内才显示离线。
+4. **并发有上限**：单 daemon 默认最多 20 个任务、单个 Agent 最多 6 个，取两者较小值。
+   并行任务抢的是同一台机器的算力、同一个工具账号的配额和同一个工作目录。
+5. **别把「本地执行」理解成「密钥只在这台机器上」**（官方明确提醒）：
+   Agent 的自定义环境变量和 MCP 配置是**存在服务端的**。所以要往
+   `multica agent env` 里塞东西时，先想清楚它是服务端数据。
+6. **runtime 默认私有**。只有 owner 能把它设成公开；把别人的机器开成公共执行环境，
+   烧的是对方的算力和账号额度。
+
+### 1Password CLI（`op`）
+
+以下都是**本库约束** —— `op` 的 help 只讲「怎么调」，不讲「调完怎么不泄露」：
+
+1. **`op read` 的输出就是明文密钥。** 不要把结果回显到回复、日志、命令历史或文件里；
+   需要给程序用时，直接管道给下一步，别先打印再复制。
+2. **优先 `op run --env-file` / `op inject`，而不是「取出来再传」**：
+   明文只活在子进程环境或目标文件里。用 `inject` 生成的含密文件必须进 `.gitignore`。
+3. **先确认身份再取密钥**：`op whoami` / `op account list`。多账号环境下取错账号，
+   表现为「拿到了一个看起来对的密钥」，排查成本很高。
+4. **不可逆操作要逐条确认**：`op item delete`、`op vault` / `op group` 的权限变更、
+   `op user` 的恢复与停用，都没有撤销。
+5. **要 JSON 用 `--format json`**（或 `OP_FORMAT=json`），别解析人类可读输出。
+6. 非交互环境（CI / 无浏览器）用 service account token（`OP_SERVICE_ACCOUNT_TOKEN`），
+   不要试图把交互式登录塞进脚本。
+
+### Grok CLI（`grok`）
+
+规则基于其自身 help 与官方构建文档。最容易踩的六条：
+
+1. **默认开的是交互式 TUI**。脚本 / CI / 由 Agent 调用时，要显式走单轮模式：
+   `grok -p "<prompt>"`（或 `--prompt-file` / `--prompt-json`），跑完即退出。
+2. **默认会为 shell 命令和文件改动弹权限确认**。无人值守的场景要么给出 `--allow <规则>` 白名单、
+   要么接受 `--always-approve` —— **不要为了「跑通」就默认加 `--always-approve`**，
+   那等于让它无确认地改本机。更稳的做法是用 `--sandbox <profile>` 或 `--permission-mode` 收窄。
+3. **要机器可读结果就加 `--output-format json`**（还有 `streaming-json`）；
+   结构要固定可以配 `--json-schema`。
+4. **要知道自己跑在什么环境里**：`grok inspect` 显示它在当前目录发现的实际配置，
+   配置没生效时先看它，别猜。
+5. **联网检索是模型的内置工具，不是独立子命令**。想关掉用 `--disable-web-search`；
+   想限制可用工具用 `--tools` / `--disallowed-tools`。
+6. **会话可按 `--session-id` 续 / `-c` 继续 / `--fork-session` 分叉**；
+   要回看历史用 `grok sessions list|search`，导出用 `grok export`。
+
+### 腾讯广告 CLI（`tencentads`）
+
+**注意：这个 CLI 目前的命令面很薄，别当成完整业务入口。**
+
+1. CLI 自身只发布了 **`auth`** 域（`auth login` / `status` / `logout`）。
+   用 `tencentads --list-commands` 可以看到：营销管理类命令标着 `enterprise`，
+   默认 edition 不包含。
+2. **账号 / 营销单元 / 创意 / 报表这些业务查询，CLI 里没有对应命令**。
+   官方把这些做成了技能站的脚本（`skills.ad.qq.com`，`@tencent-adm/tencentads-*` 系列），
+   本库**尚未收录，也没做过业务调用验证** —— 要用请先去官方技能站核对。
+3. `tencentads-cli` 这个 npm 包的发布者账号是个人账号，虽被官方技能文档列为前置依赖，
+   **是否为厂商直接维护待确认**。参考它给出的命令契约时留个心眼。
+4. 凭据落在 `~/.tencent-ads`（`--config-dir` 可改）。API Key 属于密钥，
+   不要回显在对话里 —— 参照 1Password 那节的第 1 条纪律。
 
 ---
 

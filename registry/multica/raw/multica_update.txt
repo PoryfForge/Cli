@@ -1,0 +1,14 @@
+Update multica to the latest version
+
+USAGE
+  multica update [flags]
+
+FLAGS
+      --download-timeout duration   Maximum time to wait for the release archive download (default 2m0s)
+  -h, --help                        help for update
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

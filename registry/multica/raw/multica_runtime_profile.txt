@@ -1,0 +1,22 @@
+Manage custom runtime profiles
+
+USAGE
+  multica runtime profile <command> [flags]
+
+COMMANDS
+  create:      Create a custom runtime profile
+  delete:      Delete a custom runtime profile
+  list:        List custom runtime profiles in the workspace
+  set-path:    Pin a per-machine executable path for a runtime profile (local only)
+  unset-path:  Remove a per-machine executable path override for a runtime profile
+  update:      Update a custom runtime profile (protocol family is immutable)
+
+
+FLAGS
+  -h, --help   help for profile
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica runtime profile <command> --help` for more information about a command.

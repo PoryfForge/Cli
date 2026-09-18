@@ -1,0 +1,4875 @@
+{
+  "meta": {
+    "name": "multica",
+    "title": "Multica CLI",
+    "command": "multica",
+    "version": "0.4.44",
+    "description": "Multica 官方 CLI：把任务派发到已连接的机器上执行、管理 workspace 与 issue，daemon 负责发现本机可用的编码 Agent 并回传运行状态与结果",
+    "scannedAt": "2026-09-18 06:38:35",
+    "depth": 2,
+    "source": "release-bin + help-tree",
+    "nodes": 134,
+    "repo": "https://github.com/multica-ai/multica",
+    "license": "Multica License（Apache-2.0 + 附加条件）",
+    "install": "brew tap multica-ai/tap && brew install multica",
+    "release": "v0.4.44",
+    "docsCommit": "ff2933d67a6a"
+  },
+  "root": {
+    "path": [
+      "multica"
+    ],
+    "depth": 0,
+    "usage": "",
+    "summary": "Work seamlessly with Multica from the command line.",
+    "options": [
+      {
+        "flags": "--debug",
+        "desc": "Print full error details on failure (env: MULTICA_DEBUG)"
+      },
+      {
+        "flags": "-h, --help",
+        "desc": "help for multica"
+      },
+      {
+        "flags": "--profile string",
+        "desc": "Configuration profile name (e.g. dev) — isolates config, daemon state, and workspaces"
+      },
+      {
+        "flags": "--server-url string",
+        "desc": "Multica server URL (env: MULTICA_SERVER_URL)"
+      },
+      {
+        "flags": "-v, --version",
+        "desc": "version for multica"
+      },
+      {
+        "flags": "--workspace-id string",
+        "desc": "Workspace ID (env: MULTICA_WORKSPACE_ID)"
+      }
+    ],
+    "groups": [],
+    "children": [
+      "agent",
+      "autopilot",
+      "chat",
+      "issue",
+      "label",
+      "project",
+      "property",
+      "repo",
+      "skill",
+      "squad",
+      "workspace",
+      "daemon",
+      "runtime",
+      "attachment",
+      "auth",
+      "config",
+      "login",
+      "setup",
+      "update",
+      "user",
+      "version"
+    ],
+    "helpFlag": "--help"
+  },
+  "nodes": [
+    {
+      "path": [
+        "multica"
+      ],
+      "depth": 0,
+      "usage": "",
+      "summary": "Work seamlessly with Multica from the command line.",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Print full error details on failure (env: MULTICA_DEBUG)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for multica"
+        },
+        {
+          "flags": "--profile string",
+          "desc": "Configuration profile name (e.g. dev) — isolates config, daemon state, and workspaces"
+        },
+        {
+          "flags": "--server-url string",
+          "desc": "Multica server URL (env: MULTICA_SERVER_URL)"
+        },
+        {
+          "flags": "-v, --version",
+          "desc": "version for multica"
+        },
+        {
+          "flags": "--workspace-id string",
+          "desc": "Workspace ID (env: MULTICA_WORKSPACE_ID)"
+        }
+      ],
+      "groups": [],
+      "children": [
+        "agent",
+        "autopilot",
+        "chat",
+        "issue",
+        "label",
+        "project",
+        "property",
+        "repo",
+        "skill",
+        "squad",
+        "workspace",
+        "daemon",
+        "runtime",
+        "attachment",
+        "auth",
+        "config",
+        "login",
+        "setup",
+        "update",
+        "user",
+        "version"
+      ],
+      "helpFlag": "--help"
+    },
+    {
+      "path": [
+        "multica",
+        "agent"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with agents",
+      "detail": "Work with agents",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for agent"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "archive",
+        "avatar",
+        "copy",
+        "create",
+        "env",
+        "get",
+        "list",
+        "mcp",
+        "restore",
+        "skills",
+        "tasks",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Manage autopilots (scheduled/triggered agent automations)",
+      "detail": "Manage autopilots (scheduled/triggered agent automations)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for autopilot"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "runs",
+        "trigger",
+        "trigger-add",
+        "trigger-delete",
+        "trigger-list",
+        "trigger-rotate-url",
+        "trigger-update",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "chat"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with the current chat conversation",
+      "detail": "Work with the current chat conversation",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for chat"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "history",
+        "thread"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "issue"
+      ],
+      "depth": 1,
+      "usage": "Show aggregated token usage for an issue",
+      "summary": "Work with issues",
+      "detail": "Work with issues",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for issue"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "assign",
+        "cancel-task",
+        "children",
+        "comment",
+        "create",
+        "get",
+        "label",
+        "list",
+        "metadata",
+        "property",
+        "pull-requests",
+        "reorder",
+        "rerun",
+        "run-messages",
+        "runs",
+        "search",
+        "status",
+        "subscriber",
+        "timeline",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "label"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with issue labels",
+      "detail": "Work with issue labels",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for label"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "project"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with projects",
+      "detail": "Work with projects",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for project"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "create",
+        "delete",
+        "get",
+        "list",
+        "resource",
+        "status",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "property"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Manage workspace custom issue properties",
+      "detail": "Manage workspace custom issue properties",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for property"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "archive",
+        "create",
+        "get",
+        "list",
+        "unarchive",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "repo"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with repositories",
+      "detail": "Work with repositories",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for repo"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "checkout",
+        "list",
+        "remove"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "skill"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with skills",
+      "detail": "Work with skills",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for skill"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "create",
+        "delete",
+        "files",
+        "get",
+        "import",
+        "list",
+        "refresh",
+        "search",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "squad"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with squads",
+      "detail": "Work with squads",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for squad"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "activity",
+        "create",
+        "delete",
+        "get",
+        "list",
+        "member",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "workspace"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with workspaces",
+      "detail": "Work with workspaces",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for workspace"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "create",
+        "get",
+        "list",
+        "mcp",
+        "member",
+        "switch",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "daemon"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Control the local agent runtime daemon",
+      "detail": "Control the local agent runtime daemon",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for daemon"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "disk-usage",
+        "logs",
+        "restart",
+        "start",
+        "status",
+        "stop"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "runtime"
+      ],
+      "depth": 1,
+      "usage": "Get token usage for a runtime",
+      "summary": "Work with agent runtimes",
+      "detail": "Work with agent runtimes",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for runtime"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "activity",
+        "delete",
+        "list",
+        "profile",
+        "rename",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "attachment"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with attachments",
+      "detail": "Work with attachments",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for attachment"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "download",
+        "upload"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "auth"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Authenticate multica with Multica",
+      "detail": "Authenticate multica with Multica",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for auth"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "logout",
+        "status"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "config"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Manage configuration for multica",
+      "detail": "Manage configuration for multica",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for config"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "set",
+        "show"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "login"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Authenticate and set up workspaces",
+      "detail": "Log in to Multica, then automatically discover and watch all your workspaces.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--callback-host string",
+          "desc": "Host/IP the OAuth callback URL points at when the browser can reach this CLI directly. For SSH-only machines, use the printed tunnel hint instead."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for login"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "setup"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Configure the CLI, authenticate, and start the daemon",
+      "detail": "Configure the CLI, authenticate, and start the daemon",
+      "group": "",
+      "options": [
+        {
+          "flags": "--callback-host string",
+          "desc": "Host/IP the OAuth callback URL points at when the browser can reach this CLI directly. For SSH-only machines, use the printed tunnel hint instead."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for setup"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "cloud",
+        "self-host"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "update"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Update multica to the latest version",
+      "detail": "Update multica to the latest version",
+      "group": "",
+      "options": [
+        {
+          "flags": "--download-timeout duration",
+          "desc": "Maximum time to wait for the release archive download (default 2m0s)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "user"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Work with your user account",
+      "detail": "Work with your user account",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for user"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "profile"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "version"
+      ],
+      "depth": 1,
+      "usage": "",
+      "summary": "Print version information",
+      "detail": "Print version information",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for version"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: text or json (default \"text\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "archive"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Archive an agent",
+      "detail": "Archive an agent",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for archive"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "avatar"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Upload an avatar image for an agent",
+      "detail": "Upload an avatar image for an agent",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file string",
+          "desc": "Path to the avatar image file (required)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for avatar"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "copy"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Copy an existing agent into a new one (optionally on a different runtime)",
+      "detail": "Copy an existing agent's portable configuration into a brand-new agent.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--custom-args string",
+          "desc": "Override custom CLI arguments as a JSON array."
+        },
+        {
+          "flags": "--custom-env string",
+          "desc": "Set custom_env on the copy as a JSON object (never copied from the source). Prefer --custom-env-stdin/--custom-env-file for secrets. Pass '{}' for an empty map."
+        },
+        {
+          "flags": "--custom-env-file string",
+          "desc": "Read --custom-env from a file path (suggested mode: 0600). Mutually exclusive with --custom-env and --custom-env-stdin."
+        },
+        {
+          "flags": "--custom-env-stdin",
+          "desc": "Read --custom-env from stdin. Mutually exclusive with --custom-env and --custom-env-file."
+        },
+        {
+          "flags": "--description string",
+          "desc": "Override the copied description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for copy"
+        },
+        {
+          "flags": "--instructions string",
+          "desc": "Override the copied instructions"
+        },
+        {
+          "flags": "--max-concurrent-tasks int32",
+          "desc": "Override maximum concurrent tasks (default 6)"
+        },
+        {
+          "flags": "--mcp-config string",
+          "desc": "Set mcp_config on the copy as a JSON object (never copied from the source). Prefer --mcp-config-stdin/--mcp-config-file for secrets."
+        },
+        {
+          "flags": "--mcp-config-file string",
+          "desc": "Read --mcp-config from a file path (suggested mode: 0600). Mutually exclusive with --mcp-config and --mcp-config-stdin."
+        },
+        {
+          "flags": "--mcp-config-stdin",
+          "desc": "Read --mcp-config from stdin. Mutually exclusive with --mcp-config and --mcp-config-file."
+        },
+        {
+          "flags": "--model string",
+          "desc": "Model identifier for the copy. Required when --runtime-id selects a different runtime (pass \"\" to accept the target runtime default). Empty otherwise = runtime default."
+        },
+        {
+          "flags": "--name string",
+          "desc": "Name for the new agent (default: \"<source name> (copy)\")"
+        },
+        {
+          "flags": "--no-skills",
+          "desc": "Do not copy the source agent's workspace skill assignments."
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--permission-mode string",
+          "desc": "Override invocation permission mode: private or public_to. Authoritative over --visibility."
+        },
+        {
+          "flags": "--public-to-member strings",
+          "desc": "public_to: allow the given member user id(s) to invoke the copy. Repeatable."
+        },
+        {
+          "flags": "--public-to-workspace",
+          "desc": "public_to: allow every workspace member to invoke the copy."
+        },
+        {
+          "flags": "--runtime-config string",
+          "desc": "Set runtime_config on the copy as a JSON string (never copied from the source)."
+        },
+        {
+          "flags": "--runtime-id string",
+          "desc": "Target runtime ID (default: the source agent's runtime). A different value forks the agent onto that runtime."
+        },
+        {
+          "flags": "--service-tier string",
+          "desc": "Override Codex service tier. Not carried across a runtime change unless set here."
+        },
+        {
+          "flags": "--thinking-level string",
+          "desc": "Override thinking level. Not carried across a runtime change unless set here."
+        },
+        {
+          "flags": "--visibility string",
+          "desc": "Override visibility: private or workspace (legacy; mapped to --permission-mode)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new agent",
+      "detail": "Create a new agent",
+      "group": "",
+      "options": [
+        {
+          "flags": "--conversation-starters string",
+          "desc": "Conversation starters as a JSON array of {\"label\",\"prompt\"} objects (at most 3; label ≤80, prompt ≤4000). Shown above the Chat composer; selecting one fills the composer and does not start a run. Omit to default to none."
+        },
+        {
+          "flags": "--custom-args string",
+          "desc": "Custom CLI arguments as JSON array. For model selection prefer --model; some providers (codex app-server, openclaw) reject --model in custom_args."
+        },
+        {
+          "flags": "--custom-env string",
+          "desc": "Custom environment variables as JSON object, e.g. '{\"KEY\":\"value\"}'. Treated as secret material — never logged by the CLI, but values passed on the command line are visible to shell history and 'ps'; prefer --custom-env-stdin or --custom-env-file for real secrets. Pass '{}' to set an empty map."
+        },
+        {
+          "flags": "--custom-env-file string",
+          "desc": "Read the --custom-env JSON object from a file path (suggested mode: 0600). Mutually exclusive with --custom-env and --custom-env-stdin."
+        },
+        {
+          "flags": "--custom-env-stdin",
+          "desc": "Read the --custom-env JSON object from stdin. Keeps secrets out of shell history and 'ps'. Mutually exclusive with --custom-env and --custom-env-file."
+        },
+        {
+          "flags": "--description string",
+          "desc": "Agent description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--instructions string",
+          "desc": "Agent instructions"
+        },
+        {
+          "flags": "--max-concurrent-tasks int32",
+          "desc": "Maximum concurrent runs (1-50) (default 6)"
+        },
+        {
+          "flags": "--mcp-config string",
+          "desc": "MCP server configuration as a JSON object, e.g. '{\"mcpServers\":{\"shortcut\":{...}}}'. Treated as secret material (MCP entries often carry API tokens) — never logged by the CLI, but values passed on the command line are visible to shell history and 'ps'; prefer --mcp-config-stdin or --mcp-config-file for real secrets."
+        },
+        {
+          "flags": "--mcp-config-file string",
+          "desc": "Read the --mcp-config JSON object from a file path (suggested mode: 0600). Mutually exclusive with --mcp-config and --mcp-config-stdin."
+        },
+        {
+          "flags": "--mcp-config-stdin",
+          "desc": "Read the --mcp-config JSON object from stdin. Keeps secrets out of shell history and 'ps'. Mutually exclusive with --mcp-config and --mcp-config-file."
+        },
+        {
+          "flags": "--model string",
+          "desc": "Model identifier (e.g. claude-sonnet-4-6, openai/gpt-4o). Prefer this over passing --model in --custom-args."
+        },
+        {
+          "flags": "--name string",
+          "desc": "Agent name (required)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--permission-mode string",
+          "desc": "Invocation permission mode: private (owner only) or public_to (allow-list via --public-to-*). Authoritative over --visibility when set."
+        },
+        {
+          "flags": "--public-to-member strings",
+          "desc": "public_to: allow the given member user id(s) to invoke this agent. Repeatable."
+        },
+        {
+          "flags": "--public-to-workspace",
+          "desc": "public_to: allow every workspace member to invoke this agent."
+        },
+        {
+          "flags": "--runtime-config string",
+          "desc": "Runtime config as JSON string"
+        },
+        {
+          "flags": "--runtime-id string",
+          "desc": "Runtime ID (required)"
+        },
+        {
+          "flags": "--service-tier string",
+          "desc": "Codex execution speed: empty = inherit local Codex configuration; default = explicit Standard when supported by the daemon's installed Codex CLI; a catalog tier such as priority = explicit Fast."
+        },
+        {
+          "flags": "--thinking-level string",
+          "desc": "Reasoning/effort level for the agent's runtime (e.g. Claude: low|medium|high|xhigh|max; Codex values come from the runtime model catalog). The set is runtime/model-specific; malformed values are rejected server-side and the daemon validates the exact model/level pair. Some runtimes (e.g. hermes) expose no reasoning control and reject every value. Empty = runtime default."
+        },
+        {
+          "flags": "--visibility string",
+          "desc": "Visibility: private or workspace (legacy; mapped to --permission-mode. private->private, workspace->public_to+workspace target) (default \"private\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "env"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Read and update an agent's custom environment variables (audited)",
+      "detail": "Read and update an agent's custom environment variables (audited)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for env"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "get",
+        "set"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get agent details",
+      "detail": "Get agent details",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List agents in the workspace",
+      "detail": "List agents in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--include-archived",
+          "desc": "Include archived agents"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "mcp"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage which workspace MCP servers an agent uses",
+      "detail": "Manage which workspace MCP servers an agent uses",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for mcp"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "disable",
+        "enable",
+        "list",
+        "remove"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "restore"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Restore an archived agent",
+      "detail": "Restore an archived agent",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for restore"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "skills"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage agent skill assignments",
+      "detail": "Manage agent skill assignments",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for skills"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "list",
+        "set"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "tasks"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List runs for an agent",
+      "detail": "List runs for an agent",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for tasks"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "agent",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update an agent",
+      "detail": "Update an agent",
+      "group": "",
+      "options": [
+        {
+          "flags": "--conversation-starters string",
+          "desc": "New conversation starters as a JSON array of {\"label\",\"prompt\"} objects (at most 3; label ≤80, prompt ≤4000). Pass '[]' to clear. Omit to leave the stored value unchanged."
+        },
+        {
+          "flags": "--custom-args string",
+          "desc": "New custom CLI arguments as JSON array. For model selection prefer --model; some providers (codex app-server, openclaw) reject --model in custom_args."
+        },
+        {
+          "flags": "--description string",
+          "desc": "New description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--instructions string",
+          "desc": "New instructions"
+        },
+        {
+          "flags": "--max-concurrent-tasks int32",
+          "desc": "New max concurrent runs (1-50)"
+        },
+        {
+          "flags": "--mcp-config string",
+          "desc": "New MCP server configuration as a JSON object, e.g. '{\"mcpServers\":{...}}'. Pass 'null' to clear. Treated as secret material — never logged by the CLI, but values passed on the command line are visible to shell history and 'ps'; prefer --mcp-config-stdin or --mcp-config-file for real secrets."
+        },
+        {
+          "flags": "--mcp-config-file string",
+          "desc": "Read the --mcp-config JSON from a file path (suggested mode: 0600). Mutually exclusive with --mcp-config and --mcp-config-stdin."
+        },
+        {
+          "flags": "--mcp-config-stdin",
+          "desc": "Read the --mcp-config JSON from stdin. Keeps secrets out of shell history and 'ps'. Mutually exclusive with --mcp-config and --mcp-config-file."
+        },
+        {
+          "flags": "--model string",
+          "desc": "New model identifier. Pass an empty string to clear and fall back to the runtime default."
+        },
+        {
+          "flags": "--name string",
+          "desc": "New name"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--permission-mode string",
+          "desc": "New invocation permission mode: private or public_to. Authoritative over --visibility. Owner-only."
+        },
+        {
+          "flags": "--public-to-member strings",
+          "desc": "public_to: allow the given member user id(s) to invoke this agent. Repeatable."
+        },
+        {
+          "flags": "--public-to-workspace",
+          "desc": "public_to: allow every workspace member to invoke this agent."
+        },
+        {
+          "flags": "--runtime-config string",
+          "desc": "New runtime config as JSON string"
+        },
+        {
+          "flags": "--runtime-id string",
+          "desc": "New runtime ID"
+        },
+        {
+          "flags": "--service-tier string",
+          "desc": "New Codex execution speed: default = explicit Standard when supported by the daemon's installed Codex CLI; a catalog tier such as priority = explicit Fast. Pass an empty string to clear and inherit local Codex configuration."
+        },
+        {
+          "flags": "--status string",
+          "desc": "New status"
+        },
+        {
+          "flags": "--thinking-level string",
+          "desc": "New reasoning/effort level for the agent's runtime (e.g. Claude: low|medium|high|xhigh|max; Codex values come from the runtime model catalog). The set is runtime/model-specific; malformed values are rejected server-side and the daemon validates the exact model/level pair. Some runtimes (e.g. hermes) expose no reasoning control and reject every value. Pass an empty string to clear and fall back to the runtime default."
+        },
+        {
+          "flags": "--visibility string",
+          "desc": "New visibility: private or workspace (legacy; mapped to --permission-mode)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new autopilot",
+      "detail": "Create a new autopilot",
+      "group": "",
+      "options": [
+        {
+          "flags": "--agent string",
+          "desc": "Assignee agent (name or ID) — required"
+        },
+        {
+          "flags": "--description string",
+          "desc": "Autopilot description (used as the run prompt)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--issue-title-template string",
+          "desc": "Template for issue titles (create_issue mode). Only {{date}} (UTC, YYYY-MM-DD) is interpolated; any other {{...}} token is rejected at create-time."
+        },
+        {
+          "flags": "--mode string",
+          "desc": "Execution mode: create_issue or run_only (required)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--project string",
+          "desc": "Project ID (optional)"
+        },
+        {
+          "flags": "--subscriber stringArray",
+          "desc": "Member subscriber to notify for issues this autopilot creates (name or user ID; repeatable)"
+        },
+        {
+          "flags": "--title string",
+          "desc": "Autopilot title (required)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete an autopilot",
+      "detail": "Delete an autopilot",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get autopilot details (webhook credentials redacted by default)",
+      "detail": "Get autopilot details (webhook credentials redacted by default)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--show-secrets",
+          "desc": "Include live webhook credentials in JSON output (unsafe for logs)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List autopilots in the workspace",
+      "detail": "List autopilots in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--status string",
+          "desc": "Filter by status (active, paused)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "runs"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List execution history for an autopilot",
+      "detail": "List execution history for an autopilot",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for runs"
+        },
+        {
+          "flags": "--limit int",
+          "desc": "Max number of runs to return (default 20)"
+        },
+        {
+          "flags": "--offset int",
+          "desc": "Pagination offset"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "trigger"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manually trigger an autopilot to run once",
+      "detail": "Manually trigger an autopilot to run once",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for trigger"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "trigger-add"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Add a schedule or webhook trigger to an autopilot",
+      "detail": "Add a schedule or webhook trigger to an autopilot",
+      "group": "",
+      "options": [
+        {
+          "flags": "--cron string",
+          "desc": "Cron expression (required for --kind schedule)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for trigger-add"
+        },
+        {
+          "flags": "--kind string",
+          "desc": "Trigger kind: schedule or webhook (default \"schedule\")"
+        },
+        {
+          "flags": "--label string",
+          "desc": "Optional human-readable label"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--timezone string",
+          "desc": "IANA timezone (default UTC; schedule only)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "trigger-delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete a trigger",
+      "detail": "Delete a trigger",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for trigger-delete"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "trigger-list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List an autopilot's triggers (ids for trigger-update/-delete/-rotate-url)",
+      "detail": "List an autopilot's triggers (ids for trigger-update/-delete/-rotate-url)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for trigger-list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "trigger-rotate-url"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Rotate the webhook URL of a webhook trigger",
+      "detail": "Rotate the webhook URL of a webhook trigger",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for trigger-rotate-url"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "-y, --yes",
+          "desc": "Skip the interactive confirmation prompt"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "trigger-update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update an existing trigger",
+      "detail": "Update an existing trigger",
+      "group": "",
+      "options": [
+        {
+          "flags": "--cron string",
+          "desc": "New cron expression"
+        },
+        {
+          "flags": "--enabled",
+          "desc": "Enable or disable the trigger (default true)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for trigger-update"
+        },
+        {
+          "flags": "--label string",
+          "desc": "New label"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--timezone string",
+          "desc": "New IANA timezone"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "autopilot",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update an autopilot",
+      "detail": "Update an autopilot",
+      "group": "",
+      "options": [
+        {
+          "flags": "--agent string",
+          "desc": "New assignee agent (name or ID)"
+        },
+        {
+          "flags": "--clear-subscribers",
+          "desc": "Remove all autopilot subscribers"
+        },
+        {
+          "flags": "--description string",
+          "desc": "New description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--issue-title-template string",
+          "desc": "New issue title template. Only {{date}} (UTC, YYYY-MM-DD) is interpolated; any other {{...}} token is rejected."
+        },
+        {
+          "flags": "--mode string",
+          "desc": "New execution mode (create_issue or run_only)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--project string",
+          "desc": "New project ID (use empty string to clear)"
+        },
+        {
+          "flags": "--status string",
+          "desc": "New status (active, paused)"
+        },
+        {
+          "flags": "--subscriber stringArray",
+          "desc": "Replace subscribers with this member (name or user ID; repeatable)"
+        },
+        {
+          "flags": "--title string",
+          "desc": "New title"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "chat",
+        "history"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Overview of the channel this conversation is in (messages + thread list)",
+      "detail": "Show the overview of the chat channel (e.g. Slack) this conversation is in: the",
+      "group": "",
+      "options": [
+        {
+          "flags": "--before string",
+          "desc": "Opaque cursor (a next_cursor from a prior page) to read older messages"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for history"
+        },
+        {
+          "flags": "--limit int",
+          "desc": "Maximum number of messages to return (the server clamps the range)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "chat",
+        "thread"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Read one thread's messages (the current thread, or a specific id)",
+      "detail": "Read the messages of a single thread.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--before string",
+          "desc": "Opaque cursor (a next_cursor from a prior page) to read older messages"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for thread"
+        },
+        {
+          "flags": "--limit int",
+          "desc": "Maximum number of messages to return (the server clamps the range)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "assign"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Assign an issue to a member, agent, or squad",
+      "detail": "Assign an issue to a member, agent, or squad",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for assign"
+        },
+        {
+          "flags": "--no-start",
+          "desc": "Assign ownership without starting an agent run"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--to string",
+          "desc": "Assignee name (member, agent, or squad; fuzzy match)"
+        },
+        {
+          "flags": "--to-id string",
+          "desc": "Assignee UUID — member, agent, or squad (mutually exclusive with --to)"
+        },
+        {
+          "flags": "--unassign",
+          "desc": "Remove current assignee"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "cancel-task"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Cancel an in-progress or queued run (interrupts in-flight agent)",
+      "detail": "Cancel a single run by its ID. Accepts the short ID prefix shown by `issue runs`. Use --issue to scope short-ID resolution to a specific issue when ambiguous. Triggers daemon-side interrupt of any in-flight agent so it stops emitting tool calls promptly.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for cancel-task"
+        },
+        {
+          "flags": "--issue string",
+          "desc": "Issue ID/key to scope short run ID prefix resolution"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "children"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List an issue's sub-issues grouped by stage",
+      "detail": "List an issue's sub-issues grouped by stage",
+      "group": "",
+      "options": [
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for children"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "comment"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Work with issue comments",
+      "detail": "Work with issue comments",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for comment"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "delete",
+        "list",
+        "resolve",
+        "unresolve"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new issue",
+      "detail": "Create a new issue",
+      "group": "",
+      "options": [
+        {
+          "flags": "--allow-duplicate",
+          "desc": "Allow creating an issue even when an active duplicate exists"
+        },
+        {
+          "flags": "--allow-external-file",
+          "desc": "Allow --description-file / --attachment to read a path outside the current working directory. Off by default so a stale file from another run/environment can't be picked up (MUL-4252)."
+        },
+        {
+          "flags": "--assignee string",
+          "desc": "Assignee name (member, agent, or squad; fuzzy match)"
+        },
+        {
+          "flags": "--assignee-id string",
+          "desc": "Assignee UUID — member, agent, or squad (mutually exclusive with --assignee)"
+        },
+        {
+          "flags": "--attachment strings",
+          "desc": "File path(s) to attach (can be specified multiple times)"
+        },
+        {
+          "flags": "--attachment-id strings",
+          "desc": "Existing attachment UUID(s) to bind to the created issue (can be specified multiple times)"
+        },
+        {
+          "flags": "--description string",
+          "desc": "Issue description (decodes \\n, \\r, \\t, \\\\; pipe via --description-stdin to preserve literal backslashes)"
+        },
+        {
+          "flags": "--description-file string",
+          "desc": "Read issue description from a UTF-8 file (preserves multi-line content verbatim; use this on Windows when stdin piping mangles non-ASCII bytes). The path must be inside the current working directory unless --allow-external-file is set."
+        },
+        {
+          "flags": "--description-stdin",
+          "desc": "Read issue description from stdin (preserves multi-line content verbatim)"
+        },
+        {
+          "flags": "--due-date string",
+          "desc": "Due date (calendar day, YYYY-MM-DD)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--parent string",
+          "desc": "Parent issue ID"
+        },
+        {
+          "flags": "--priority string",
+          "desc": "Issue priority"
+        },
+        {
+          "flags": "--project string",
+          "desc": "Project ID"
+        },
+        {
+          "flags": "--stage int",
+          "desc": "Stage ordinal (>=1) grouping this sub-issue into an ordered barrier group under its parent; omit for unstaged. The parent assignee is woken only when every sub-issue in a stage finishes."
+        },
+        {
+          "flags": "--start-date string",
+          "desc": "Start date (calendar day, YYYY-MM-DD)"
+        },
+        {
+          "flags": "--status string",
+          "desc": "Issue status"
+        },
+        {
+          "flags": "--title string",
+          "desc": "Issue title (required)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get issue details",
+      "detail": "Get issue details",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "label"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage labels on an issue",
+      "detail": "Manage labels on an issue",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for label"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "list",
+        "remove"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List issues in the workspace",
+      "detail": "List issues in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "--assignee string",
+          "desc": "Filter by assignee name (member, agent, or squad; fuzzy match)"
+        },
+        {
+          "flags": "--assignee-id string",
+          "desc": "Filter by assignee UUID — member, agent, or squad (mutually exclusive with --assignee)"
+        },
+        {
+          "flags": "--direction string",
+          "desc": "Sort direction (asc or desc); requires --sort to be a non-position column or a property sort (position is always ascending)"
+        },
+        {
+          "flags": "--fields string",
+          "desc": "JSON output only: comma-separated list of issue fields to include (e.g. id,title,status,priority). Filtering happens client-side after the full response is fetched, so this shrinks CLI output size and agent context cost, not network/server-side cost. Omit for the full issue object (default, unchanged). Valid fields: id, workspace_id, number, identifier, title, description, status, status_category, status_name, priority, assignee_type, assignee_id, creator_type, creator_id, parent_issue_id, project_id, position, stage, start_date, due_date, created_at, updated_at, revision, last_activity_at, metadata, properties, labels"
+        },
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--limit int",
+          "desc": "Page size, 1 to 100 (the server returns at most 100 issues per request; use --offset to page through more) (default 50)"
+        },
+        {
+          "flags": "--metadata strings",
+          "desc": "Filter by metadata key=value (repeatable; combined with AND). Value is JSON-parsed: 'true'/'false' → bool, numbers → number, otherwise string. Wrap as '\"42\"' to force a string when the value would otherwise sniff as a number."
+        },
+        {
+          "flags": "--offset int",
+          "desc": "Number of issues to skip (for pagination; while --output json reports has_more, advance it by the number of issues in that same response)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--priority string",
+          "desc": "Filter by priority"
+        },
+        {
+          "flags": "--project string",
+          "desc": "Filter by project ID"
+        },
+        {
+          "flags": "--property stringArray",
+          "desc": "Filter by custom property, written as \"Name=Value\" (repeatable, one value per flag). Name is a property name (case-insensitive) or its UUID. Value depends on the type: an option name or id for select and multi_select, true or false for checkbox, a member name, email, or id for actor types, and the value itself for text, url, number, and date (YYYY-MM-DD). Use __none__ to match issues where the property is unset; it works for every type, so an option or member actually named __none__ has to be given by id, as does a property whose name contains \"=\" or ends in <, > or ! (the >=, <=, and != spellings are reserved for comparison filters). Repeating a property matches ANY of its values; different properties must ALL match."
+        },
+        {
+          "flags": "--sort string",
+          "desc": "Sort column: position (default, manual board order), title, created_at, start_date, due_date, priority, or property:<name-or-id> to sort by a custom property (select properties sort by option order)"
+        },
+        {
+          "flags": "--status string",
+          "desc": "Filter by status"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "metadata"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage per-issue metadata (KV)",
+      "detail": "Manage per-issue metadata (KV)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for metadata"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "delete",
+        "get",
+        "list",
+        "set"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "property"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage custom property values on an issue",
+      "detail": "Manage custom property values on an issue",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for property"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "list",
+        "set",
+        "unset"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "pull-requests"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List pull requests linked to an issue",
+      "detail": "List pull requests linked to an issue",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for pull-requests"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "reorder"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Move an issue within its status column",
+      "detail": "Reposition an issue inside its current status column by computing a new",
+      "group": "",
+      "options": [
+        {
+          "flags": "--after string",
+          "desc": "Place the issue directly below this issue (same column)"
+        },
+        {
+          "flags": "--before string",
+          "desc": "Place the issue directly above this issue (same column)"
+        },
+        {
+          "flags": "--bottom",
+          "desc": "Move the issue to the bottom of its status column"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for reorder"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--top",
+          "desc": "Move the issue to the top of its status column"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "rerun"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Re-enqueue an issue's current agent assignment as a fresh run",
+      "detail": "Re-enqueue an issue's current agent assignment as a fresh run",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for rerun"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "run-messages"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List messages for an execution",
+      "detail": "List messages for an execution",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for run-messages"
+        },
+        {
+          "flags": "--issue string",
+          "desc": "Issue ID/key to scope short run ID prefix resolution"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--since int",
+          "desc": "Only return messages after this sequence number"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "runs"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List execution history for an issue",
+      "detail": "List agent runs for an issue.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--active",
+          "desc": "Only in-flight runs (queued, dispatched, running, waiting_local_directory) instead of the full execution history. Answers \"is an agent working on this right now\" without pulling every past run."
+        },
+        {
+          "flags": "--full-id",
+          "desc": "Show full run UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for runs"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--siblings",
+          "desc": "Widen to this issue's sub-issue family — its parent (or itself, when it has no parent) plus every child of that parent — so you can see whether another run is already working alongside you before starting overlapping code or PR work. Implies --active. Returns a compact per-run row (run, issue, agent, status, started) rather than the full execution-log record. Ordered running-first, newest-first within a status, and capped at 20 rows; when the cap truncates the answer the CLI says so on stderr, so a short list is never mistaken for a complete one. Advisory only: it reports work in flight, it does not reserve or serialise anything."
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "search"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Search issues by title, description, or comments",
+      "detail": "Search issues in the current workspace. The query matches issue titles,",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for search"
+        },
+        {
+          "flags": "--include-closed",
+          "desc": "Include done and cancelled issues"
+        },
+        {
+          "flags": "--limit int",
+          "desc": "Maximum number of results to return (default 20)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "status"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Change issue status",
+      "detail": "Change an issue's status. The argument is a status KEY, not its display name.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for status"
+        },
+        {
+          "flags": "--no-start",
+          "desc": "Change status without starting an agent run"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "subscriber"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Work with issue subscribers",
+      "detail": "Work with issue subscribers",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for subscriber"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "list",
+        "remove"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "timeline"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Chronological issue history — when status/assignee changed, how long it has been stuck",
+      "detail": "Chronological history of an issue: the activity log — status / priority /",
+      "group": "",
+      "options": [
+        {
+          "flags": "--action strings",
+          "desc": "Only return activities with these actions (repeatable or comma-separated). Implies --activity-only, since comments carry no action. Known actions: created, status_changed, priority_changed, assignee_changed, title_changed, description_updated, start_date_changed, due_date_changed, task_completed, task_failed, squad_leader_evaluated."
+        },
+        {
+          "flags": "--activity-only",
+          "desc": "Drop comments and return every activity record — including the task_completed / task_failed entries the server already writes, not just field changes. Much cheaper to read than the full timeline; use --action when you want only state transitions."
+        },
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for timeline"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--since string",
+          "desc": "Only return entries created after this timestamp (RFC3339)"
+        },
+        {
+          "flags": "--tail int",
+          "desc": "Only return the N most recent entries (applied after every other filter)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "issue",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update an issue",
+      "detail": "Update an issue",
+      "group": "",
+      "options": [
+        {
+          "flags": "--allow-external-file",
+          "desc": "Allow --description-file to read a path outside the current working directory. Off by default so a stale temp file from another run/environment can't be picked up (MUL-4252)."
+        },
+        {
+          "flags": "--assignee string",
+          "desc": "New assignee name (member, agent, or squad; fuzzy match)"
+        },
+        {
+          "flags": "--assignee-id string",
+          "desc": "New assignee UUID — member, agent, or squad (mutually exclusive with --assignee)"
+        },
+        {
+          "flags": "--description string",
+          "desc": "New description (decodes \\n, \\r, \\t, \\\\; pipe via --description-stdin to preserve literal backslashes)"
+        },
+        {
+          "flags": "--description-file string",
+          "desc": "Read new description from a UTF-8 file (preserves multi-line content verbatim; use this on Windows when stdin piping mangles non-ASCII bytes). The path must be inside the current working directory unless --allow-external-file is set."
+        },
+        {
+          "flags": "--description-stdin",
+          "desc": "Read new description from stdin (preserves multi-line content verbatim)"
+        },
+        {
+          "flags": "--due-date string",
+          "desc": "New due date (calendar day, YYYY-MM-DD)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--no-start",
+          "desc": "Apply the update without starting an agent run"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--parent string",
+          "desc": "Parent issue ID (use --parent \"\" to clear)"
+        },
+        {
+          "flags": "--priority string",
+          "desc": "New priority"
+        },
+        {
+          "flags": "--project string",
+          "desc": "Project ID"
+        },
+        {
+          "flags": "--start-date string",
+          "desc": "New start date (calendar day, YYYY-MM-DD; pass empty string to clear)"
+        },
+        {
+          "flags": "--status string",
+          "desc": "New status"
+        },
+        {
+          "flags": "--title string",
+          "desc": "New title"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "label",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new label",
+      "detail": "Create a new label",
+      "group": "",
+      "options": [
+        {
+          "flags": "--color string",
+          "desc": "Hex color like #3b82f6 (required)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Label name (required)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "label",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete a label",
+      "detail": "Delete a label",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "label",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get label details",
+      "detail": "Get label details",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "label",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List labels in the workspace",
+      "detail": "List labels in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "label",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update a label",
+      "detail": "Update a label",
+      "group": "",
+      "options": [
+        {
+          "flags": "--color string",
+          "desc": "New hex color"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--name string",
+          "desc": "New name"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new project",
+      "detail": "Create a new project",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "Project description"
+        },
+        {
+          "flags": "--due-date string",
+          "desc": "Due date (calendar day, YYYY-MM-DD)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--icon string",
+          "desc": "Project icon (emoji)"
+        },
+        {
+          "flags": "--lead string",
+          "desc": "Lead name (member or agent)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--repo stringArray",
+          "desc": "Attach a github_repo resource by URL (may be repeated)"
+        },
+        {
+          "flags": "--start-date string",
+          "desc": "Start date (calendar day, YYYY-MM-DD)"
+        },
+        {
+          "flags": "--status string",
+          "desc": "Project status"
+        },
+        {
+          "flags": "--title string",
+          "desc": "Project title (required)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete a project",
+      "detail": "Delete a project",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get project details",
+      "detail": "Get project details",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List projects in the workspace",
+      "detail": "List projects in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--status string",
+          "desc": "Filter by status"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "resource"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage resources attached to a project",
+      "detail": "Manage resources attached to a project",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for resource"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "list",
+        "remove",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "status"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Change project status",
+      "detail": "Change project status",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for status"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "project",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update a project",
+      "detail": "Update a project",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "New description"
+        },
+        {
+          "flags": "--due-date string",
+          "desc": "New due date (calendar day, YYYY-MM-DD; pass empty string to clear)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--icon string",
+          "desc": "New icon (emoji)"
+        },
+        {
+          "flags": "--lead string",
+          "desc": "New lead name (member or agent)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--start-date string",
+          "desc": "New start date (calendar day, YYYY-MM-DD; pass empty string to clear)"
+        },
+        {
+          "flags": "--status string",
+          "desc": "New status"
+        },
+        {
+          "flags": "--title string",
+          "desc": "New title"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "property",
+        "archive"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Archive a property definition (hidden from pickers; values preserved)",
+      "detail": "Archive a property definition (hidden from pickers; values preserved)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for archive"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "property",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a property definition (workspace owner/admin only)",
+      "detail": "Create a property definition. Types: text, number, select, multi_select,",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "Property description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--icon string",
+          "desc": "Property icon key from the Web picker (for example, flag, tag, or shield)"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Property name (required)"
+        },
+        {
+          "flags": "--option stringArray",
+          "desc": "Select option as \"Name\" or \"Name:#rrggbb\" (repeatable; select types only)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--type string",
+          "desc": "Property type: text, number, select, multi_select, date, checkbox, url, actor, multi_actor (required)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "property",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Show one property definition",
+      "detail": "Show one property definition",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "property",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List property definitions",
+      "detail": "List property definitions",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--include-archived",
+          "desc": "Include archived properties"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "property",
+        "unarchive"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Restore an archived property definition",
+      "detail": "Restore an archived property definition",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for unarchive"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "property",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update a property definition (owner/admin only; type is immutable)",
+      "detail": "Update a property definition. --option flags REPLACE the full option list;",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "New property description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--icon string",
+          "desc": "New property icon key from the Web picker; pass an empty value to clear"
+        },
+        {
+          "flags": "--name string",
+          "desc": "New property name"
+        },
+        {
+          "flags": "--option stringArray",
+          "desc": "Replacement option list as \"Name\" or \"Name:#rrggbb\" (repeatable)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "repo",
+        "add"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Add repositories to the workspace registry",
+      "detail": "Adds one or more repository URLs to the current workspace repository registry. Existing URLs are not duplicated. Use project resources when you need project-specific context instead.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "Optional description; only valid when adding one URL"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for add"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--url stringArray",
+          "desc": "Repository URL to add (may be repeated)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "repo",
+        "checkout"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Check out a repository into the working directory",
+      "detail": "Creates a git worktree from the daemon's bare clone cache. Used by agents to check out repos on demand.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--fresh",
+          "desc": "discard an existing checkout's uncommitted changes and untracked files and start over on a new branch from the latest default branch (or --ref); commits stay on the old branch"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for checkout"
+        },
+        {
+          "flags": "--ref string",
+          "desc": "branch, tag, or commit to check out instead of the remote default branch"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "repo",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List workspace repositories",
+      "detail": "Lists the repository registry for the current workspace. These are workspace-level repos, separate from project resources.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "repo",
+        "remove"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Remove repositories from the workspace registry",
+      "detail": "Removes one or more repository URLs from the current workspace repository registry.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for remove"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--url stringArray",
+          "desc": "Repository URL to remove (may be repeated)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new skill",
+      "detail": "Create a new skill",
+      "group": "",
+      "options": [
+        {
+          "flags": "--config string",
+          "desc": "Skill config as JSON string"
+        },
+        {
+          "flags": "--content string",
+          "desc": "Skill content (SKILL.md body)"
+        },
+        {
+          "flags": "--content-file string",
+          "desc": "Read skill content from a UTF-8 file. Mutually exclusive with --content and --content-stdin."
+        },
+        {
+          "flags": "--content-stdin",
+          "desc": "Read skill content from stdin. Mutually exclusive with --content and --content-file."
+        },
+        {
+          "flags": "--description string",
+          "desc": "Skill description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Skill name (required)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete a skill",
+      "detail": "Delete a skill",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--yes",
+          "desc": "Skip confirmation prompt"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "files"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Work with skill files",
+      "detail": "Work with skill files",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for files"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "delete",
+        "list",
+        "upsert"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get skill details and its file list (use --with-content for the bodies)",
+      "detail": "Get skill details and its file list (use --with-content for the bodies)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--with-content",
+          "desc": "Include the SKILL.md body and every file body. Off by default: the response grows with the skill and large skills cannot be fetched this way over slow links."
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "import"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Import a skill from a URL (clawhub.ai, skills.sh, github.com) or a local .skill/.zip archive",
+      "detail": "Import a skill from a URL (clawhub.ai, skills.sh, github.com) or a local .skill/.zip archive",
+      "group": "",
+      "options": [
+        {
+          "flags": "--file string",
+          "desc": "Path to a local skill archive (.skill or .zip) to import. Mutually exclusive with --url."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for import"
+        },
+        {
+          "flags": "--on-conflict string",
+          "desc": "Conflict strategy when a skill with the same name exists: fail, overwrite, rename, or skip (default \"fail\")"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--url string",
+          "desc": "URL to import from (clawhub.ai, skills.sh, or github.com). Mutually exclusive with --file."
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List skills in the workspace",
+      "detail": "List skills in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "refresh"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Re-download a skill from its imported source, preserving its id and agent assignments",
+      "detail": "Re-download a skill from its imported source, preserving its id and agent assignments",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for refresh"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "search"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Search for installable skills",
+      "detail": "Search for installable skills",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for search"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "skill",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update a skill",
+      "detail": "Update a skill",
+      "group": "",
+      "options": [
+        {
+          "flags": "--config string",
+          "desc": "New config as JSON string"
+        },
+        {
+          "flags": "--content string",
+          "desc": "New content"
+        },
+        {
+          "flags": "--content-file string",
+          "desc": "Read new content from a UTF-8 file. Mutually exclusive with --content and --content-stdin."
+        },
+        {
+          "flags": "--content-stdin",
+          "desc": "Read new content from stdin. Mutually exclusive with --content and --content-file."
+        },
+        {
+          "flags": "--description string",
+          "desc": "New description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--name string",
+          "desc": "New name"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "activity"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Record a squad leader evaluation on an issue",
+      "detail": "Record the squad leader's evaluation decision for an issue.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for activity"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--reason string",
+          "desc": "Short explanation of the decision"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a new squad",
+      "detail": "Create a new squad",
+      "group": "",
+      "options": [
+        {
+          "flags": "--description string",
+          "desc": "Squad description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--leader string",
+          "desc": "Leader agent (name or ID) — required"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Squad name (required)"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete (archive) a squad",
+      "detail": "Delete (archive) a squad",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get squad details",
+      "detail": "Get squad details",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List squads in the workspace",
+      "detail": "List squads in the workspace",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "member"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Work with squad members",
+      "detail": "Work with squad members",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for member"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "list",
+        "remove",
+        "set-role"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "squad",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update a squad",
+      "detail": "Update a squad",
+      "group": "",
+      "options": [
+        {
+          "flags": "--avatar-url string",
+          "desc": "New avatar URL"
+        },
+        {
+          "flags": "--description string",
+          "desc": "New description"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--instructions string",
+          "desc": "New instructions"
+        },
+        {
+          "flags": "--leader string",
+          "desc": "New leader agent (name or ID)"
+        },
+        {
+          "flags": "--name string",
+          "desc": "New name"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "create"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Create a workspace",
+      "detail": "Creates a new workspace and adds you as its owner. Both --name and --slug are required; the slug is permanent (lowercase letters, digits, and hyphens) and cannot be changed after creation.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--context string",
+          "desc": "Workspace context (decodes \\n, \\r, \\t, \\\\; pipe via --context-stdin to preserve literal backslashes)"
+        },
+        {
+          "flags": "--context-stdin",
+          "desc": "Read context from stdin (preserves multi-line content verbatim)"
+        },
+        {
+          "flags": "--description string",
+          "desc": "Workspace description (decodes \\n, \\r, \\t, \\\\; pipe via --description-stdin to preserve literal backslashes)"
+        },
+        {
+          "flags": "--description-stdin",
+          "desc": "Read description from stdin (preserves multi-line content verbatim)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for create"
+        },
+        {
+          "flags": "--issue-prefix string",
+          "desc": "Issue prefix (uppercased server-side)"
+        },
+        {
+          "flags": "--name string",
+          "desc": "Workspace name"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--slug string",
+          "desc": "Workspace slug"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "get"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get workspace details",
+      "detail": "Prints the full details of a workspace. The argument accepts a full UUID, a slug, or a short UUID prefix (≥4 hex chars) as shown in 'workspace list'. If omitted, the current default workspace is used.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for get"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List all workspaces you belong to",
+      "detail": "List all workspaces you belong to",
+      "group": "",
+      "options": [
+        {
+          "flags": "--full-id",
+          "desc": "Show full UUIDs in table output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "mcp"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage the workspace's MCP server library",
+      "detail": "Manage the workspace's MCP server library",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for mcp"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "add",
+        "list",
+        "remove",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "member"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage workspace members",
+      "detail": "Manage workspace members",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for member"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "invite",
+        "list"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "switch"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Set the default workspace for this profile",
+      "detail": "Sets the default workspace for the current profile after verifying you have access to it. Accepts a full UUID, a slug, or a short UUID prefix (≥4 hex chars) as shown in 'workspace list'. Subsequent commands without --workspace-id or MULTICA_WORKSPACE_ID will target this workspace.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for switch"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "workspace",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Update workspace metadata (admin/owner only)",
+      "detail": "Update workspace metadata (admin/owner only)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--context string",
+          "desc": "New workspace context (decodes \\n, \\r, \\t, \\\\; pipe via --context-stdin to preserve literal backslashes)"
+        },
+        {
+          "flags": "--context-stdin",
+          "desc": "Read context from stdin (preserves multi-line content verbatim)"
+        },
+        {
+          "flags": "--description string",
+          "desc": "New description (decodes \\n, \\r, \\t, \\\\; pipe via --description-stdin to preserve literal backslashes)"
+        },
+        {
+          "flags": "--description-stdin",
+          "desc": "Read description from stdin (preserves multi-line content verbatim)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--issue-prefix string",
+          "desc": "New issue prefix (uppercased server-side)"
+        },
+        {
+          "flags": "--name string",
+          "desc": "New workspace name"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "daemon",
+        "disk-usage"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Show daemon workspace disk usage by run or workspace",
+      "detail": "Walks the daemon's workspaces root and reports per-run or per-workspace disk usage.",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "--all-profiles",
+          "desc": "Scan every workspace root (default root + all ~/.multica/profiles/* roots, incl. the Desktop app's) and report a combined total"
+        },
+        {
+          "flags": "--by-task",
+          "desc": "Per-run view (default; mutually exclusive with --by-workspace)"
+        },
+        {
+          "flags": "--by-workspace",
+          "desc": "Aggregate output by workspace instead of by run"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for disk-usage"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--top int",
+          "desc": "Keep only the largest N entries (per root in --all-profiles mode)"
+        },
+        {
+          "flags": "--workspaces-root string",
+          "desc": "Override the workspaces root path (default: same as the daemon)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "daemon",
+        "logs"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Show daemon logs",
+      "detail": "Show daemon logs",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-f, --follow",
+          "desc": "Follow log output"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for logs"
+        },
+        {
+          "flags": "-n, --lines int",
+          "desc": "Number of lines to show (default 50)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "daemon",
+        "restart"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Restart the running daemon (stop + start)",
+      "detail": "Restart the running daemon (stop + start)",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "--agent-timeout duration",
+          "desc": "Absolute per-run wall-clock cap; 0 = no cap, rely on the watchdogs (env: MULTICA_AGENT_TIMEOUT)"
+        },
+        {
+          "flags": "--auto-update-interval duration",
+          "desc": "How often to poll GitHub for a newer release (env: MULTICA_DAEMON_AUTO_UPDATE_INTERVAL)"
+        },
+        {
+          "flags": "--codex-handshake-timeout duration",
+          "desc": "Codex app-server startup RPC timeout (env: MULTICA_CODEX_HANDSHAKE_TIMEOUT)"
+        },
+        {
+          "flags": "--codex-semantic-inactivity-timeout duration",
+          "desc": "Codex semantic inactivity timeout (env: MULTICA_CODEX_SEMANTIC_INACTIVITY_TIMEOUT)"
+        },
+        {
+          "flags": "--daemon-id string",
+          "desc": "Unique daemon identifier (env: MULTICA_DAEMON_ID)"
+        },
+        {
+          "flags": "--device-name string",
+          "desc": "Human-readable device name (env: MULTICA_DAEMON_DEVICE_NAME)"
+        },
+        {
+          "flags": "--foreground",
+          "desc": "Run in the foreground instead of background"
+        },
+        {
+          "flags": "--heartbeat-interval duration",
+          "desc": "Heartbeat interval (env: MULTICA_DAEMON_HEARTBEAT_INTERVAL)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for restart"
+        },
+        {
+          "flags": "--max-concurrent-tasks int",
+          "desc": "Maximum concurrent runs (env: MULTICA_DAEMON_MAX_CONCURRENT_TASKS)"
+        },
+        {
+          "flags": "--no-auto-reload",
+          "desc": "Disable restarting when the multica binary on disk changes version (env: MULTICA_DAEMON_AUTO_RELOAD=false)"
+        },
+        {
+          "flags": "--no-auto-update",
+          "desc": "Disable periodic CLI self-update (env: MULTICA_DAEMON_AUTO_UPDATE=false)"
+        },
+        {
+          "flags": "--poll-interval duration",
+          "desc": "Run poll interval (env: MULTICA_DAEMON_POLL_INTERVAL)"
+        },
+        {
+          "flags": "--runtime-name string",
+          "desc": "Runtime display name (env: MULTICA_AGENT_RUNTIME_NAME)"
+        },
+        {
+          "flags": "--workspaces-root string",
+          "desc": "Base directory for run workspaces (env: MULTICA_WORKSPACES_ROOT)"
+        },
+        {
+          "flags": "--ws-claim-poll-interval duration",
+          "desc": "Healthy WebSocket claim safety-poll upper bound (env: MULTICA_DAEMON_WS_CLAIM_POLL_INTERVAL)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "daemon",
+        "start"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Start the local agent runtime daemon",
+      "detail": "Start the daemon process that polls for runs and executes them using local agent CLIs (Claude, Codex).",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "--agent-timeout duration",
+          "desc": "Absolute per-run wall-clock cap; 0 = no cap, rely on the watchdogs (env: MULTICA_AGENT_TIMEOUT)"
+        },
+        {
+          "flags": "--auto-update-interval duration",
+          "desc": "How often to poll GitHub for a newer release (env: MULTICA_DAEMON_AUTO_UPDATE_INTERVAL)"
+        },
+        {
+          "flags": "--codex-handshake-timeout duration",
+          "desc": "Codex app-server startup RPC timeout (env: MULTICA_CODEX_HANDSHAKE_TIMEOUT)"
+        },
+        {
+          "flags": "--codex-semantic-inactivity-timeout duration",
+          "desc": "Codex semantic inactivity timeout (env: MULTICA_CODEX_SEMANTIC_INACTIVITY_TIMEOUT)"
+        },
+        {
+          "flags": "--daemon-id string",
+          "desc": "Unique daemon identifier (env: MULTICA_DAEMON_ID)"
+        },
+        {
+          "flags": "--device-name string",
+          "desc": "Human-readable device name (env: MULTICA_DAEMON_DEVICE_NAME)"
+        },
+        {
+          "flags": "--foreground",
+          "desc": "Run in the foreground instead of background"
+        },
+        {
+          "flags": "--heartbeat-interval duration",
+          "desc": "Heartbeat interval (env: MULTICA_DAEMON_HEARTBEAT_INTERVAL)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for start"
+        },
+        {
+          "flags": "--max-concurrent-tasks int",
+          "desc": "Maximum concurrent runs (env: MULTICA_DAEMON_MAX_CONCURRENT_TASKS)"
+        },
+        {
+          "flags": "--no-auto-reload",
+          "desc": "Disable restarting when the multica binary on disk changes version (env: MULTICA_DAEMON_AUTO_RELOAD=false)"
+        },
+        {
+          "flags": "--no-auto-update",
+          "desc": "Disable periodic CLI self-update (env: MULTICA_DAEMON_AUTO_UPDATE=false)"
+        },
+        {
+          "flags": "--poll-interval duration",
+          "desc": "Run poll interval (env: MULTICA_DAEMON_POLL_INTERVAL)"
+        },
+        {
+          "flags": "--runtime-name string",
+          "desc": "Runtime display name (env: MULTICA_AGENT_RUNTIME_NAME)"
+        },
+        {
+          "flags": "--workspaces-root string",
+          "desc": "Base directory for run workspaces (env: MULTICA_WORKSPACES_ROOT)"
+        },
+        {
+          "flags": "--ws-claim-poll-interval duration",
+          "desc": "Healthy WebSocket claim safety-poll upper bound (env: MULTICA_DAEMON_WS_CLAIM_POLL_INTERVAL)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "daemon",
+        "status"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Show daemon status",
+      "detail": "Show daemon status",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for status"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "daemon",
+        "stop"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Stop the running daemon",
+      "detail": "Stop the running daemon",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for stop"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "runtime",
+        "activity"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get hourly run activity for a runtime",
+      "detail": "Get hourly run activity for a runtime",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for activity"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "runtime",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Delete a runtime from the workspace",
+      "detail": "Delete a runtime registration from the workspace.",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "--cascade",
+          "desc": "Unbind active agents from the runtime, cancel their runs, then delete the runtime"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for delete"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "runtime",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "List runtimes in the workspace",
+      "detail": "List runtimes in the workspace",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for list"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "runtime",
+        "profile"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Manage custom runtime profiles",
+      "detail": "Manage custom runtime profiles",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for profile"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "create",
+        "delete",
+        "list",
+        "set-path",
+        "unset-path",
+        "update"
+      ]
+    },
+    {
+      "path": [
+        "multica",
+        "runtime",
+        "rename"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Set a custom display name for a runtime",
+      "detail": "Set (or clear) a runtime's custom display name.",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for rename"
+        },
+        {
+          "flags": "--machine",
+          "desc": "Apply the name to every runtime on the same machine"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"table\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "runtime",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Initiate a CLI update on a runtime",
+      "detail": "Initiate a CLI update on a runtime",
+      "group": "RUNTIME COMMANDS",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for update"
+        },
+        {
+          "flags": "--output string",
+          "desc": "Output format: table or json (default \"json\")"
+        },
+        {
+          "flags": "--target-version string",
+          "desc": "Target version to update to (required)"
+        },
+        {
+          "flags": "--wait",
+          "desc": "Wait for update to complete (poll until done)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "attachment",
+        "download"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Download an attachment to a local file",
+      "detail": "Download an attachment by its ID to a local file.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for download"
+        },
+        {
+          "flags": "-o, --output-dir string",
+          "desc": "Directory to save the downloaded file (default \".\")"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "attachment",
+        "upload"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Upload a file to attach to your chat reply",
+      "detail": "Upload a local file so it is attached to the reply of the current chat task.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for upload"
+        },
+        {
+          "flags": "--task string",
+          "desc": "Chat task id to attach to (defaults to MULTICA_TASK_ID)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "auth",
+        "logout"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Remove stored authentication token",
+      "detail": "Remove stored authentication token",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for logout"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "auth",
+        "status"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Show current authentication status",
+      "detail": "Show current authentication status",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for status"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "config",
+        "set"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Set a CLI configuration value",
+      "detail": "Supported keys: server_url, app_url, workspace_id, device_name, runtime_name, workspaces_root, max_concurrent_tasks, poll_interval, ws_claim_poll_interval, heartbeat_interval, agent_timeout, codex_semantic_inactivity_timeout, codex_handshake_timeout, disable_auto_update, auto_update_check_interval, disable_auto_reload.",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for set"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "config",
+        "show"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Show current CLI configuration",
+      "detail": "Show current CLI configuration",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for show"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "setup",
+        "cloud"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Configure the CLI for Multica Cloud (multica.ai)",
+      "detail": "Explicitly configures the CLI to connect to Multica Cloud (multica.ai).",
+      "group": "",
+      "options": [
+        {
+          "flags": "--callback-host string",
+          "desc": "Host/IP the OAuth callback URL points at when the browser can reach this CLI directly. For SSH-only machines, use the printed tunnel hint instead."
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for cloud"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "setup",
+        "self-host"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Configure the CLI for a self-hosted Multica server",
+      "detail": "Configures the CLI to connect to a self-hosted Multica server.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--app-url string",
+          "desc": "Frontend app URL (e.g. https://app.internal.co) (env: MULTICA_APP_URL)"
+        },
+        {
+          "flags": "--callback-host string",
+          "desc": "Host/IP the OAuth callback URL points at when the browser can reach this CLI directly. For SSH-only machines, use the printed tunnel hint instead."
+        },
+        {
+          "flags": "--frontend-port int",
+          "desc": "Frontend port (used when --app-url is not set) (default 3000)"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "help for self-host"
+        },
+        {
+          "flags": "--port int",
+          "desc": "Backend server port (used when --server-url is not set) (default 8080)"
+        },
+        {
+          "flags": "--server-url string",
+          "desc": "Backend server URL (e.g. https://api.internal.co) (env: MULTICA_SERVER_URL)"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "multica",
+        "user",
+        "profile"
+      ],
+      "depth": 2,
+      "usage": "",
+      "summary": "Get or update your personal profile",
+      "detail": "Get or update your personal profile",
+      "group": "",
+      "options": [
+        {
+          "flags": "-h, --help",
+          "desc": "help for profile"
+        },
+        {
+          "flags": "--help",
+          "desc": "Show help for command"
+        }
+      ],
+      "children": [
+        "get",
+        "update"
+      ]
+    }
+  ],
+  "skill": null
+}

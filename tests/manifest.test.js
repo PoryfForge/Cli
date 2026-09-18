@@ -54,12 +54,64 @@ for (const entry of manifest.clis) {
   if (acq.kind === 'release-bin') {
     assert.ok(acq.binName, `${where} 的 release-bin 需要 acquire.binName`);
     assert.ok(acq.binDir, `${where} 的 release-bin 需要 acquire.binDir`);
+
+    // 「下载哪个文件」有三条路：逐平台直链 / 逐平台资产名 / 单条资产模板
+    const urlMap = acq.url && typeof acq.url === 'object' ? acq.url : null;
+    const hasUrl = Boolean(acq.url);
     assert.ok(
-      (acq.asset && Object.keys(acq.asset).length) || acq.assetTemplate,
-      `${where} 的 release-bin 需要 acquire.asset（按平台映射）或 acquire.assetTemplate`
+      hasUrl || (acq.asset && Object.keys(acq.asset).length) || acq.assetTemplate,
+      `${where} 的 release-bin 需要 acquire.url（逐平台直链）、acquire.asset 或 acquire.assetTemplate`
     );
     for (const k of Object.keys(acq.asset || {})) {
       assert.match(k, /^\w+-\w+$/, `${where} 的 acquire.asset 键应为 <os>-<arch>，实际是 ${k}`);
+    }
+    for (const k of Object.keys(urlMap || {})) {
+      assert.match(k, /^\w+-\w+$/, `${where} 的 acquire.url 键应为 <os>-<arch>，实际是 ${k}`);
+    }
+    // 逐平台写 URL 时最容易犯的错是复制粘贴后忘了改平台名，这样所有平台会下到同一个文件
+    const urls = Object.entries(urlMap || {});
+    assert.equal(
+      new Set(urls.map(([, u]) => u)).size,
+      urls.length,
+      `${where} 的 acquire.url 有重复的平台地址（多半是复制粘贴漏改）。` +
+        `若该 CLI 各平台共用同一个地址，请改成单条字符串：acquire.url = "<url 模板>"`
+    );
+
+    assert.ok(
+      !acq.archive || ['zip', 'tar.gz', 'none'].includes(acq.archive),
+      `${where} 的 acquire.archive 只能是 zip / tar.gz / none`
+    );
+
+    // 版本号从哪来：GitHub 仓库能查 release，非 GitHub 托管就必须自带版本源
+    const isGithub = /github\.com\/[^/]+\/[^/]+/.test(entry.repo || '');
+    assert.ok(
+      acq.version || acq.versionSource || isGithub,
+      `${where} 的 repo 不是 GitHub 地址，必须给 acquire.version（写死）或 acquire.versionSource（查厂商端点）`
+    );
+    if (acq.versionSource) {
+      assert.ok(
+        ['url-json', 'url-text'].includes(acq.versionSource.kind),
+        `${where} 的 acquire.versionSource.kind 只能是 url-json / url-text`
+      );
+      assert.ok(acq.versionSource.url, `${where} 的 acquire.versionSource 需要 url`);
+    }
+
+    // 官方 Agent 文档：不在发布包里，单独取源码，规则与前缀解压一致
+    const docs = acq.docs;
+    if (docs) {
+      assert.ok(docs.tarball, `${where} 的 acquire.docs 需要 tarball`);
+      assert.ok(docs.stripPrefix, `${where} 的 acquire.docs 需要 stripPrefix`);
+      assert.doesNotMatch(docs.stripPrefix, /\//, `${where} 的 acquire.docs.stripPrefix 应是单个顶层目录名`);
+      assert.ok(
+        Array.isArray(docs.extract) && docs.extract.length,
+        `${where} 的 acquire.docs 需要 extract`
+      );
+      if (docs.skill) {
+        assert.ok(
+          docs.extract.includes(docs.skill),
+          `${where} 的 acquire.docs.skill（${docs.skill}）不在 extract 列表里，会取不到`
+        );
+      }
     }
   }
 
@@ -70,6 +122,13 @@ for (const entry of manifest.clis) {
   if (acq.scan) {
     assert.ok(Number(acq.scan.depth) >= 0, `${where} 的 scan.depth 必须是非负整数`);
     assert.ok(Number(acq.scan.max) > 0, `${where} 的 scan.max 必须为正整数`);
+  }
+
+  // note 会以单行引用块渲染进 CAPABILITY.md —— 换行会把引用块截断成半截
+  if (entry.note !== undefined) {
+    assert.equal(typeof entry.note, 'string', `${where} 的 note 应为字符串`);
+    assert.ok(entry.note.trim(), `${where} 的 note 不能是空串（要表达「没有缺口」就整条删掉）`);
+    assert.doesNotMatch(entry.note, /\n/, `${where} 的 note 不能换行（会渲染成半截引用块）`);
   }
 }
 

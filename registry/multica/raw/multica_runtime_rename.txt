@@ -1,0 +1,17 @@
+Set (or clear) a runtime's custom display name.
+
+Pass an empty name ("") to clear the custom name and fall back to the default. Use --machine to apply the name to every runtime on the same machine.
+
+USAGE
+  multica runtime rename <runtime-id> <name> [flags]
+
+FLAGS
+  -h, --help            help for rename
+      --machine         Apply the name to every runtime on the same machine
+      --output string   Output format: table or json (default "table")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

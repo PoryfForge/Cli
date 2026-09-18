@@ -1,0 +1,37 @@
+Provision a user in the authenticated account.
+
+Provisioned users will receive an invitation email to join the 1Password
+account.
+
+Once a user accepts an invitation, an administrator must confirm them on
+1Password.com or using the 'op user confirm' command.
+
+Invited users will not be considered for billing until they accept their
+invitation.
+
+For accounts with a automated provisioning configured, first set up credentials
+using 'op provisioning configure'. After configuration, this command will
+automatically use automated provisioning to create users.
+
+Usage:  op user provision [flags]
+
+Examples:
+Invite a user by specifying their e-mail address and name:
+
+	op user provision --name "Wendy Appleseed" --email "wendy.appleseed@example.com"
+
+For accounts with automated provisioning, first configure credentials:
+
+	op provisioning configure --token "op://Private/Provisioning-Integration/credential" --url "https://provisioning.1password.com/scim/v2"
+
+Then provision users (no additional flags needed):
+
+	op user provision --name "Wendy Appleseed" --email "wendy.appleseed@example.com"
+
+Flags:
+      --email string      Provide the user's email address.
+  -h, --help              help for provision
+      --language string   Provide the user's account language. (default "en")
+      --name string       Provide the user's name.
+
+To list the global flags available on every command, run  'op --help'.

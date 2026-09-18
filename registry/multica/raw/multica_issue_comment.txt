@@ -1,0 +1,21 @@
+Work with issue comments
+
+USAGE
+  multica issue comment <command> [flags]
+
+COMMANDS
+  add:        Add a comment to an issue
+  delete:     Delete a comment
+  list:       List comments on an issue
+  resolve:    Resolve a comment thread
+  unresolve:  Unresolve a comment thread
+
+
+FLAGS
+  -h, --help   help for comment
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica issue comment <command> --help` for more information about a command.

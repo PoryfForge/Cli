@@ -1,0 +1,17 @@
+Delete a runtime registration from the workspace.
+
+By default this refuses when active agents are still bound to the runtime. Pass --cascade to unbind those agents, cancel their queued or active runs, and delete the runtime. Unbound agents keep their configuration, chats and run history; bind them to another runtime to run them again.
+
+USAGE
+  multica runtime delete <runtime-id> [flags]
+
+FLAGS
+      --cascade         Unbind active agents from the runtime, cancel their runs, then delete the runtime
+  -h, --help            help for delete
+      --output string   Output format: table or json (default "table")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

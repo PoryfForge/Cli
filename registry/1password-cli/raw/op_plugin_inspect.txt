@@ -1,0 +1,19 @@
+Inspect your existing shell plugin configurations.
+
+You can run 'op plugin inspect' to select a plugin from the list of
+all available plugins, or 'op plugin inspect <plugin-executable>' to inspect
+a specific plugin.
+
+1Password CLI returns a list of the credentials you've configured
+to use with the plugin and their default scopes, as well as configured
+alias details.
+
+Usage:  op plugin inspect [ <plugin-name> ] [flags]
+
+Aliases:
+  inspect, info
+
+Flags:
+  -h, --help   help for inspect
+
+To list the global flags available on every command, run  'op --help'.

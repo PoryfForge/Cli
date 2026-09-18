@@ -1,6 +1,6 @@
 ---
 name: cli-capability-lookup
-description: "Look up a SaaS CLI's complete capability surface before using it, instead of guessing commands or re-reading --help every time. Use this skill whenever a task involves a vendor-provided capability CLI — 飞书/lark-cli、企业微信/wecom-cli、WPS 365/wps365-cli、即梦/dreamina — or when the user asks what such a CLI can do, whether it supports some operation, or how to call it. Also use it to record a newly discovered capability, or to add a new CLI to the library so future sessions can reuse it."
+description: "Look up a SaaS CLI's complete capability surface before using it, instead of guessing commands or re-reading --help every time. Use this skill whenever a task involves a vendor-provided capability CLI — 飞书/lark-cli、GitHub/gh、Multica/multica、企业微信/wecom-cli、WPS 365/wps365-cli、1Password/op、Grok/grok、即梦/dreamina、腾讯广告/tencentads — or when the user asks what such a CLI can do, whether it supports some operation, or how to call it. Also use it to record a newly discovered capability, or to add a new CLI to the library so future sessions can reuse it."
 description_zh: "先查 SaaS CLI 能力库再动手，避免每次现翻 help 或凭印象编命令"
 description_en: "Look up a SaaS CLI's capability snapshot before using it"
 ---
@@ -29,9 +29,14 @@ description_en: "Look up a SaaS CLI's capability snapshot before using it"
 ## 什么时候用这个 skill
 
 - 要用**飞书 CLI（`lark-cli`）**：发消息、看日程、读写文档 / 多维表格、任务、审批、考勤……
+- 要用 **GitHub CLI（`gh`）**：仓库、PR、Issue、Actions、release、搜索、调 GitHub API
+- 要用 **Multica CLI（`multica`）**：把任务派到别的机器上跑、看执行状态与结果
 - 要用**企业微信 CLI（`wecom-cli`）**：消息、邮件、在线文档、智能表格、待办、日程、会议、微盘……
 - 要用 **WPS 365 CLI（`wps365-cli`）**：日历、消息、邮箱、云文档、智能文档、多维表格……
+- 要用 **1Password CLI（`op`）**：取密钥、把密钥注入进程或配置文件
+- 要用 **Grok CLI（`grok`）**：非交互跑一次、联网检索、管理会话与 MCP / 插件
 - 要用**即梦 CLI（`dreamina`）**：文生图、图生图、文生视频、图生视频、查任务、查积分……
+- 要用**腾讯广告 CLI（`tencentads`）**：API Key 鉴权（业务调用要看官方技能站，别指望这个 CLI）
 - 用户问「这个 CLI 能干什么」「支不支持 YY」
 - 你不确定某个命令的准确名字或参数，正要盲试
 - 要用一个库外的 SaaS CLI：**先按第 3 步固化，再用**
@@ -55,8 +60,11 @@ bin/cli-cap search 日程        # 搜路由表 + 全部能力文档 + 官方规
 ### 第 2 步：读能力文档
 
 命中后读 `registry/<名字>/CAPABILITY.md`。这份文档包含该工具的**全部命令/参数/约定**，
-照着拼命令，不要自己造。文档里两节必须看：
+照着拼命令，不要自己造。文档里三节必须看：
 
+- **「采集说明」**（如有，在概览正下方）：这份快照**已知的边界**。出现它往往表示某部分
+  命令受本机环境影响、不能照字面信（如 `gh` 的部分子命令来自本机装的扩展）。
+  这类情况**以本机 `<命令> --help` 为准**。
 - **「全局约定」**：身份、输出格式、成功判定、退出码语义。忽略这些会把成功当失败。
 - **「官方 Agent 使用规则」**（如有）：厂商写给 Agent 的判断标准，**优先于一般经验**。
 
@@ -85,7 +93,8 @@ bin/cli-cap remember <名字> \
 ```
 
 要**新增一个 CLI**：往 `clis.json` 加一条记录，跑 `bin/refresh <名字>`。
-脚本不用改 —— 采集方式与解析档的写法见仓库里的 `CONTRIBUTING.md`。
+同一类分发方式（GitHub Release / 厂商 CDN 直链 / npm 注册表 / 裸二进制）都不用改脚本，
+只有碰到全新的分发渠道才需要动 `lib/fetchsource.js` —— 字段写法见仓库里的 `CONTRIBUTING.md`。
 
 ```bash
 bin/refresh --list          # 看清单里有什么
@@ -106,6 +115,27 @@ bin/refresh <名字> --force  # 强制重新下载源并采集
    拿到显式同意后把 `hint` 指的 flag 追加到原命令末尾重试。**绝不静默绕过。**
 4. 写操作先 `--dry-run`；文件路径只能传**相对路径**。
 
+### GitHub CLI（`gh`）
+
+1. **别加防交互的补丁**：非 TTY 下它本来就跳过 pager、需要必填参数时直接报错。
+   没有 `--no-pager` 这个 flag。
+2. **列表会静默截断**（默认常为 30 条）：`gh issue list` / `gh pr list` / `gh search` 要加 `-L N`；
+   要结构化数据用 `--json <字段>`，字段名不确定就先跑一次不带字段名的 `--json`。
+3. **`-T` 在 `pr create` / `issue create` 上是 body 模板**，不是 `--template`。
+4. **仓库靠当前目录推断**：不在仓库目录里，或要操作别的仓库，必须写 `-R OWNER/REPO`。
+5. 搜索限定词要拆成独立 token（`repo:x/y is:open`），整串加引号会报 `Invalid search query`。
+6. **命令树受本机扩展影响**：`gh copilot` 之类的子命令来自本机装的扩展，
+   别人机器上未必有。能力文档的「采集说明」已标注，**用之前先在本机跑一次 `--help` 确认真有**。
+
+### Multica CLI（`multica`）
+
+1. **任务跑在 runtime 上**，不是这台机器。一个 runtime = 一台机器 + 一个编码 CLI；
+   派任务前先 `multica runtime list` 确认在线。
+2. **daemon 只认本机 PATH 里已有的编码 CLI**，一个都没有时**起不来**；
+   新装 / 新登录后要 `multica daemon restart` 才会被探测到。
+3. 已排队的任务最多等 2 小时；**正在跑的任务在 runtime 掉线时直接失败**。
+4. **「本地执行」不等于「密钥只在本机」**：Agent 的自定义环境变量与 MCP 配置存在服务端。
+
 ### 企业微信 CLI（`wecom-cli`）
 
 1. **ID 类字段禁止外露**（`userid` / `chat_id` / `mail_id`）—— 最终回复必须换成可读名称。
@@ -122,6 +152,22 @@ bin/refresh <名字> --force  # 强制重新下载源并采集
 2. **域名字像但对象不同**：`airpage`=智能文档、`airsheet`=智能表格、`dbsheet`=多维表。
 3. 写操作先 `--dry-run`；**时间要带时区**（`+08:00`）。
 
+### 1Password CLI（`op`）
+
+1. **`op read` 的输出就是明文密钥**，不要回显到回复、日志或命令历史里。
+2. **优先 `op run --env-file` / `op inject`**，而不是「取出来再传」；
+   `inject` 生成的含密文件必须进 `.gitignore`。
+3. 取密钥前先 `op whoami` 确认账号，多账号下取错账号很难排查。
+4. `op item delete` 与 `vault` / `group` 的权限变更是**不可逆**的，逐条跟用户确认。
+
+### Grok CLI（`grok`）
+
+1. **默认开交互式 TUI**；脚本 / Agent 里要显式用单轮模式 `grok -p "<prompt>"`。
+2. **默认会为 shell 命令和文件改动弹确认**。别为了「跑通」就默认加 `--always-approve`，
+   要无人值守就用 `--allow <规则>` 或 `--permission-mode` 收窄。
+3. 要机器可读结果加 `--output-format json`（配 `--json-schema` 可固定结构）。
+4. 配置没生效时先跑 `grok inspect`，看它在当前目录实际发现了什么，别猜。
+
 ### 即梦 CLI（`dreamina`）
 
 1. **别用退出码判断成功**。返回 `submit_id` + `gen_status=querying` 只说明*提交被接受*；
@@ -129,6 +175,14 @@ bin/refresh <名字> --force  # 强制重新下载源并采集
 2. **所有生成操作都消耗积分**，真跑前先告知用户；`dreamina user_credit` 查余额。
 3. **`--poll=N` 是有界等待**：超时后用 `query_result --submit_id=<id>` 续查，别反复重投。
 4. 复用已有登录态；不要硬编码模型支持范围，先跑 `dreamina <子命令> -h` 确认。
+
+### 腾讯广告 CLI（`tencentads`）
+
+1. **命令面很薄，别当业务入口**：默认版只有 `auth` 域（`tencentads --list-commands` 可查），
+   账号 / 营销单元 / 创意 / 报表都不在这个 CLI 里。
+2. 业务能力在腾讯广告官方技能站的脚本里（`skills.ad.qq.com`），**本库尚未收录、也未做过
+   业务调用验证** —— 要用先去官方核对。
+3. 其 npm 包的发布者账号是个人账号，是否厂商直接维护待确认。
 
 ## 维护
 

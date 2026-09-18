@@ -1,0 +1,29 @@
+Get details about a group. Specify the group by its name or ID.
+
+USE STANDARD INPUT TO SPECIFY OBJECTS
+
+If you enter a hyphen ('-') instead of a single object for this command,
+the tool will read object specifiers from standard input (stdin).
+Separate each specifier with a new line. For more information about how
+to specify objects, run 'op help'.
+
+You can also pass the command a list or array of JSON objects. The tool
+will get an item for any object that has an ID, ignoring line
+breaks. This is useful for passing information from one 'op' command
+to another.
+
+Usage:  op group get [{ <groupName> | <groupID> | - }] [flags]
+
+Examples:
+Get details for all groups:
+
+	op group list --format=json | op group get -
+
+Get details for the groups who have access to a vault:
+
+	op group list --vault "Production keys" --format=json | op group get -
+
+Flags:
+  -h, --help   help for get
+
+To list the global flags available on every command, run  'op --help'.

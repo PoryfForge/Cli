@@ -1,0 +1,17 @@
+Perform CRUD operations on Document items in your vaults.
+
+Usage:  op document [command] [flags]
+
+Commands:
+  create      Create a document item
+  get         Download a document
+  edit        Edit a document item
+  delete      Delete or archive a document item
+  list        Get a list of documents
+
+Flags:
+  -h, --help   help for document
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op document [command] --help' for more information on the command.

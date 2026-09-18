@@ -1,0 +1,21 @@
+{
+  "name": "multica",
+  "title": "Multica CLI",
+  "command": "multica",
+  "version": "0.4.44",
+  "description": "Multica 官方 CLI：把任务派发到已连接的机器上执行、管理 workspace 与 issue，daemon 负责发现本机可用的编码 Agent 并回传运行状态与结果",
+  "scannedAt": "2026-09-18 06:38:35",
+  "depth": 2,
+  "source": "release-bin + help-tree",
+  "nodes": 134,
+  "repo": "https://github.com/multica-ai/multica",
+  "license": "Multica License（Apache-2.0 + 附加条件）",
+  "install": "brew tap multica-ai/tap && brew install multica",
+  "release": "v0.4.44",
+  "docsCommit": "ff2933d67a6a",
+  "domains": 16,
+  "commands": 134,
+  "apiMethods": 0,
+  "refs": 0,
+  "manual": true
+}

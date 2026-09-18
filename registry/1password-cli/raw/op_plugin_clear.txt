@@ -1,0 +1,29 @@
+Clear an existing shell plugin configuration.
+
+You can clear one configuration at a time, in this order of precedence:
+
+- Terminal session default
+- Directory default, from the current directory to $HOME
+- Global default
+
+For example, if you're in the directory $HOME/projects/awesomeProject
+and you have a terminal session default, directory defaults for $HOME
+and $HOME/projects/awesomeProject, and a global default credential
+configured, you would need to run 'op plugin clear aws' four times to
+clear all of your defaults.
+
+To clear your global default credentials, terminal session default, and
+the defaults for your current directory at the same time, run 'op plugin
+clear aws --all'.
+
+Usage:  op plugin clear <plugin-name> [flags]
+
+Aliases:
+  clear, reset
+
+Flags:
+      --all     Clear all configurations for this plugin that apply to this directory and/or terminal session, including the global default.
+  -f, --force   Apply immediately without asking for confirmation.
+  -h, --help    help for clear
+
+To list the global flags available on every command, run  'op --help'.

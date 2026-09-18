@@ -1,0 +1,15 @@
+Manage user vault access.
+
+Usage:  op vault user [command] [flags]
+
+Commands:
+  grant       Grant a user access to a vault
+  revoke      Revoke a portion or the entire access of a user to a vault
+  list        List all users with access to the vault and their permissions
+
+Flags:
+  -h, --help   help for user
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op vault user [command] --help' for more information on the command.

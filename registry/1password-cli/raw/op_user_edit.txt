@@ -1,0 +1,12 @@
+Change a user's name or Travel Mode status.
+
+Specify the user by their e-mail address, name, or ID.
+
+Usage:  op user edit [{ <email> | <name> | <userID> | - }] [flags]
+
+Flags:
+  -h, --help                 help for edit
+      --name string          Set the user's name.
+      --travel-mode on|off   Turn Travel Mode on or off for the user. (default off)
+
+To list the global flags available on every command, run  'op --help'.

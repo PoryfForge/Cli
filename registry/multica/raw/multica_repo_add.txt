@@ -1,0 +1,16 @@
+Adds one or more repository URLs to the current workspace repository registry. Existing URLs are not duplicated. Use project resources when you need project-specific context instead.
+
+USAGE
+  multica repo add [url]... [flags]
+
+FLAGS
+      --description string   Optional description; only valid when adding one URL
+  -h, --help                 help for add
+      --output string        Output format: table or json (default "json")
+      --url stringArray      Repository URL to add (may be repeated)
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

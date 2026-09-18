@@ -1,0 +1,21 @@
+Edit a document item. Specify the document item to edit by its name or ID.
+
+Replaces the file contents of a Document item with the provided file
+or with the information on standard input (stdin).
+
+UPDATE A FILE FROM STANDARD INPUT
+
+To update the file contents from standard input (stdin), enter a
+hyphen ('-') instead of a path. You can use the '--file-name' option to
+change the name of the file.
+
+Usage:  op document edit { <itemName> | <itemID> } [{ <file> | - }] [flags]
+
+Flags:
+      --file-name name   Set the file's name.
+  -h, --help             help for edit
+      --tags tags        Set the tags to the specified (comma-separated) values. An empty value removes all tags.
+      --title title      Set the document item's title.
+      --vault vault      Look up document in this vault.
+
+To list the global flags available on every command, run  'op --help'.

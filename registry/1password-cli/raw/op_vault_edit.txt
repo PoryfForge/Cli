@@ -1,0 +1,19 @@
+Edit a vault's name, description, icon, or Travel Mode status. Specify the vault by name or ID.
+
+Set Travel Mode to on to mark a vault as safe for travel. Vaults with Travel 
+Mode set to off are hidden in the 1Password apps and browser extension when 
+Travel Mode is enabled for a user. 
+
+Valid icon keywords are:
+airplane, application, art-supplies, bankers-box, brown-briefcase, brown-gate, buildings, cabin, castle, circle-of-dots, coffee, color-wheel, curtained-window, document, doughnut, fence, galaxy, gears, globe, green-backpack, green-gem, handshake, heart-with-monitor, house, id-card, jet, large-ship, luggage, plant, porthole, puzzle, rainbow, record, round-door, sandals, scales, screwdriver, shop, tall-window, treasure-chest, vault-door, vehicle, wallet, wrench
+
+Usage:  op vault edit [{ <vaultName> | <vaultID> | - }] [flags]
+
+Flags:
+      --description description   Change the vault's description.
+  -h, --help                      help for edit
+      --icon icon                 Change the vault's icon.
+      --name name                 Change the vault's name.
+      --travel-mode on|off        Turn Travel Mode on or off for the vault. (default off)
+
+To list the global flags available on every command, run  'op --help'.

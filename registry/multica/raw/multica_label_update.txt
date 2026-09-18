@@ -1,0 +1,16 @@
+Update a label
+
+USAGE
+  multica label update <id> [flags]
+
+FLAGS
+      --color string    New hex color
+  -h, --help            help for update
+      --name string     New name
+      --output string   Output format: table or json (default "json")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

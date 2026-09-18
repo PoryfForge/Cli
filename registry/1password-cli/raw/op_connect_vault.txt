@@ -1,0 +1,14 @@
+Manage Connect server vault access.
+
+Usage:  op connect vault [command] [flags]
+
+Commands:
+  grant       Grant a Connect server access to a vault
+  revoke      Revoke a Connect server's access to a vault
+
+Flags:
+  -h, --help   help for vault
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op connect vault [command] --help' for more information on the command.

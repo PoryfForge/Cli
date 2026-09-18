@@ -1,0 +1,16 @@
+Create a new label
+
+USAGE
+  multica label create [flags]
+
+FLAGS
+      --color string    Hex color like #3b82f6 (required)
+  -h, --help            help for create
+      --name string     Label name (required)
+      --output string   Output format: table or json (default "json")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

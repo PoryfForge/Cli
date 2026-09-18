@@ -1,0 +1,29 @@
+Manage your shell plugin configurations.
+
+You can use shell plugins to securely authenticate third-party CLIs with
+1Password, rather than storing your CLI credentials in plaintext.
+
+After you configure a plugin, 1Password CLI will prompt you to authenticate the
+third-party CLI with your fingerprint or other system authentication option.
+
+See our documentation to learn more about shell plugins:
+https://www.1password.dev/cli/shell-plugins
+
+Usage:  op plugin [command] [flags]
+
+Management Commands:
+  credential  Manage credentials for shell plugins
+
+Commands:
+  list        List all available shell plugins
+  clear       Clear shell plugin configuration
+  init        Configure a shell plugin
+  inspect     Inspect your existing shell plugin configurations
+  run         Provision credentials from 1Password and run this command
+
+Flags:
+  -h, --help   help for plugin
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op plugin [command] --help' for more information on the command.

@@ -1,0 +1,8 @@
+Get details about your account.
+
+Usage:  op account get [flags]
+
+Flags:
+  -h, --help   help for get
+
+To list the global flags available on every command, run  'op --help'.

@@ -1,0 +1,26 @@
+{
+  "name": "github-cli",
+  "title": "GitHub CLI",
+  "command": "gh",
+  "version": "2.101.0",
+  "description": "GitHub 官方 CLI：仓库 / Issue / PR / Actions 工作流 / release / 搜索 / gist / codespace / project 等协作能力，另含 gh api 直连 REST 与 GraphQL 的兜底入口",
+  "scannedAt": "2026-09-18 06:38:14",
+  "depth": 2,
+  "source": "release-bin + help-tree + official-skill",
+  "nodes": 214,
+  "repo": "https://github.com/cli/cli",
+  "license": "MIT",
+  "install": "brew install gh",
+  "note": "`gh` 的一部分子命令来自**本机安装的扩展**而非内置（最典型的是 `gh copilot`）。扩展装没装、版本不同，扫出来的树就会不一样，对照时以本机 `gh <命令> --help` 为准。",
+  "officialSkill": {
+    "name": "gh",
+    "source": "~/Documents/Cli总结/.cache/src/github-cli-docs/skills/gh/SKILL.md"
+  },
+  "release": "v2.101.0",
+  "docsCommit": "0cf1092493af",
+  "domains": 24,
+  "commands": 214,
+  "apiMethods": 0,
+  "refs": 0,
+  "manual": true
+}

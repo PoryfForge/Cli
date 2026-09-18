@@ -1,0 +1,19 @@
+Suspend a user.
+
+Specify the user by their e-mail address, name, or ID.
+
+A suspended user will immediately be logged out of all devices and
+will not be able to log in or access any data.
+
+Users in a suspended state are not considered in billing.
+
+You can reactivate a suspended user with the 'op user reactivate'
+command.
+
+Usage:  op user suspend [{ <email> | <name> | <userID> | - }] [flags]
+
+Flags:
+      --deauthorize-devices-after duration   Deauthorize the user's devices after a time (rounded down to seconds).
+  -h, --help                                 help for suspend
+
+To list the global flags available on every command, run  'op --help'.

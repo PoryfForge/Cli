@@ -1,0 +1,15 @@
+Get skill details and its file list (use --with-content for the bodies)
+
+USAGE
+  multica skill get <id> [flags]
+
+FLAGS
+  -h, --help            help for get
+      --output string   Output format: table or json (default "json")
+      --with-content    Include the SKILL.md body and every file body. Off by default: the response grows with the skill and large skills cannot be fetched this way over slow links.
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

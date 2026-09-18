@@ -1,0 +1,12 @@
+Sign out of a 1Password account.
+
+Signs out of the most recently used account by default.
+
+Usage:  op signout [flags]
+
+Flags:
+      --all      Sign out of all signed-in accounts.
+      --forget   Remove the details for a 1Password account from this device.
+  -h, --help     help for signout
+
+To list the global flags available on every command, run  'op --help'.

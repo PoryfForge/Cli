@@ -1,0 +1,19 @@
+Configure the CLI, authenticate, and start the daemon
+
+USAGE
+  multica setup <command> [flags]
+
+COMMANDS
+  cloud:      Configure the CLI for Multica Cloud (multica.ai)
+  self-host:  Configure the CLI for a self-hosted Multica server
+
+
+FLAGS
+      --callback-host string   Host/IP the OAuth callback URL points at when the browser can reach this CLI directly. For SSH-only machines, use the printed tunnel hint instead.
+  -h, --help                   help for setup
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica setup <command> --help` for more information about a command.

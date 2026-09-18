@@ -1,0 +1,55 @@
+Copy an existing agent's portable configuration into a brand-new agent.
+
+The source agent is left untouched. By default the copy lands on the same
+runtime as the source; pass --runtime-id to fork it onto a different runtime.
+
+Copied by default without a dedicated override flag: conversation starters.
+
+Copied by default, each overridable with the matching flag: name (suffixed
+" (copy)"), description, instructions, avatar, custom_args, max_concurrent_tasks,
+invocation permission (permission_mode + allow-list), assigned workspace skills,
+and — only when the target runtime is unchanged — model, thinking_level and
+service_tier.
+
+Secret and machine-local fields are never copied: custom_env, mcp_config and
+runtime_config. Supply fresh values for the copy with the same secret-safe flags
+as 'agent create' when the target machine needs them.
+
+Runtime-specific fields do not travel across a runtime change: when --runtime-id
+selects a different runtime, --model is required (pass --model "" to accept the
+target runtime's default), and thinking_level / service_tier are dropped unless
+set explicitly.
+
+USAGE
+  multica agent copy <source-agent-id> [flags]
+
+FLAGS
+      --custom-args string           Override custom CLI arguments as a JSON array.
+      --custom-env string            Set custom_env on the copy as a JSON object (never copied from the source). Prefer --custom-env-stdin/--custom-env-file for secrets. Pass '{}' for an empty map.
+      --custom-env-file string       Read --custom-env from a file path (suggested mode: 0600). Mutually exclusive with --custom-env and --custom-env-stdin.
+      --custom-env-stdin             Read --custom-env from stdin. Mutually exclusive with --custom-env and --custom-env-file.
+      --description string           Override the copied description
+  -h, --help                         help for copy
+      --instructions string          Override the copied instructions
+      --max-concurrent-tasks int32   Override maximum concurrent tasks (default 6)
+      --mcp-config string            Set mcp_config on the copy as a JSON object (never copied from the source). Prefer --mcp-config-stdin/--mcp-config-file for secrets.
+      --mcp-config-file string       Read --mcp-config from a file path (suggested mode: 0600). Mutually exclusive with --mcp-config and --mcp-config-stdin.
+      --mcp-config-stdin             Read --mcp-config from stdin. Mutually exclusive with --mcp-config and --mcp-config-file.
+      --model string                 Model identifier for the copy. Required when --runtime-id selects a different runtime (pass "" to accept the target runtime default). Empty otherwise = runtime default.
+      --name string                  Name for the new agent (default: "<source name> (copy)")
+      --no-skills                    Do not copy the source agent's workspace skill assignments.
+      --output string                Output format: table or json (default "json")
+      --permission-mode string       Override invocation permission mode: private or public_to. Authoritative over --visibility.
+      --public-to-member strings     public_to: allow the given member user id(s) to invoke the copy. Repeatable.
+      --public-to-workspace          public_to: allow every workspace member to invoke the copy.
+      --runtime-config string        Set runtime_config on the copy as a JSON string (never copied from the source).
+      --runtime-id string            Target runtime ID (default: the source agent's runtime). A different value forks the agent onto that runtime.
+      --service-tier string          Override Codex service tier. Not carried across a runtime change unless set here.
+      --thinking-level string        Override thinking level. Not carried across a runtime change unless set here.
+      --visibility string            Override visibility: private or workspace (legacy; mapped to --permission-mode)
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

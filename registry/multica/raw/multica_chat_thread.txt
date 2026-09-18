@@ -1,0 +1,21 @@
+Read the messages of a single thread.
+
+With no id, read the thread you are currently in (the one you were @mentioned in).
+With an id — a thread_id from "multica chat history" — read that specific thread.
+Either way the thread is within the channel you are in; you cannot read another
+channel.
+
+USAGE
+  multica chat thread [id] [flags]
+
+FLAGS
+      --before string   Opaque cursor (a next_cursor from a prior page) to read older messages
+  -h, --help            help for thread
+      --limit int       Maximum number of messages to return (the server clamps the range)
+      --output string   Output format: table or json (default "json")
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

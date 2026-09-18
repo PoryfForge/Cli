@@ -1,0 +1,17 @@
+Manage Connect servers.
+
+Usage:  op connect server [command] [flags]
+
+Commands:
+  create      Set up a Connect server
+  get         Get a Connect server
+  edit        Rename a Connect server
+  delete      Remove a Connect server
+  list        List Connect servers
+
+Flags:
+  -h, --help   help for server
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op connect server [command] --help' for more information on the command.

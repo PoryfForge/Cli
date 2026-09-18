@@ -117,6 +117,8 @@ const SECTION_ALIASES = {
     '选项', '选项:', '参数',
   ],
   examples: ['examples', 'examples:', 'example', '示例', '示例:', 'examples:'],
+  // 这些是「进一步了解」类的收尾小节，里面不是命令，收进来会污染命令树
+  topics: ['help topics', 'help topic', 'topics', 'learn more', 'see also'],
 };
 
 // 分节头的「词尾」兜底。
@@ -154,6 +156,15 @@ const isPlainAlias = (text, key) =>
 const isHeaderLike = (line) => /^[A-Z][A-Za-z ]{2,32}:?\s*$/.test(line) && line.trim() === line;
 
 /**
+ * 顶格的全大写行基本都是分节头（"HELP TOPICS"、"LEARN MORE"），即使不在别名表里。
+ * gh 的 help 用全大写分节，`HELP TOPICS` 不被识别时，它下面那 8 个帮助主题会被当成子命令
+ * —— 采集器会去跑 `gh accessibility --help`，浪费一轮且命令树里混进不存在的东西。
+ * 认不出的全大写行一律当分节边界：宁少收，不错收。
+ */
+const isAllCapsHeader = (line) =>
+  line.trim() === line && /^[A-Z][A-Z0-9 _/&.-]{2,40}$/.test(line) && /[A-Z]{2,}/.test(line);
+
+/**
  * 解析 "  -h, --help   desc" 形式的选项行。
  * 同时兼容 cobra/pflag 的 "  --prompt string   desc"：flag 与类型之间恰好一个空格，
  * 类型与说明之间 2 个以上空格 —— 这个空格数差异是区分「类型」和「单字说明」的唯一依据。
@@ -181,9 +192,11 @@ function parseCommandLine(line, minIndent) {
   if (!m) return null;
   const indent = m[1].length;
   if (indent < minIndent || indent > 8) return null;
-  const name = m[2];
+  // gh 写成 "  auth:   Authenticate…" —— 冒号是排版分隔符，不是命令名的一部分。
+  // 把 "auth:" 原样当命令名，后续 `gh auth: --help` 全部失败，整棵命令树就空了。
+  const name = m[2].replace(/:$/, '');
   const desc = trim(m[4]);
-  if (name.length > 40) return null;
+  if (!name || name.length > 40) return null;
   if (/^(usage|options?|flags|commands?|global|examples?)$/i.test(name)) return null;
   return { name, desc, indent };
 }
@@ -282,7 +295,8 @@ function parseHelp(text, rootName) {
   let sectionLabel = ''; // "Built-in Commands:" / "Generator Commands:" 这类带信息的分节名
   let currentGroup = '';
   const enterSection = (key, rawLine) => {
-    section = key === 'usage' ? null : key;
+    // usage / topics 只是「怎么用」「还能看哪里」，不是能力清单
+    section = key === 'usage' || key === 'topics' ? null : key;
     // 通用别名（"Commands:"）不当分组名，只有带限定词的分节名才值得保留
     sectionLabel = key && !isPlainAlias(rawLine, key) ? rawLine.trim().replace(/[:：]$/, '') : '';
     currentGroup = '';
@@ -303,6 +317,11 @@ function parseHelp(text, rootName) {
       }
     }
     if (!line.trim()) continue;
+    // 认不出的顶格全大写行 = 新的一节开始了，别让它的内容继续落进上一节
+    if (section && isAllCapsHeader(line)) {
+      enterSection(null, '');
+      continue;
+    }
     if (usageLineIdx.has(i)) continue; // usage 块里的行不是子命令声明
 
     if (section === 'options') {
@@ -340,7 +359,13 @@ function parseHelp(text, rootName) {
   }
 
   // ---- 回退：没有 "Commands:" 头的 CLI，宽松扫描缩进条目
-  if (result.commands.length === 0) {
+  //
+  // 只在「这份帮助没有任何结构化分节」时才回退。帮助里已经出现 FLAGS / Options 这类分节，
+  // 说明厂商本来就是结构化输出的 —— 那没有 COMMANDS 节就是真的没有子命令，再按缩进硬扫
+  // 只会把 Examples 里的用法行和正文换行当成命令：`op read` 会扫出一个叫 read 的假子命令，
+  // `gh browse` 会扫出一个叫 browse 的，还会把 "'app-prod':" 这种示例行当成分组名。
+  const structured = lines.some((l) => classifyHeader(l) === 'options');
+  if (result.commands.length === 0 && !structured) {
     let group = '';
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
@@ -348,8 +373,11 @@ function parseHelp(text, rootName) {
       if (usageLineIdx.has(i)) continue;
       if (classifyHeader(line) === 'options') break;
       if (!/^\s/.test(line)) {
-        const t = trim(line);
-        if (t && !/^\s*(usage|用法)\s*[::]/i.test(line)) group = t.replace(/:$/, '');
+        const t = trim(line).replace(/:$/, '');
+        if (t && !/^\s*(usage|用法)\s*[::]/i.test(line)) {
+          // 只有当它像标题（短、无句读）时才当分组名；否则是正文，别让它当分组
+          group = t.length <= 40 && !/[.,;!?。，；！？]/.test(t) ? t : '';
+        }
         continue;
       }
       const self = parseSelfPrefixed(line, rootName);
@@ -405,14 +433,17 @@ function looksLikeHelp(text) {
 async function fetchHelp(cmdPath, timeout, helpFlag) {
   const flags = helpFlag ? [helpFlag] : ['--help', '-h'];
   const accept = (r) => r && r.text.trim().length > 10 && (r.ok || looksLikeHelp(r.text));
+  // 有些 CLI 会把 $HOME 展开进帮助文本（如 gh copilot 显示 copilot 的下载目录）。
+  // 一展开就把本机用户名写进留档了，所以在入口处统一折成 `~`。
+  const tidy = (r) => (r ? { ...r, text: shortenHomeInText(r.text) } : r);
   for (const f of flags) {
     const r = await run(cmdPath[0], [...cmdPath.slice(1), f], timeout);
-    if (accept(r)) return { ...r, usedFlag: f };
+    if (accept(r)) return tidy({ ...r, usedFlag: f });
   }
   // 兜底：`cmd help`
   if (!helpFlag && cmdPath.length === 1) {
     const r = await run(cmdPath[0], ['help'], timeout);
-    if (accept(r)) return { ...r, usedFlag: 'help' };
+    if (accept(r)) return tidy({ ...r, usedFlag: 'help' });
   }
   return null;
 }
@@ -468,6 +499,11 @@ async function scanTree(command, opts) {
   }
 
   const rawDir = path.join(opts.outDir, 'raw');
+  // 先清空：这次扫描产出的就是全集（根 + 所有递归到的子命令）。不清的话，
+  // 上一版里有、这一版没了的命令会以旧文本的形式留下来 —— 读者看到 `raw/` 里有
+  // 这个命令，能力文档里却没有，无从判断该信哪个。gh copilot 就撞上过：它的子命令
+  // 来自本地装的扩展，扩展变化后旧留档还在。vendor/ 不在这里管（由采集层写）。
+  fs.rmSync(rawDir, { recursive: true, force: true });
   fs.mkdirSync(rawDir, { recursive: true });
   // 允许用绝对路径调用可执行文件（如 .cache/bin 里解出来的发布版），
   // 但留档文件名与文档里的命令名都不能带目录前缀。
@@ -547,12 +583,12 @@ function loadSkill(skillPath, outDir) {
       fm[kv[1]] = v;
     }
   }
-  const body = raw.slice(fmMatch ? fmMatch[0].length : 0).trim();
+  const body = shortenHomeInText(raw.slice(fmMatch ? fmMatch[0].length : 0)).trim();
 
   // 留档：这份规则取自哪一版官方文档，便于以后比对更新
   const vendorDir = path.join(outDir, 'vendor');
   fs.mkdirSync(vendorDir, { recursive: true });
-  fs.writeFileSync(path.join(vendorDir, 'SKILL.md'), raw);
+  fs.writeFileSync(path.join(vendorDir, 'SKILL.md'), shortenHomeInText(raw));
 
   return {
     name: fm.name || '',
@@ -571,6 +607,25 @@ function homeShorten(p) {
   return home && abs.startsWith(home + path.sep) ? '~' + abs.slice(home.length) : abs;
 }
 
+/**
+ * help 文本里的本机 HOME 绝对路径 → `~`。
+ *
+ * 和 homeShorten 是一件事的两面：那个处理「文件从哪儿来」的路径，这个处理
+ * 「文件内容里出现的路径」。有些 CLI 会把 $HOME 展开进帮助（gh copilot 就会
+ * 打印 copilot 的安装目录），不折的话留档里就带上了本机用户名。
+ * 只在后面不是路径字符时替换，避免把 `/Users/me2` 误折成 `~2`。
+ */
+function shortenHomeInText(s) {
+  const home = process.env.HOME || '';
+  if (!home || !s) return s;
+  return String(s).replace(new RegExp(escapeRegExp(home) + '(?![\\w.-])', 'g'), '~');
+}
+
+/** 正则转义：HOME 里理论上不会有元字符，但别指望它 */
+function escapeRegExp(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 /** 把 SKILL.md 的标题层级整体降一级，避免与能力文档自身的结构打架 */
 function demoteHeadings(md, by = 1) {
   return md
@@ -586,6 +641,24 @@ function demoteHeadings(md, by = 1) {
 
 // ---------------------------------------------------------------- 渲染
 
+/** 采集方式的自然语言说法 —— 读者据此判断快照的可信范围 */
+const SOURCE_LABEL = {
+  'skill-repo': '厂商仓库里的 skill 文档',
+  'release-bin + help-tree': '官方 release 二进制（`--help` 递归）',
+  'release-bin + help-tree + official-skill': '官方 release 二进制（`--help` 递归）+ 官方 SKILL.md',
+  'local-bin + help-tree': '本机安装的 CLI（`--help` 递归）',
+  'local-bin + help-tree + official-skill': '本机安装的 CLI（`--help` 递归）+ 官方 SKILL.md',
+  'help-tree + official-skill': '`--help` 递归 + 官方 SKILL.md',
+  'help-tree': '`--help` 递归',
+};
+
+/**
+ * 渲染能力文档。
+ *
+ * meta.source 由采集层给出（bin/skill-digest 按 acquire.kind 决定），它回答的是
+ * 「这份快照从哪儿来」—— 下载的发布二进制、本机装的 CLI、还是厂商仓库里的 skill 文档。
+ * 读的人靠它判断可信范围，所以不能一律写成「help 全树」。
+ */
 function renderCapabilityMd(meta, root, nodes, skill) {
   const L = [];
   const byDepth = nodes.reduce((a, n) => ((a[n.depth] = (a[n.depth] || 0) + 1), a), {});
@@ -598,7 +671,7 @@ function renderCapabilityMd(meta, root, nodes, skill) {
   if (meta.license) L.push(`license: ${meta.license}`);
   if (meta.repo) L.push(`repo: ${meta.repo}`);
   L.push(`scanned_at: ${meta.scannedAt}`);
-  L.push(`source: ${skill ? 'help-tree + official-skill' : 'help-tree'}`);
+  L.push(`source: ${meta.source}`);
   L.push(`nodes: ${nodes.length}`);
   if (skill) L.push(`official_skill: vendor/SKILL.md`);
   L.push('---');
@@ -626,13 +699,20 @@ function renderCapabilityMd(meta, root, nodes, skill) {
   if (meta.version) L.push(`| 版本 | \`${meta.version}\` |`);
   if (meta.repo) L.push(`| 仓库 | ${meta.repo} |`);
   if (meta.license) L.push(`| 许可证 | ${meta.license} |`);
-  L.push(`| 采集方式 | help 全树（\`--help\` 递归） |`);
+  L.push(`| 采集方式 | ${SOURCE_LABEL[meta.source] || meta.source} |`);
   L.push(`| 本轮抓取命令数 | ${nodes.length}（顶层 ${byDepth[0] || 1}） |`);
   if (root.extraDiscovered) L.push(`| 其中补充发现 | ${root.extraDiscovered}（--help 未列出，由附加命令补全） |`);
   L.push(`| 抓取时间 | ${meta.scannedAt} |`);
   L.push(`| 原始 help 留档 | \`raw/\` |`);
   if (skill) L.push(`| 官方 Agent 规则 | \`vendor/SKILL.md\`（已合并到文末） |`);
   L.push('');
+
+  // 采集前就已知的缺口（clis.json 的 note）。放在概览正下方：
+  // 「这份快照的边界在哪」和「有哪些命令」是同等重要的信息。
+  if (meta.note) {
+    L.push('> **采集说明**：' + meta.note);
+    L.push('');
+  }
 
   if (meta.install) {
     L.push('## 安装');
@@ -667,14 +747,19 @@ function renderCapabilityMd(meta, root, nodes, skill) {
   L.push('## 命令树');
   L.push('');
   const sorted = [...nodes].sort((a, b) => a.path.join(' ').localeCompare(b.path.join(' ')));
+  // 有分组的 CLI（如即梦的 Built-in / Generator）按分组分段列，比一张长表好读。
+  // 但只在分组信息基本完整时才分段：有的 CLI 只给部分命令分了组（gh 的分组名来自每一层
+  // 自己的 help，深层命令大多是未分组的），这时分段会把主体全塞进「其他」，
+  // 反而不如一张按命令路径排序的长表好查。
   const subs = sorted.filter((n) => n.depth > 0);
   const row = (n) =>
     `| \`${n.path.join(' ')}\` | ${'&nbsp;'.repeat((n.depth - 1) * 4)}${escapeCell(
       n.summary || synopsisOf(n, 100)
     )} |`;
-  // 有分组的 CLI（如即梦的 Built-in / Generator）按分组分段列，比一张长表好读
   const groups = uniq(subs.map((n) => n.group || ''));
-  if (groups.filter(Boolean).length >= 2) {
+  const named = subs.filter((n) => n.group).length;
+  const groupByCmd = groups.filter(Boolean).length >= 2 && named >= subs.length * 0.8;
+  if (groupByCmd) {
     for (const g of groups) {
       const label = g || '其他';
       L.push(`### ${label}`);
@@ -752,14 +837,17 @@ function synopsisOf(n, max = 110) {
 /**
  * 取版本号。各家写法差别很大：
  *   `wps365-cli version 0.3.5`（一行纯文本）
+ *   `tencentads version v1.1.5`（带 v 前缀）
  *   `{"version":"673dd28-dirty","commit":"…"}`（JSON，可能不是语义化版本）
  * 所以先认 JSON 的 version 字段，再退回全文里的语义化版本片段 —— 只看第一行会全部落空。
+ *
+ * `v` 前缀必须显式吃掉：`\b\d+` 在 "v1.1.5" 里匹配不到开头，会从第二个数字起匹配成 "1.5"。
  */
 function pickVersion(text) {
   const json = String(text || '').match(/"version"\s*:\s*"([^"]+)"/);
   if (json) return json[1];
-  const sem = String(text || '').match(/\b\d+\.\d+(?:\.\d+)?[\w.\-+]*/);
-  return sem ? sem[0] : '';
+  const sem = String(text || '').match(/\bv?(\d+\.\d+(?:\.\d+)?[\w.\-+]*)/);
+  return sem ? sem[1] : '';
 }
 
 function getVersion(command, timeout) {
@@ -798,12 +886,15 @@ async function cmdScan(command, opts) {
     description: opts.desc || root.summary || `${command} 命令行工具`,
     scannedAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
     depth: opts.depth,
-    source: skill ? 'help-tree + official-skill' : 'help-tree',
+    source: opts.sourceLabel || (skill ? 'help-tree + official-skill' : 'help-tree'),
     nodes: nodes.length,
   };
   if (opts.repo) meta.repo = opts.repo;
   if (opts.license) meta.license = opts.license;
   if (opts.installCmd) meta.install = opts.installCmd;
+  // 采集前就已知的覆盖面缺口（如「某些子命令来自本机安装的扩展」）。
+  // 写进文档而不是只留在 clis.json：读快照的人看的是这一份。
+  if (opts.note) meta.note = opts.note;
   if (skill) meta.officialSkill = { name: skill.name, source: skill.source };
 
   fs.writeFileSync(
@@ -937,7 +1028,9 @@ function acquireLabel(it) {
   const map = {
     'skill-repo': '仓库 skill 文档',
     'release-bin + help-tree': 'release 二进制 help 全树',
+    'release-bin + help-tree + official-skill': 'release 二进制 help 全树 + 官方 SKILL.md',
     'local-bin + help-tree + official-skill': '本机 CLI help 全树 + 官方 SKILL.md',
+    'local-bin + help-tree': '本机 CLI help 全树',
     'help-tree + official-skill': 'help 全树 + 官方 SKILL.md',
     'help-tree': 'help 全树',
   };
@@ -1016,7 +1109,8 @@ function cmdIndex() {
   L.push('```');
   L.push('');
   L.push('想加一个新的 CLI：往 `clis.json` 加一条记录，再跑 `bin/refresh <名字>`。');
-  L.push('采集方式和解析档的说明见 `CONTRIBUTING.md` —— 加 CLI 不用改任何脚本。');
+  L.push('同一类分发方式（GitHub Release / 厂商 CDN 直链 / npm 注册表 / 裸二进制）都不需要改脚本；');
+  L.push('只有碰到全新的分发渠道时才需要动 `lib/fetchsource.js`。解析档与字段说明见 `CONTRIBUTING.md`。');
   L.push('');
   L.push('`remember` 保存到 `routes.json` 并自动重建索引；同一个 CLI、同一个意图再次保存会更新原条目，不执行业务命令。也可手工编辑后运行 `bin/cli-cap index`。');
   L.push('');
@@ -1185,7 +1279,7 @@ ${cards}
   </div>
 
   <h2>新增 / 更新</h2>
-  <p class="hint">加一个新 CLI：往 <code>clis.json</code> 加一条记录，然后跑 <code>bin/refresh &lt;名字&gt;</code>。脚本不用改。</p>
+  <p class="hint">加一个新 CLI：往 <code>clis.json</code> 加一条记录，然后跑 <code>bin/refresh &lt;名字&gt;</code>。同一类分发方式都不用改脚本；只有碰到全新的分发渠道才需要动 <code>lib/fetchsource.js</code>。</p>
   <code class="blk">bin/refresh                      # 刷新全部已收录 CLI，并重建索引
 bin/refresh wecom-cli --force    # 只刷一个，并强制重新下载源
 bin/refresh --list               # 看清单里有什么
@@ -1465,6 +1559,8 @@ async function main() {
         `      --timeout <ms>       单次 help 超时（默认 8000）\n` +
         `      --help-flag <flag>   强制用指定 help flag（默认依次试 --help / -h）\n` +
         `      --extra-cmds "<args>" --help 只列常用子命令时，用它补全\n` +
+        `      --source <id>        采集方式标识（release-bin + help-tree 等，由 bin/skill-digest 传入）\n` +
+        `      --note <text>        已知的覆盖面缺口，渲染进文档的「采集说明」\n` +
         `      --title/--repo/--license/--install  溯源信息（通常由 bin/skill-digest 从 clis.json 传入）\n` +
         `  list                     列出能力库已收录的 CLI\n` +
         `  index                    重建 INDEX.md 与 docs/index.html\n` +
@@ -1488,11 +1584,14 @@ async function main() {
       skill: flags.skill ? String(flags.skill) : null,
       helpFlag: flags['help-flag'] ? String(flags['help-flag']) : null,
       extraCmds: flags['extra-cmds'] ? String(flags['extra-cmds']).split(/\s+/) : null,
+      // 「能力从哪儿来」由采集层告知（下载的发布二进制 / 本机装的 / 仓库 skill 文档）
+      sourceLabel: flags.source ? String(flags.source) : '',
       // 溯源信息：由 clis.json 提供，让 help 型 CLI 的快照与 skill 型保持同一套元数据
       title: flags.title ? String(flags.title) : '',
       repo: flags.repo ? String(flags.repo) : '',
       license: flags.license ? String(flags.license) : '',
       installCmd: flags.install ? String(flags.install) : '',
+      note: flags.note ? String(flags.note) : '',
     });
     // 被 bin/refresh 批量调用时用 --no-index 跳过，避免每采一个就重建一次索引
     if (!flags['no-index']) cmdIndex();
@@ -1522,4 +1621,11 @@ if (require.main === module) {
   });
 }
 
-module.exports = { parseHelp, parseCommandLine, parseOptionLine, classifyHeader };
+module.exports = {
+  parseHelp,
+  parseCommandLine,
+  parseOptionLine,
+  classifyHeader,
+  pickVersion,
+  shortenHomeInText,
+};

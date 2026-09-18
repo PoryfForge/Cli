@@ -1,0 +1,11 @@
+Remove a group. Specify the group to delete by its name or ID.
+
+Usage:  op group delete [{ <groupName> | <groupID> | - }] [flags]
+
+Aliases:
+  delete, remove, rm
+
+Flags:
+  -h, --help   help for delete
+
+To list the global flags available on every command, run  'op --help'.

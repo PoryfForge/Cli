@@ -1,0 +1,20 @@
+{
+  "name": "tencentads",
+  "title": "腾讯广告 CLI",
+  "command": "tencentads",
+  "version": "1.1.5",
+  "description": "腾讯广告（腾讯营销）API CLI：登录鉴权与状态查询，其余能力按营销 API v3.0 的资源名暴露——账号与管家、营销单元、创意与组件、素材、报表与人群等",
+  "scannedAt": "2026-09-18 06:27:41",
+  "depth": 2,
+  "source": "release-bin + help-tree",
+  "nodes": 11,
+  "repo": "https://www.npmjs.com/package/tencentads-cli",
+  "license": "MIT",
+  "install": "npm install -g tencentads-cli",
+  "release": "1.1.5",
+  "domains": 0,
+  "commands": 11,
+  "apiMethods": 0,
+  "refs": 0,
+  "manual": true
+}

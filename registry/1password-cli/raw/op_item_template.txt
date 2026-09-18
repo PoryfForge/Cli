@@ -1,0 +1,14 @@
+Manage templates.
+
+Usage:  op item template [command] [flags]
+
+Commands:
+  get         Get an item template
+  list        Get a list of templates
+
+Flags:
+  -h, --help   help for template
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op item template [command] --help' for more information on the command.

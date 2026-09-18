@@ -1,0 +1,23 @@
+Manage users within this 1Password account.
+
+Usage:  op user [command] [flags]
+
+Management Commands:
+  recovery    Manage user recovery in your 1Password account
+
+Commands:
+  provision   Provision a user in the authenticated account
+  confirm     Confirm a user
+  get         Get details about a user
+  edit        Edit a user's name or Travel Mode status
+  suspend     Suspend a user
+  reactivate  Reactivate a suspended user
+  delete      Remove a user and all their data from the account
+  list        List users
+
+Flags:
+  -h, --help   help for user
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op user [command] --help' for more information on the command.

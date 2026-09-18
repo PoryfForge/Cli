@@ -1,0 +1,2755 @@
+{
+  "meta": {
+    "name": "grok-cli",
+    "title": "Grok CLI",
+    "command": "grok",
+    "version": "1.0.34",
+    "description": "xAI 官方 Grok CLI：交互式 TUI、单轮 headless 模式与 ACP agent 模式，带联网检索（含 X 平台）、本机文件与命令执行、会话与子 Agent 管理",
+    "scannedAt": "2026-09-18 06:27:40",
+    "depth": 2,
+    "source": "release-bin + help-tree",
+    "nodes": 63,
+    "repo": "https://x.ai/cli",
+    "license": "厂商专有",
+    "install": "curl -fsSL https://x.ai/cli/install.sh | bash",
+    "release": "1.0.34"
+  },
+  "root": {
+    "path": [
+      "grok"
+    ],
+    "depth": 0,
+    "usage": "grok [OPTIONS] [PROMPT] [COMMAND]",
+    "summary": "Grok Build TUI",
+    "options": [
+      {
+        "flags": "--agent",
+        "desc": "<NAME>"
+      },
+      {
+        "flags": "--agents",
+        "desc": "<JSON>"
+      },
+      {
+        "flags": "--allow",
+        "desc": "<RULE>"
+      },
+      {
+        "flags": "--always-approve",
+        "desc": ""
+      },
+      {
+        "flags": "-c, --continue",
+        "desc": ""
+      },
+      {
+        "flags": "--cwd",
+        "desc": "<CWD>"
+      },
+      {
+        "flags": "--debug",
+        "desc": ""
+      },
+      {
+        "flags": "--debug-file",
+        "desc": "<FILE>"
+      },
+      {
+        "flags": "--deny",
+        "desc": "<RULE>"
+      },
+      {
+        "flags": "--disable-web-search",
+        "desc": ""
+      },
+      {
+        "flags": "--disallowed-tools",
+        "desc": "<TOOLS>"
+      },
+      {
+        "flags": "--fork-session",
+        "desc": ""
+      },
+      {
+        "flags": "--fullscreen",
+        "desc": ""
+      },
+      {
+        "flags": "-h, --help",
+        "desc": ""
+      },
+      {
+        "flags": "--include-partial-messages",
+        "desc": ""
+      },
+      {
+        "flags": "--json-schema",
+        "desc": "<SCHEMA>"
+      },
+      {
+        "flags": "--leader-socket",
+        "desc": "<PATH>"
+      },
+      {
+        "flags": "-m, --model",
+        "desc": "<MODEL>"
+      },
+      {
+        "flags": "--max-turns",
+        "desc": "<N>"
+      },
+      {
+        "flags": "--minimal",
+        "desc": ""
+      },
+      {
+        "flags": "--no-alt-screen",
+        "desc": ""
+      },
+      {
+        "flags": "--no-plan",
+        "desc": ""
+      },
+      {
+        "flags": "--no-subagents",
+        "desc": ""
+      },
+      {
+        "flags": "--oauth",
+        "desc": ""
+      },
+      {
+        "flags": "--output-format",
+        "desc": "<OUTPUT_FORMAT>"
+      },
+      {
+        "flags": "-p, --single",
+        "desc": "<PROMPT>"
+      },
+      {
+        "flags": "--permission-mode",
+        "desc": "<MODE>"
+      },
+      {
+        "flags": "--prompt-file",
+        "desc": "<PATH>"
+      },
+      {
+        "flags": "--prompt-json",
+        "desc": "<JSON>"
+      },
+      {
+        "flags": "--reasoning-effort",
+        "desc": "<EFFORT>"
+      },
+      {
+        "flags": "--restore-code",
+        "desc": ""
+      },
+      {
+        "flags": "--rules",
+        "desc": "<RULES>"
+      },
+      {
+        "flags": "-s, --session-id",
+        "desc": "<SESSION_ID>"
+      },
+      {
+        "flags": "--sandbox",
+        "desc": "<PROFILE>"
+      },
+      {
+        "flags": "--system-prompt-override",
+        "desc": "<PROMPT>"
+      },
+      {
+        "flags": "--tools",
+        "desc": "<TOOLS>"
+      },
+      {
+        "flags": "-v, --version",
+        "desc": ""
+      },
+      {
+        "flags": "--verbatim",
+        "desc": ""
+      },
+      {
+        "flags": "--worktree-ref",
+        "desc": "<WORKTREE_REF>"
+      }
+    ],
+    "groups": [],
+    "children": [
+      "agent",
+      "clone",
+      "completions",
+      "cursor-worker",
+      "dashboard",
+      "doctor",
+      "du",
+      "export",
+      "help",
+      "inspect",
+      "leader",
+      "login",
+      "logout",
+      "mcp",
+      "memory",
+      "models",
+      "plugin",
+      "sessions",
+      "setup",
+      "trace",
+      "update",
+      "version",
+      "worktree",
+      "wrap"
+    ],
+    "helpFlag": "--help"
+  },
+  "nodes": [
+    {
+      "path": [
+        "grok"
+      ],
+      "depth": 0,
+      "usage": "grok [OPTIONS] [PROMPT] [COMMAND]",
+      "summary": "Grok Build TUI",
+      "options": [
+        {
+          "flags": "--agent",
+          "desc": "<NAME>"
+        },
+        {
+          "flags": "--agents",
+          "desc": "<JSON>"
+        },
+        {
+          "flags": "--allow",
+          "desc": "<RULE>"
+        },
+        {
+          "flags": "--always-approve",
+          "desc": ""
+        },
+        {
+          "flags": "-c, --continue",
+          "desc": ""
+        },
+        {
+          "flags": "--cwd",
+          "desc": "<CWD>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "--deny",
+          "desc": "<RULE>"
+        },
+        {
+          "flags": "--disable-web-search",
+          "desc": ""
+        },
+        {
+          "flags": "--disallowed-tools",
+          "desc": "<TOOLS>"
+        },
+        {
+          "flags": "--fork-session",
+          "desc": ""
+        },
+        {
+          "flags": "--fullscreen",
+          "desc": ""
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--include-partial-messages",
+          "desc": ""
+        },
+        {
+          "flags": "--json-schema",
+          "desc": "<SCHEMA>"
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        },
+        {
+          "flags": "-m, --model",
+          "desc": "<MODEL>"
+        },
+        {
+          "flags": "--max-turns",
+          "desc": "<N>"
+        },
+        {
+          "flags": "--minimal",
+          "desc": ""
+        },
+        {
+          "flags": "--no-alt-screen",
+          "desc": ""
+        },
+        {
+          "flags": "--no-plan",
+          "desc": ""
+        },
+        {
+          "flags": "--no-subagents",
+          "desc": ""
+        },
+        {
+          "flags": "--oauth",
+          "desc": ""
+        },
+        {
+          "flags": "--output-format",
+          "desc": "<OUTPUT_FORMAT>"
+        },
+        {
+          "flags": "-p, --single",
+          "desc": "<PROMPT>"
+        },
+        {
+          "flags": "--permission-mode",
+          "desc": "<MODE>"
+        },
+        {
+          "flags": "--prompt-file",
+          "desc": "<PATH>"
+        },
+        {
+          "flags": "--prompt-json",
+          "desc": "<JSON>"
+        },
+        {
+          "flags": "--reasoning-effort",
+          "desc": "<EFFORT>"
+        },
+        {
+          "flags": "--restore-code",
+          "desc": ""
+        },
+        {
+          "flags": "--rules",
+          "desc": "<RULES>"
+        },
+        {
+          "flags": "-s, --session-id",
+          "desc": "<SESSION_ID>"
+        },
+        {
+          "flags": "--sandbox",
+          "desc": "<PROFILE>"
+        },
+        {
+          "flags": "--system-prompt-override",
+          "desc": "<PROMPT>"
+        },
+        {
+          "flags": "--tools",
+          "desc": "<TOOLS>"
+        },
+        {
+          "flags": "-v, --version",
+          "desc": ""
+        },
+        {
+          "flags": "--verbatim",
+          "desc": ""
+        },
+        {
+          "flags": "--worktree-ref",
+          "desc": "<WORKTREE_REF>"
+        }
+      ],
+      "groups": [],
+      "children": [
+        "agent",
+        "clone",
+        "completions",
+        "cursor-worker",
+        "dashboard",
+        "doctor",
+        "du",
+        "export",
+        "help",
+        "inspect",
+        "leader",
+        "login",
+        "logout",
+        "mcp",
+        "memory",
+        "models",
+        "plugin",
+        "sessions",
+        "setup",
+        "trace",
+        "update",
+        "version",
+        "worktree",
+        "wrap"
+      ],
+      "helpFlag": "--help"
+    },
+    {
+      "path": [
+        "grok",
+        "agent"
+      ],
+      "depth": 1,
+      "usage": "grok agent [OPTIONS] [COMMAND]",
+      "summary": "Run Grok without the interactive UI",
+      "detail": "Run Grok without the interactive UI",
+      "group": "",
+      "options": [
+        {
+          "flags": "--reauth",
+          "desc": ""
+        },
+        {
+          "flags": "-m, --model",
+          "desc": "<MODEL>"
+        },
+        {
+          "flags": "--reasoning-effort",
+          "desc": "<EFFORT>"
+        },
+        {
+          "flags": "--always-approve",
+          "desc": ""
+        },
+        {
+          "flags": "--agent-profile",
+          "desc": "<PATH>"
+        },
+        {
+          "flags": "--plugin-dir",
+          "desc": "<DIR>"
+        },
+        {
+          "flags": "--leader",
+          "desc": ""
+        },
+        {
+          "flags": "--no-leader",
+          "desc": ""
+        },
+        {
+          "flags": "--grok-ws-origin",
+          "desc": "<GROK_WS_ORIGIN>"
+        },
+        {
+          "flags": "--grok-ws-url",
+          "desc": "<GROK_WS_URL>"
+        },
+        {
+          "flags": "--cli-chat-proxy-base-url",
+          "desc": "<CLI_CHAT_PROXY_BASE_URL>"
+        },
+        {
+          "flags": "--xai-api-base-url",
+          "desc": "<XAI_API_BASE_URL>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": [
+        "stdio",
+        "headless",
+        "serve",
+        "leader",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "clone"
+      ],
+      "depth": 1,
+      "usage": "grok clone [OPTIONS] <URL> [DIR]",
+      "summary": "Lazy-clone a git repository via grove (NFS on macOS, FUSE on Linux)",
+      "detail": "Lazy-clone a git repository via grove (NFS on macOS, FUSE on Linux)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-b, --branch <BRANCH>",
+          "desc": "Branch or ref to check out"
+        },
+        {
+          "flags": "--cone <PATH>",
+          "desc": "Sparse-checkout cone path (repeatable)"
+        },
+        {
+          "flags": "--full-history",
+          "desc": "Fetch complete history during clone instead of the fast depth-1 bootstrap. After a depth-1 clone, `git fetch --deepen=N origin` / `--unshallow origin` affect only the selected branch. Another branch needs an explicit depth-limited refspec"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "completions"
+      ],
+      "depth": 1,
+      "usage": "grok completions [OPTIONS] <SHELL>",
+      "summary": "Generate shell completion scripts (bash, zsh, fish, powershell, ...)",
+      "detail": "Generate shell completion scripts (bash, zsh, fish, powershell, ...)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "cursor-worker"
+      ],
+      "depth": 1,
+      "usage": "grok cursor-worker [OPTIONS] <COMMAND>",
+      "summary": "Register this machine as a Cursor private worker (via the leader)",
+      "detail": "Register this machine as a Cursor private worker (via the leader)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "start",
+        "stop",
+        "status",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "dashboard"
+      ],
+      "depth": 1,
+      "usage": "grok dashboard [OPTIONS]",
+      "summary": "Open the Agent Dashboard view at startup. The dashboard shows every session, top-level and subagents. Disabled when `[dashboard].enabled = false` in `~/.grok/config.toml` or when the `GROK_AGENT_DASHBOARD=0` env var is set",
+      "detail": "Open the Agent Dashboard view at startup. The dashboard shows every session, top-level and subagents. Disabled when `[dashboard].enabled = false` in `~/.grok/config.toml` or when the `GROK_AGENT_DASHBOARD=0` env var is set",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "doctor"
+      ],
+      "depth": 1,
+      "usage": "grok doctor [OPTIONS] grok doctor <COMMAND>",
+      "summary": "Check terminal, clipboard, color, and input support without starting Grok",
+      "detail": "Check terminal, clipboard, color, and input support without starting Grok",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Print the diagnostic report as JSON"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "fix",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "du"
+      ],
+      "depth": 1,
+      "usage": "grok du [OPTIONS]",
+      "summary": "Show what the grok home (~/.grok) uses on disk [aliases: disk-usage]",
+      "detail": "Show what the grok home (~/.grok) uses on disk",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "export"
+      ],
+      "depth": 1,
+      "usage": "grok export [OPTIONS] <SESSION_ID> [OUTPUT]",
+      "summary": "Export a session transcript as Markdown",
+      "detail": "Export a session transcript as Markdown",
+      "group": "",
+      "options": [
+        {
+          "flags": "-c, --clipboard",
+          "desc": "Copy to clipboard instead of writing to stdout"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "inspect"
+      ],
+      "depth": 1,
+      "usage": "grok inspect [OPTIONS]",
+      "summary": "Show the configuration Grok discovers for this directory",
+      "detail": "Show the configuration Grok discovers for this directory",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "leader"
+      ],
+      "depth": 1,
+      "usage": "grok leader [OPTIONS] <COMMAND>",
+      "summary": "Manage running leader processes",
+      "detail": "Manage running leader processes",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "list",
+        "info",
+        "kill",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "login"
+      ],
+      "depth": 1,
+      "usage": "grok login [OPTIONS]",
+      "summary": "Sign in to Grok",
+      "detail": "Sign in to Grok",
+      "group": "",
+      "options": [
+        {
+          "flags": "--oauth",
+          "desc": "Use Grok OAuth via auth.x.ai"
+        },
+        {
+          "flags": "--device-auth",
+          "desc": "Use device-code authentication for headless/remote environments [aliases: --device-code]"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "logout"
+      ],
+      "depth": 1,
+      "usage": "grok logout [OPTIONS]",
+      "summary": "Sign out and clear cached credentials",
+      "detail": "Sign out and clear cached credentials",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp"
+      ],
+      "depth": 1,
+      "usage": "grok mcp [OPTIONS] <COMMAND>",
+      "summary": "Manage MCP server configurations",
+      "detail": "Manage MCP server configurations",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "list",
+        "add",
+        "remove",
+        "enable",
+        "disable",
+        "doctor",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "memory"
+      ],
+      "depth": 1,
+      "usage": "grok memory [OPTIONS] <COMMAND>",
+      "summary": "Manage cross-session memory",
+      "detail": "Manage cross-session memory",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "clear",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "models"
+      ],
+      "depth": 1,
+      "usage": "grok models [OPTIONS]",
+      "summary": "List available models and exit",
+      "detail": "List available models and exit",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin"
+      ],
+      "depth": 1,
+      "usage": "grok plugin [OPTIONS] <COMMAND>",
+      "summary": "Manage plugins and marketplace sources",
+      "detail": "Manage plugins and marketplace sources",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "list",
+        "install",
+        "uninstall",
+        "update",
+        "enable",
+        "disable",
+        "details",
+        "validate",
+        "tag",
+        "marketplace",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "sessions"
+      ],
+      "depth": 1,
+      "usage": "grok sessions [OPTIONS] <COMMAND>",
+      "summary": "List, search, or restore sessions",
+      "detail": "List, search, or restore sessions",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "list",
+        "search",
+        "delete",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "setup"
+      ],
+      "depth": 1,
+      "usage": "grok setup [OPTIONS]",
+      "summary": "Fetch and install managed configuration",
+      "detail": "Fetch and install managed configuration",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Print the fetched configuration as JSON instead of installing it; writes nothing to ~/.grok"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "trace"
+      ],
+      "depth": 1,
+      "usage": "grok trace [OPTIONS] <SESSION_ID>",
+      "summary": "Export or upload session trace data",
+      "detail": "Export or upload session trace data",
+      "group": "",
+      "options": [
+        {
+          "flags": "--local",
+          "desc": "Save locally only, skip remote upload"
+        },
+        {
+          "flags": "-o, --output <OUTPUT>",
+          "desc": "Output path (default: $GROK_HOME/trace-exports/<session-id>.tar.gz)"
+        },
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "update"
+      ],
+      "depth": 1,
+      "usage": "grok update [OPTIONS]",
+      "summary": "Check for updates or install a specific version",
+      "detail": "Check for updates or install a specific version",
+      "group": "",
+      "options": [
+        {
+          "flags": "--check",
+          "desc": "Check for updates without installing"
+        },
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output (for --check)"
+        },
+        {
+          "flags": "--force-reinstall",
+          "desc": "Force re-download and install even if already up to date"
+        },
+        {
+          "flags": "--version <VERSION>",
+          "desc": "Install a specific version (e.g. 0.1.150 or 0.1.151-alpha.2)"
+        },
+        {
+          "flags": "--alpha",
+          "desc": "Switch to the alpha release channel (faster updates, may have bugs)"
+        },
+        {
+          "flags": "--stable",
+          "desc": "Switch to the stable release channel (default, weekly releases)"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "version"
+      ],
+      "depth": 1,
+      "usage": "grok version [OPTIONS]",
+      "summary": "Print version information [aliases: v]",
+      "detail": "Print version information",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree"
+      ],
+      "depth": 1,
+      "usage": "grok worktree [OPTIONS] <COMMAND>",
+      "summary": "Manage git worktrees",
+      "detail": "Manage git worktrees",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "list",
+        "show",
+        "rm",
+        "gc",
+        "detach",
+        "salvage",
+        "clean-artifacts",
+        "db",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "wrap"
+      ],
+      "depth": 1,
+      "usage": "grok wrap [OPTIONS] <CMD>...",
+      "summary": "Run any command with local clipboard support (forwards OSC 52 to the system clipboard)",
+      "detail": "Run any command inside a local PTY that forwards its clipboard to yours.",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "agent",
+        "stdio"
+      ],
+      "depth": 2,
+      "usage": "grok agent stdio [OPTIONS]",
+      "summary": "Run the agent over stdio",
+      "detail": "Run the agent over stdio",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "agent",
+        "headless"
+      ],
+      "depth": 2,
+      "usage": "grok agent headless [OPTIONS]",
+      "summary": "Run the agent headlessly over the Grok WebSocket relay",
+      "detail": "Run the agent headlessly over the Grok WebSocket relay",
+      "group": "",
+      "options": [
+        {
+          "flags": "--grok-ws-origin",
+          "desc": "<GROK_WS_ORIGIN>"
+        },
+        {
+          "flags": "--grok-ws-url",
+          "desc": "<GROK_WS_URL>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "agent",
+        "serve"
+      ],
+      "depth": 2,
+      "usage": "grok agent serve [OPTIONS]",
+      "summary": "Run the agent as a WebSocket server",
+      "detail": "Run the agent as a WebSocket server",
+      "group": "",
+      "options": [
+        {
+          "flags": "--bind",
+          "desc": "<BIND>"
+        },
+        {
+          "flags": "--secret",
+          "desc": "<SECRET>"
+        },
+        {
+          "flags": "--remote",
+          "desc": "<REMOTE>"
+        },
+        {
+          "flags": "--grok-ws-origin",
+          "desc": "<GROK_WS_ORIGIN>"
+        },
+        {
+          "flags": "--grok-ws-url",
+          "desc": "<GROK_WS_URL>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "agent",
+        "leader"
+      ],
+      "depth": 2,
+      "usage": "grok agent leader [OPTIONS]",
+      "summary": "Run as the shared leader process for other clients",
+      "detail": "Run as the shared leader process for other clients",
+      "group": "",
+      "options": [
+        {
+          "flags": "--no-exit-on-disconnect",
+          "desc": ""
+        },
+        {
+          "flags": "--relay-on-demand",
+          "desc": ""
+        },
+        {
+          "flags": "--no-auto-update",
+          "desc": ""
+        },
+        {
+          "flags": "--cursor-worker",
+          "desc": ""
+        },
+        {
+          "flags": "--cursor-worker-name",
+          "desc": "<NAME>"
+        },
+        {
+          "flags": "--cursor-worker-dir",
+          "desc": "<DIR>"
+        },
+        {
+          "flags": "--cursor-worker-max-agents",
+          "desc": "<N>"
+        },
+        {
+          "flags": "--grok-ws-origin",
+          "desc": "<GROK_WS_ORIGIN>"
+        },
+        {
+          "flags": "--grok-ws-url",
+          "desc": "<GROK_WS_URL>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "cursor-worker",
+        "start"
+      ],
+      "depth": 2,
+      "usage": "grok cursor-worker start [OPTIONS]",
+      "summary": "Register the leader as a Cursor private worker (or restart it with new options)",
+      "detail": "Register the leader as a Cursor private worker (or restart it with new options)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--name <NAME>",
+          "desc": "Worker display name shown in Cursor (default: `[cursor_worker].name`, then the hostname)"
+        },
+        {
+          "flags": "--worker-dir <DIR>",
+          "desc": "Repository directory offered to Cursor Cloud Agents; repeatable, the first one is the registered working directory. Defaults to `[cursor_worker].worker_dirs`"
+        },
+        {
+          "flags": "--max-agents <N>",
+          "desc": "Maximum concurrent Cloud Agent claims (default: `[cursor_worker].max_agents`; unset means no cap)"
+        },
+        {
+          "flags": "--leader",
+          "desc": "Force leader mode for this command, overriding config"
+        },
+        {
+          "flags": "--no-leader",
+          "desc": "Refuse to start even when config enables leader mode"
+        },
+        {
+          "flags": "--timeout <SECS>",
+          "desc": "Seconds to wait for the registration before printing the status; `0` returns as soon as the leader accepted the start [default: 90]"
+        },
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "cursor-worker",
+        "stop"
+      ],
+      "depth": 2,
+      "usage": "grok cursor-worker stop [OPTIONS]",
+      "summary": "Unregister from Cursor and release the claims (the leader keeps running)",
+      "detail": "Unregister from Cursor and release the claims (the leader keeps running)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--pid <PID>",
+          "desc": "Leader process ID from `grok leader list`"
+        },
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "cursor-worker",
+        "status"
+      ],
+      "depth": 2,
+      "usage": "grok cursor-worker status [OPTIONS]",
+      "summary": "Show the current worker status and its Cloud Agent claims [aliases: list]",
+      "detail": "Show the current worker status and its Cloud Agent claims",
+      "group": "",
+      "options": [
+        {
+          "flags": "--pid <PID>",
+          "desc": "Leader process ID from `grok leader list`"
+        },
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "doctor",
+        "fix"
+      ],
+      "depth": 2,
+      "usage": "grok doctor fix [OPTIONS] [ID]",
+      "summary": "Apply an automatic fix",
+      "detail": "Apply an automatic fix",
+      "group": "",
+      "options": [
+        {
+          "flags": "--yes",
+          "desc": "Apply the displayed changes without confirmation"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "leader",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "grok leader list [OPTIONS]",
+      "summary": "List running leader processes",
+      "detail": "List running leader processes",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "leader",
+        "info"
+      ],
+      "depth": 2,
+      "usage": "grok leader info [OPTIONS]",
+      "summary": "Show details for a leader process",
+      "detail": "Show details for a leader process",
+      "group": "",
+      "options": [
+        {
+          "flags": "--pid <PID>",
+          "desc": "Leader process ID from `grok leader list`"
+        },
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "leader",
+        "kill"
+      ],
+      "depth": 2,
+      "usage": "grok leader kill [OPTIONS]",
+      "summary": "Stop all running leader processes",
+      "detail": "Stop all running leader processes",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "grok mcp list [OPTIONS]",
+      "summary": "List configured MCP servers",
+      "detail": "List configured MCP servers",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp",
+        "add"
+      ],
+      "depth": 2,
+      "usage": "grok mcp add [OPTIONS] <NAME> [COMMAND_OR_URL] [ARGS]...",
+      "summary": "Add or update an MCP server",
+      "detail": "Add or update an MCP server",
+      "group": "",
+      "options": [
+        {
+          "flags": "-t, --transport",
+          "desc": "<TRANSPORT>"
+        },
+        {
+          "flags": "-s, --scope",
+          "desc": "<SCOPE>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp",
+        "remove"
+      ],
+      "depth": 2,
+      "usage": "grok mcp remove [OPTIONS] <NAME>",
+      "summary": "Remove an MCP server",
+      "detail": "Remove an MCP server",
+      "group": "",
+      "options": [
+        {
+          "flags": "-s, --scope",
+          "desc": "<SCOPE>"
+        },
+        {
+          "flags": "--debug",
+          "desc": ""
+        },
+        {
+          "flags": "--debug-file",
+          "desc": "<FILE>"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": ""
+        },
+        {
+          "flags": "--leader-socket",
+          "desc": "<PATH>"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp",
+        "enable"
+      ],
+      "depth": 2,
+      "usage": "grok mcp enable [OPTIONS] <NAME>",
+      "summary": "Enable an MCP server",
+      "detail": "Enable an MCP server",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp",
+        "disable"
+      ],
+      "depth": 2,
+      "usage": "grok mcp disable [OPTIONS] <NAME>",
+      "summary": "Disable an MCP server",
+      "detail": "Disable an MCP server",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "mcp",
+        "doctor"
+      ],
+      "depth": 2,
+      "usage": "grok mcp doctor [OPTIONS] [NAME]",
+      "summary": "Diagnose MCP server configuration and connectivity",
+      "detail": "Diagnose MCP server configuration and connectivity",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "memory",
+        "clear"
+      ],
+      "depth": 2,
+      "usage": "grok memory clear [OPTIONS]",
+      "summary": "Clear memory files (workspace by default)",
+      "detail": "Clear memory files (workspace by default)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--workspace",
+          "desc": "Clear workspace-scoped memory (MEMORY.md, sessions/, index.sqlite)"
+        },
+        {
+          "flags": "--global",
+          "desc": "Clear global MEMORY.md"
+        },
+        {
+          "flags": "--all",
+          "desc": "Clear both workspace and global memory"
+        },
+        {
+          "flags": "-y, --yes",
+          "desc": "Skip confirmation prompt"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "grok plugin list [OPTIONS]",
+      "summary": "List installed plugins",
+      "detail": "List installed plugins",
+      "group": "",
+      "options": [
+        {
+          "flags": "--json",
+          "desc": "Emit machine-readable JSON output"
+        },
+        {
+          "flags": "--available",
+          "desc": "Include available plugins from marketplace sources. Requires --json"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "install"
+      ],
+      "depth": 2,
+      "usage": "grok plugin install [OPTIONS] <SOURCE>",
+      "summary": "Install a plugin from a git URL or local path",
+      "detail": "Install a plugin from a git URL or local path",
+      "group": "",
+      "options": [
+        {
+          "flags": "--trust",
+          "desc": "Trust the plugin immediately (skip confirmation prompt)"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "uninstall"
+      ],
+      "depth": 2,
+      "usage": "grok plugin uninstall [OPTIONS] <NAME>",
+      "summary": "Uninstall an installed plugin by name [aliases: rm, remove]",
+      "detail": "Uninstall an installed plugin by name",
+      "group": "",
+      "options": [
+        {
+          "flags": "--confirm",
+          "desc": "Skip confirmation for multi-plugin repos"
+        },
+        {
+          "flags": "--keep-data",
+          "desc": "Preserve the plugin's persistent data directory"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "update"
+      ],
+      "depth": 2,
+      "usage": "grok plugin update [OPTIONS] [NAME]",
+      "summary": "Update installed plugin(s)",
+      "detail": "Update installed plugin(s)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "enable"
+      ],
+      "depth": 2,
+      "usage": "grok plugin enable [OPTIONS] <NAME>",
+      "summary": "Enable a disabled plugin",
+      "detail": "Enable a disabled plugin",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "disable"
+      ],
+      "depth": 2,
+      "usage": "grok plugin disable [OPTIONS] <NAME>",
+      "summary": "Disable a plugin without uninstalling it",
+      "detail": "Disable a plugin without uninstalling it",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "details"
+      ],
+      "depth": 2,
+      "usage": "grok plugin details [OPTIONS] <NAME>",
+      "summary": "Show a plugin's component inventory",
+      "detail": "Show a plugin's component inventory",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "validate"
+      ],
+      "depth": 2,
+      "usage": "grok plugin validate [OPTIONS] [PATH]",
+      "summary": "Validate a plugin manifest",
+      "detail": "Validate a plugin manifest",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "tag"
+      ],
+      "depth": 2,
+      "usage": "grok plugin tag [OPTIONS] [PATH]",
+      "summary": "Create a release git tag from the plugin's manifest version",
+      "detail": "Create a release git tag from the plugin's manifest version",
+      "group": "",
+      "options": [
+        {
+          "flags": "--push",
+          "desc": "Push the tag to the remote after creating it"
+        },
+        {
+          "flags": "-f, --force",
+          "desc": "Create the tag even if the working tree is dirty or tag exists"
+        },
+        {
+          "flags": "--dry-run",
+          "desc": "Print what would be tagged without creating the tag"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "plugin",
+        "marketplace"
+      ],
+      "depth": 2,
+      "usage": "grok plugin marketplace [OPTIONS] <COMMAND>",
+      "summary": "Manage marketplace sources",
+      "detail": "Manage marketplace sources",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "list",
+        "add",
+        "remove",
+        "update",
+        "help"
+      ]
+    },
+    {
+      "path": [
+        "grok",
+        "sessions",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "grok sessions list [OPTIONS]",
+      "summary": "List recent sessions (same as search with no query)",
+      "detail": "List recent sessions (same as search with no query)",
+      "group": "",
+      "options": [
+        {
+          "flags": "-n, --limit <LIMIT>",
+          "desc": "Maximum number of sessions to show [default: 20]"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "sessions",
+        "search"
+      ],
+      "depth": 2,
+      "usage": "grok sessions search [OPTIONS] <QUERY>",
+      "summary": "Search sessions by keyword",
+      "detail": "Search sessions by keyword",
+      "group": "",
+      "options": [
+        {
+          "flags": "-n, --limit <LIMIT>",
+          "desc": "Maximum number of sessions to show [default: 20]"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "sessions",
+        "delete"
+      ],
+      "depth": 2,
+      "usage": "grok sessions delete [OPTIONS] <ID>",
+      "summary": "Permanently delete a session from history",
+      "detail": "Permanently delete a session from history",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "list"
+      ],
+      "depth": 2,
+      "usage": "grok worktree list [OPTIONS]",
+      "summary": "List tracked worktrees [aliases: ls]",
+      "detail": "List tracked worktrees",
+      "group": "",
+      "options": [
+        {
+          "flags": "--repo",
+          "desc": "<REPO>"
+        },
+        {
+          "flags": "--type",
+          "desc": "<TYPE>"
+        },
+        {
+          "flags": "--json",
+          "desc": ""
+        },
+        {
+          "flags": "--all",
+          "desc": ""
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "show"
+      ],
+      "depth": 2,
+      "usage": "grok worktree show [OPTIONS] <ID_OR_PATH>",
+      "summary": "Show details for a specific worktree",
+      "detail": "Show details for a specific worktree",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "rm"
+      ],
+      "depth": 2,
+      "usage": "grok worktree rm [OPTIONS] <IDS>...",
+      "summary": "Remove worktrees",
+      "detail": "Remove worktrees",
+      "group": "",
+      "options": [
+        {
+          "flags": "-f, --force",
+          "desc": ""
+        },
+        {
+          "flags": "--dry-run",
+          "desc": ""
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "gc"
+      ],
+      "depth": 2,
+      "usage": "grok worktree gc [OPTIONS]",
+      "summary": "Remove expired worktrees, keeping any whose work would not survive",
+      "detail": "Remove expired worktrees, keeping any whose work would not survive",
+      "group": "",
+      "options": [
+        {
+          "flags": "--dry-run",
+          "desc": "Report what would be removed without removing it"
+        },
+        {
+          "flags": "--max-age <MAX_AGE>",
+          "desc": "Expire worktrees idle longer than this, e.g. `7d`. Without it, nothing expires"
+        },
+        {
+          "flags": "-f, --force",
+          "desc": "Skip the live-process and protected-path guards. This does not override the safety check; use `grok worktree rm` for that"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "detach"
+      ],
+      "depth": 2,
+      "usage": "grok worktree detach [OPTIONS] <ID_OR_PATH>",
+      "summary": "Convert a Grove-projected worktree into a plain git worktree",
+      "detail": "Convert a Grove-projected worktree into a plain git worktree",
+      "group": "",
+      "options": [
+        {
+          "flags": "--allow-copy",
+          "desc": "Permit a copy when dest and backing are on different devices"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "salvage"
+      ],
+      "depth": 2,
+      "usage": "grok worktree salvage [OPTIONS] --out <OUT> <ID_OR_PATH>",
+      "summary": "Recover hydrated and dirty files when the source repo is gone",
+      "detail": "Recover hydrated and dirty files when the source repo is gone",
+      "group": "",
+      "options": [
+        {
+          "flags": "--out <OUT>",
+          "desc": "Directory to write the salvaged plain repo into"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "clean-artifacts"
+      ],
+      "depth": 2,
+      "usage": "grok worktree clean-artifacts [OPTIONS] <ID_OR_PATH>",
+      "summary": "Purge escape-dir artifact contents (`git clean` does not)",
+      "detail": "Purge escape-dir artifact contents (`git clean` does not)",
+      "group": "",
+      "options": [
+        {
+          "flags": "--dry-run",
+          "desc": "List jail children and exit without deleting"
+        },
+        {
+          "flags": "--yes",
+          "desc": "Required to actually delete (irreversible)"
+        },
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": []
+    },
+    {
+      "path": [
+        "grok",
+        "worktree",
+        "db"
+      ],
+      "depth": 2,
+      "usage": "grok worktree db [OPTIONS] <COMMAND>",
+      "summary": "Database maintenance",
+      "detail": "Database maintenance",
+      "group": "",
+      "options": [
+        {
+          "flags": "--debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "flags": "--debug-file <FILE>",
+          "desc": "Write debug logs to FILE"
+        },
+        {
+          "flags": "-h, --help",
+          "desc": "Print help"
+        },
+        {
+          "flags": "--leader-socket <PATH>",
+          "desc": "Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered"
+        }
+      ],
+      "children": [
+        "rebuild",
+        "stats",
+        "path",
+        "help"
+      ]
+    }
+  ],
+  "skill": null
+}

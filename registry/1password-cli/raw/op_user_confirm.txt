@@ -1,0 +1,20 @@
+Confirm users who have accepted their invitation to the 1Password account.
+
+Specify the user by their e-mail address, name, or ID.
+
+Usage:  op user confirm [{ <email> | <name> | <userID> | - }] [flags]
+
+Examples:
+Confirm a user by specifying their name:
+
+	op user confirm "Wendy Appleseed"
+
+Confirm a user by specifying their email:
+
+	op user confirm "wendy.appleseed@example.com"
+
+Flags:
+      --all    Confirm all unconfirmed users.
+  -h, --help   help for confirm
+
+To list the global flags available on every command, run  'op --help'.

@@ -1,0 +1,19 @@
+Tencent Ads CLI — command line tool for managing Tencent Ads API.
+
+Usage:
+  tencentads [flags]
+  tencentads [command]
+
+Available Commands:
+  auth        Manage authentication
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+
+Flags:
+      --config-dir string   Directory for credentials file (default: ~/.tencent-ads)
+      --edition string      Edition to use with --list-commands (default: build-time edition "default")
+  -h, --help                help for tencentads
+      --list-commands       Print command tree for the given edition and exit
+  -v, --version             version for tencentads
+
+Use "tencentads [command] --help" for more information about a command.

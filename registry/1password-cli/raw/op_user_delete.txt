@@ -1,0 +1,13 @@
+Remove a user and all their data from the account.
+
+Specify the user by their e-mail address, name, or ID.
+
+Usage:  op user delete [{ <email> | <name> | <userID> | - }] [flags]
+
+Aliases:
+  delete, remove, rm
+
+Flags:
+  -h, --help   help for delete
+
+To list the global flags available on every command, run  'op --help'.

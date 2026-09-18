@@ -1,0 +1,22 @@
+Perform CRUD operations on the 1Password items in your vaults.
+
+Usage:  op item [command] [flags]
+
+Management Commands:
+  template    Manage templates
+
+Commands:
+  create      Create an item
+  get         Get an item's details
+  edit        Edit an item's details
+  delete      Delete or archive an item
+  list        List items
+  move        Move an item between vaults
+  share       Share an item
+
+Flags:
+  -h, --help   help for item
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op item [command] --help' for more information on the command.

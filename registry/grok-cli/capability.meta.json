@@ -1,0 +1,20 @@
+{
+  "name": "grok-cli",
+  "title": "Grok CLI",
+  "command": "grok",
+  "version": "1.0.34",
+  "description": "xAI 官方 Grok CLI：交互式 TUI、单轮 headless 模式与 ACP agent 模式，带联网检索（含 X 平台）、本机文件与命令执行、会话与子 Agent 管理",
+  "scannedAt": "2026-09-18 06:27:40",
+  "depth": 2,
+  "source": "release-bin + help-tree",
+  "nodes": 63,
+  "repo": "https://x.ai/cli",
+  "license": "厂商专有",
+  "install": "curl -fsSL https://x.ai/cli/install.sh | bash",
+  "release": "1.0.34",
+  "domains": 7,
+  "commands": 63,
+  "apiMethods": 0,
+  "refs": 0,
+  "manual": true
+}

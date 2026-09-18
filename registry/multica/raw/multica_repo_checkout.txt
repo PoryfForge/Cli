@@ -1,0 +1,17 @@
+Creates a git worktree from the daemon's bare clone cache. Used by agents to check out repos on demand.
+
+Running it again where the repository is already checked out never silently discards work: a checkout that has uncommitted changes, untracked files, or unpushed commits, or is already on this task's branch, is kept as it is and only its remote refs are fetched. Pass --fresh to discard its uncommitted changes and untracked files and start over on a new branch; commits stay on the old branch, but push any you still need first.
+
+USAGE
+  multica repo checkout <url> [flags]
+
+FLAGS
+      --fresh        discard an existing checkout's uncommitted changes and untracked files and start over on a new branch from the latest default branch (or --ref); commits stay on the old branch
+  -h, --help         help for checkout
+      --ref string   branch, tag, or commit to check out instead of the remote default branch
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

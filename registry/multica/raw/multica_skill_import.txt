@@ -1,0 +1,17 @@
+Import a skill from a URL (clawhub.ai, skills.sh, github.com) or a local .skill/.zip archive
+
+USAGE
+  multica skill import [flags]
+
+FLAGS
+      --file string          Path to a local skill archive (.skill or .zip) to import. Mutually exclusive with --url.
+  -h, --help                 help for import
+      --on-conflict string   Conflict strategy when a skill with the same name exists: fail, overwrite, rename, or skip (default "fail")
+      --output string        Output format: table or json (default "json")
+      --url string           URL to import from (clawhub.ai, skills.sh, or github.com). Mutually exclusive with --file.
+
+INHERITED FLAGS
+  --help   Show help for command
+
+LEARN MORE
+  Use `multica <command> <subcommand> --help` for more information about a command.

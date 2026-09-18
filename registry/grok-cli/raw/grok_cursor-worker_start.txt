@@ -1,0 +1,16 @@
+Register the leader as a Cursor private worker (or restart it with new options)
+
+Usage: grok cursor-worker start [OPTIONS]
+
+Options:
+      --name <NAME>           Worker display name shown in Cursor (default: `[cursor_worker].name`, then the hostname)
+      --worker-dir <DIR>      Repository directory offered to Cursor Cloud Agents; repeatable, the first one is the registered working directory. Defaults to `[cursor_worker].worker_dirs`
+      --max-agents <N>        Maximum concurrent Cloud Agent claims (default: `[cursor_worker].max_agents`; unset means no cap)
+      --leader                Force leader mode for this command, overriding config
+      --no-leader             Refuse to start even when config enables leader mode
+      --timeout <SECS>        Seconds to wait for the registration before printing the status; `0` returns as soon as the leader accepted the start [default: 90]
+      --json                  Emit machine-readable JSON output
+      --debug                 Enable debug logging
+      --debug-file <FILE>     Write debug logs to FILE
+  -h, --help                  Print help
+      --leader-socket <PATH>  Use a custom leader socket path instead of the default `~/.grok/leader.sock`. A local/branch build can thus run an isolated leader without colliding with the default one already running on the machine Name it `~/.grok/leader-*.sock` to keep `grok leader list/kill` able to find it; any other location works but won't be auto-discovered

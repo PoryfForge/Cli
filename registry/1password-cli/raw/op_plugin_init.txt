@@ -1,0 +1,44 @@
+Choose a shell plugin to install and configure your default credentials. Bash,
+Zsh, and fish shells are supported.
+
+Shell plugins require the 1Password desktop app integration. Learn more:
+https://www.1password.dev/cli/shell-plugins/
+
+To see all available plugins, run 'op plugin list'.
+
+CONFIGURE YOUR DEFAULT CREDENTIALS
+
+1Password CLI prompts you to select or import the credentials you want to
+use with the third-party CLI, then returns a command to source your
+'plugins.sh' file and make the plugin alias usable.
+
+To use the plugin beyond the current terminal session, make sure
+to add the source command to your RC file or shell profile (e.g.
+'~/.bashrc', '~/.zshrc','~/.config/fish/config.fish'). For example:
+
+	echo "source ~/.op/plugins.sh" >> ~/.bashrc && source ~/.bashrc
+
+
+CONFIGURATION OPTIONS
+
+You can choose whether 1Password CLI remembers your configuration. With
+any option, your credentials never leave your 1Password account.
+
+- "Prompt me for each new terminal session" only configures the credentials for
+the current terminal session. Once you exit the terminal, your default
+is removed.
+- "Use automatically when in this directory or subdirectories" makes your
+credentials the default in the current directory and all its
+subdirectories, as long as no other directory-specific defaults are set
+in them. A terminal-session default takes precedence over a
+directory-specific one.
+- "Use as global default on my system" sets the credentials as the default
+in all terminal sessions and directories. A directory-specific default
+takes precedence over a global one.
+
+Usage:  op plugin init [ <plugin-executable> ] [flags]
+
+Flags:
+  -h, --help   help for init
+
+To list the global flags available on every command, run  'op --help'.

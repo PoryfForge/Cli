@@ -1,0 +1,16 @@
+Manage Connect server tokens.
+
+Usage:  op connect token [command] [flags]
+
+Commands:
+  create      Issue a token for a 1Password Connect server
+  edit        Rename a Connect server token
+  delete      Revoke a token for a Connect server
+  list        Get a list of tokens
+
+Flags:
+  -h, --help   help for token
+
+To list the global flags available on every command, run  'op --help'.
+
+Run 'op connect token [command] --help' for more information on the command.
