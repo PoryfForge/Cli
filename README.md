@@ -6,6 +6,8 @@
 
 [索引页（可视化）](docs/index.html) · [总索引](INDEX.md) · [机器可读索引](index.json) · [Agent 接入说明](AGENTS.md) · [贡献指南](CONTRIBUTING.md)
 
+附带工具：[企业微信服务器清理 CLI](tools/wecom-clean/README.md) · [下载清理工具包](https://github.com/PoryfForge/Cli/raw/refs/heads/main/tools/wecom-clean/WeCom-Clean-CLI-1.0.0.zip)
+
 ---
 
 ## 它解决什么问题
@@ -30,6 +32,10 @@ Agent 用命令行工具时的典型失败模式有两种：
 
 **不收**系统自带工具与通用包管理器（`git` / `curl` / `sqlite3` / `brew` / `npm` / `docker`）。
 那些现查 `help` 足够便宜，存进来只是噪声。
+
+`tools/` 单独存放本仓库维护的实用工具，不纳入厂商 CLI 能力快照与采集清单。
+目前提供 [`wecom-clean`](tools/wecom-clean/README.md)：通过 WinRM 检查 Windows 服务器资源、
+预览或分批清理旧临时图片，并提供一次性的内存缓解入口。默认仅预览，加 `--apply` 才实际执行。
 
 ---
 
@@ -84,11 +90,12 @@ bin/install-skill --uninstall               # 移除
 > 用 **Codex** 这类读 `AGENTS.md` 的 Agent：库根的 `AGENTS.md` 就是写给它的 ——
 > 把本仓库作为工作目录的上下文即可；或把 `AGENTS.md` 的内容并进你的全局指令文件。
 
-> **注意：本库只放「能力面文档」，不含 CLI 本体。** 真要调这些 CLI，你得自己装并完成授权
+> **注意：`registry/` 只放厂商 CLI 的「能力面文档」，不含这些 CLI 本体。** 真要调这些 CLI，你得自己装并完成授权
 > （本库的采集器只会把它们的**发布产物**临时拉到 `.cache/` 里跑 `--help`，
 > 但**不会**写进你的 `PATH`、也不碰你的账号配置）。
 > 本库负责让你和你的 Agent 知道「它有什么、该怎么调」，不代替它们运行。
 > 另外 `bin/` 下的脚本需要 Node.js ≥ 18 —— 只想查文档的话不需要任何环境。
+> `tools/wecom-clean/` 附带独立维护的清理工具源码和安装包，运行条件与验证范围见其说明。
 
 ### ③ 当成程序的数据源 —— 读结构化文件，别解析 markdown
 
@@ -185,6 +192,7 @@ npm test                    # 清单体检 + 渲染契约 + 检索测试
 │   ├── capmodel.js        # 统一能力模型 → 统一渲染
 │   └── fetchsource.js     # 取源（源码 / release 二进制）
 ├── profiles/              # 各 CLI 的解析档
+├── tools/wecom-clean/     # 独立的 Windows 服务器清理 CLI、安装包与说明
 ├── registry/<名字>/       # 能力快照（CAPABILITY.md / capability.json / raw/ / vendor/）
 ├── docs/index.html        # 可视化索引
 └── tests/                 # 测试
@@ -230,7 +238,7 @@ Agent 会去跑 `--help`；填错了，Agent 会照错的做。
 - **发行方需自行核对**：`tencentads-cli` 的 npm 发布者账号是个人账号，虽被官方技能文档
   列为前置依赖，是否为厂商直接维护待确认；该类存疑之处写在 `clis.json` 的 `scopeNote` 里。
 - 收录的命令面来自官方 `--help`，**不等于当前账号一定能调通**（权限、套餐、地域都可能拦）。
-  本库不做业务调用验证。
+  厂商 CLI 能力快照不做业务调用验证；附带工具的验证范围见各自说明。
 - **快照可能随本机环境变化**：有的 CLI 支持本地扩展（如 `gh copilot`），扩展装没装、
   哪一版，扫出来的树就不一样。这类缺口在采集前就已知，会写进文档的「采集说明」，
   以本机 `<命令> --help` 为准。

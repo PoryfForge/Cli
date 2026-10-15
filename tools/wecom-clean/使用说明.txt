@@ -1,0 +1,124 @@
+企业微信服务器清理 CLI 1.0.0
+
+把整个压缩包提供给其他管理员即可。工具不内置你们的服务器地址或密码。
+在自己的电脑输入服务器 IP，通过已有的 WinRM 连接执行；目标服务器不需要安装 Python。
+每次只处理一个明确指定的服务器，不自动扫描 IP，也不创建计划任务。
+
+一、安装
+
+操作电脑：Windows、macOS 或 Linux，已安装 Python 3.9 或更高版本。
+解压后，在本文件夹打开终端。Windows 执行：
+
+  py -m pip install .\wecom_clean_cli-1.0.0-py3-none-any.whl
+
+macOS / Linux 执行：
+
+  python3 -m pip install ./wecom_clean_cli-1.0.0-py3-none-any.whl
+
+首次安装需要联网获取 pywinrm 及其依赖。如果系统要求使用虚拟环境，请先创建并激活虚拟环境再安装。
+从源码安装也可以：python -m pip install .
+安装后测试：wecom-clean --help
+如果提示找不到 wecom-clean，请用 python -m wecom_clean 替代命令开头；Windows 也可以用 py -m wecom_clean。
+
+目标服务器：Windows + Windows PowerShell 5.1；账号具有 WinRM 执行和相关目录的访问权限。
+服务器必须已启用 WinRM，且允许本机访问其管理端口（HTTP 通常 5985，HTTPS 通常 5986）。
+工具不会替你启用服务、开放防火墙、修改远程登录设置或修改永久执行策略。
+Windows Server 2012 R2 配合 PowerShell 5.1 已做远程验证；其他系统需先执行 check / self-test。
+
+二、常用命令（把 SERVER_IP 换成自己的服务器地址）
+
+1. 检查磁盘、RAM 和本批候选旧图片，不删除业务文件：
+
+  wecom-clean check --host SERVER_IP
+
+2. 预览清理：默认保留最近 30 天，每批最多 512 MiB / 10000 个文件：
+
+  wecom-clean clean --host SERVER_IP
+
+3. 核对预览和保留期后执行同样一批清理：
+
+  wecom-clean clean --host SERVER_IP --apply
+
+4. 更保守的小批次：保留 60 天，最多 100 MiB / 2000 个：
+
+  wecom-clean clean --host SERVER_IP --keep-days 60 --max-mb 100 --max-files 2000
+  wecom-clean clean --host SERVER_IP --keep-days 60 --max-mb 100 --max-files 2000 --apply
+
+--apply 本身就是执行指令，不再弹出确认；文件永久删除，不经过回收站，也不自动备份。
+预览与执行会分别重新检查，后台业务仍在变化，因此两次候选文件可能不同。
+候选数量是本批结果，不是整台服务器的全部缓存量。
+如发单任务仍引用早期临时图片，需要增加保留天数；“未被占用”不代表以后一定不会再使用。
+
+5. 指定登录账号和企业微信所在用户目录：
+
+  wecom-clean clean --host SERVER_IP --user administrator --profile "C:\Users\Administrator"
+
+默认账号为 administrator，默认扫描登录账号的用户目录。
+使用其他管理账号时，要用 --profile 指向实际运行企业微信的用户目录；工具不会猜测目标用户。
+密码始终在提示后隐藏输入，不提供 --password 参数，不写入报告或安装包。
+不支持把密码写在命令、服务器清单或通过管道输入。需在交互式终端运行。
+
+6. 临时内存缓解，默认仅检查是否满足条件：
+
+  wecom-clean memory --host SERVER_IP
+  wecom-clean memory --host SERVER_IP --apply
+
+只有可用 RAM 低于“256 MiB 或总内存 15% 中的较大值”，且系统盘至少剩余 2 GiB、
+已提交内存低于 85%、存在 WXWork 主进程时，才尝试一次工作集压缩；否则显示 Skipped。
+不结束进程、不重启、不退出登录。占用可能回升，也可能短暂变慢，不建议频繁执行。
+它不能释放应用已提交的内存，不能修复内存泄漏、业务卡死、网络掉线或扫码登录过期。
+
+7. 自检，只操作自己的测试目录；内存 API 只作用于测试进程自身：
+
+  wecom-clean self-test --host SERVER_IP
+
+8. 使用 HTTPS 管理入口（证书必须有效且匹配主机名）：
+
+  wecom-clean check --host server.example.com --https
+  wecom-clean check --host server.example.com --https --ca-bundle company-ca.pem
+
+端口可加 --port 指定。使用 NTLM 身份验证并强制消息加密，不回退明文 Basic。
+优先使用有可信证书的 HTTPS 管理入口；HTTP 的 NTLM 消息加密不等同于 TLS 证书验证。
+不提供忽略证书校验选项。连接直达目标，不读取系统 HTTP 代理配置。
+
+三、清理边界
+
+磁盘清理和运行内存是两件事。clean 释放磁盘；memory 只尝试临时减少驻留 RAM。
+clean 仅检查用户 AppData\Local\Temp 根目录及直属数字会话子目录。
+仅处理 GUID 随机文件名的 JPG / JPEG / PNG / GIF / WebP；创建和修改时间都必须早于保留期。
+跳过只读、目录链接、被占用或检查后大小/时间变化的文件，不递归扫描其他目录。
+不专门处理企业微信聊天数据库、登录资料、发单素材目录、DLL、浏览器配置或分页文件。
+最少保留 7 天；批次上限可调，最多 50000 个 / 10240 MiB。工具不自动循环清理积压。
+不能仅凭随机文件名证明图片一定不再被使用，部署前需按自己的业务调整保留期。
+
+四、报告与异常
+
+本地默认保存到当前目录的 wecom-clean-reports/<时间与随机编号>/：
+  run.json    目标、操作、执行阶段和结果；不保存密码。
+  report.json 资源前后状态、本批统计，以及实际删除文件的明细。
+可用 --report-dir 指定另一个本地目录。报告包含服务器与文件路径，请按运维资料保管。
+
+每次先上传到服务器独立的临时目录，校验 SHA256，再执行。
+正常完成并保存本地报告后，只移除本次上传的脚本、控制台日志和远程报告，以及空的专用目录。
+check / 预览也会产生这些工具临时文件和本地报告，但不会删除候选业务图片。
+
+如果连接中断或拿不到完整报告，工具显示 OutcomeUnknown，并返回退出码 3。
+此时清理可能已经部分或全部执行，不能当作“未执行”重跑。
+run.json 中的 RemoteDirectory 记录服务器路径；先查看该目录里的 report.json、console.txt，
+核对结果再决定下一步。只有脚本完成后才会写完整报告；进程被中止时报告可能为空或不完整。
+不自动重试清理命令，也不在结果未知时移除服务器证据。
+连接或上传失败且清理尚未启动时，会明确显示这一点。
+
+退出码：0 = 已完成 / 预览 / 按条件跳过；1 = 运行错误或部分内存操作失败；
+2 = 参数或依赖错误；3 = 远程执行结果未知。
+清理时被占用或变化的文件正常跳过，计入 SkippedCount，不视为整批失败。
+
+五、维护与验证
+
+本地保护检查：python test_cli.py
+目标服务器自检：wecom-clean self-test --host SERVER_IP
+清理引擎源码：wecom_clean/WeCom-Maintenance.ps1
+CLI 源码：wecom_clean/__init__.py
+
+此工具不监控发单完成情况，不保证自动恢复发图或登录，不附带账号密码共享功能。
+如果每日产生的新缓存长期超过清理量，仍需按容量、增长速度和业务保留期调整磁盘与缓存策略。

@@ -16,6 +16,11 @@
 系统自带工具（`git` / `curl`）、包管理器（`brew` / `npm`）、数据库客户端**不在范围内**。
 （`gh` 只收 GitHub 的 SaaS 协作能力，本机通用 `git` 命令仍不收。）
 
+**附带工具**：`tools/wecom-clean/` 是本仓库维护的 Windows 服务器清理 CLI，
+不属于厂商能力快照，不加入 `clis.json` 或自动采集流程。使用前读该目录的 `README.md`。
+它通过 WinRM 执行，默认预览；仅在用户授权清理的目标与范围内使用 `--apply`。
+清理旧临时图片释放磁盘，内存工作集压缩只作临时缓解；结果未知时不可自动重试。
+
 > **想让 Agent 自动来查，而不是每次靠人提醒？**
 > 跑一次 `bin/install-skill`，它会把 `skills/cli-capability-lookup/` 装进本机的
 > Agent skills 目录（`~/.workbuddy/skills/` 或 `~/.claude/skills/`），
@@ -281,6 +286,7 @@ bin/cli-cap remember <名字> \
 │   ├── capmodel.js        # 统一能力模型 → 统一渲染成 CAPABILITY.md
 │   └── fetchsource.js     # 取源：下载源码 / 取 release 可执行文件
 ├── profiles/              # 各 CLI 的解析档（lark / wecom / help-tree）
+├── tools/wecom-clean/     # 独立清理工具源码、安装包、测试与使用说明
 ├── registry/<名字>/       # 各 CLI 的能力快照
 │   ├── CAPABILITY.md      #   给 AI 查的主文档
 │   ├── capability.json    #   结构化数据
