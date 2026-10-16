@@ -6,6 +6,7 @@ param(
     [ValidateRange(7,3650)][int]$KeepDays = 30,
     [ValidateRange(1,50000)][int]$MaxFiles = 10000,
     [ValidateRange(1,10240)][int]$MaxMB = 512,
+    [ValidateRange(1,5000000)][int]$MaxScan = 200000,
     [string]$ProfilePath = $env:USERPROFILE,
     [string]$ReportPath
 )
@@ -55,22 +56,26 @@ function Test-OldImage($File, [datetime]$Cutoff) {
         $File.CreationTimeUtc -lt $Cutoff -and $File.LastWriteTimeUtc -lt $Cutoff)
 }
 
-function Find-Batch([string[]]$Roots, [datetime]$Cutoff, [int]$FileLimit, [long]$ByteLimit) {
+function Find-Batch([string[]]$Roots, [datetime]$Cutoff, [int]$FileLimit, [long]$ByteLimit, [int]$ScanLimit = 200000) {
     $selected = New-Object 'Collections.Generic.List[object]'
-    $bytes = 0L; $scanned = 0; $limited = $false
+    $bytes = 0L; $scanned = 0; $limited = $false; $scanLimited = $false; $scanErrors = 0
     # ponytail: bounded batches keep RAM use small; rerun to handle a large backlog.
     :scan foreach ($root in $Roots) {
         foreach ($file in (New-Object IO.DirectoryInfo($root)).EnumerateFiles()) {
+            if ($scanned -ge $ScanLimit) { $scanLimited = $true; break scan }
             $scanned++
-            if (!(Test-OldImage $file $Cutoff) -or $file.Length -gt $ByteLimit) { continue }
-            if ($bytes + $file.Length -gt $ByteLimit) { $limited = $true; break scan }
-            $selected.Add([pscustomobject]@{Path=$file.FullName;Length=$file.Length;
-                CreatedTicks=$file.CreationTimeUtc.Ticks;WrittenTicks=$file.LastWriteTimeUtc.Ticks})
-            $bytes += $file.Length
+            try {
+                if (!(Test-OldImage $file $Cutoff) -or $file.Length -gt $ByteLimit) { continue }
+                if ($bytes + $file.Length -gt $ByteLimit) { $limited = $true; break scan }
+                $row = [pscustomobject]@{Path=$file.FullName;Length=$file.Length;
+                    CreatedTicks=$file.CreationTimeUtc.Ticks;WrittenTicks=$file.LastWriteTimeUtc.Ticks}
+            } catch { $scanErrors++; continue } # A changing file must not abort the entire scan.
+            $selected.Add($row); $bytes += $row.Length
             if ($selected.Count -ge $FileLimit -or $bytes -ge $ByteLimit) { $limited = $true; break scan }
         }
     }
-    [pscustomobject]@{Files=$selected.ToArray();Bytes=$bytes;Scanned=$scanned;LimitReached=$limited}
+    [pscustomobject]@{Files=$selected.ToArray();Bytes=$bytes;Scanned=$scanned;LimitReached=$limited;
+        ScanLimitReached=$scanLimited;ScanErrors=$scanErrors}
 }
 
 function Remove-Batch($Files, [string[]]$Roots, [datetime]$Cutoff) {
@@ -141,6 +146,10 @@ function Invoke-SelfTest {
         if ($limited.Files.Count -ne 1 -or !$limited.LimitReached) { throw 'SelfTest: batch cap failed' }
         $byteLimited = Find-Batch $roots $cutoff 100 1024
         if ($byteLimited.Files.Count -ne 1 -or $byteLimited.Bytes -gt 1024) { throw 'SelfTest: byte cap failed' }
+        $scanLimited = Find-Batch $roots $cutoff 100 1MB 1
+        if ($scanLimited.Scanned -ne 1 -or !$scanLimited.ScanLimitReached) { throw 'SelfTest: scan cap failed' }
+        $noneOld = Find-Batch $roots ([datetime]::UtcNow.AddYears(-1)) 100 1MB 1
+        if ($noneOld.Files.Count -ne 0 -or $noneOld.Scanned -ne 1 -or !$noneOld.ScanLimitReached) { throw 'SelfTest: empty scan cap failed' }
         $sub = Join-Path $root 'protected'; $null=[IO.Directory]::CreateDirectory($sub)
         $outside = Join-Path $sub ([guid]::NewGuid().ToString()+'.jpg')
         [IO.File]::WriteAllBytes($outside,(New-Object byte[] 1024))
@@ -177,14 +186,14 @@ if ($Mode -eq 'Menu') {
     $choice = Read-Host '请选择'
     $target = switch ($choice) {'1' {'Check'} '2' {'CleanTemp'} '3' {'TrimMemory'} default {return}}
     $menuReport = Join-Path $PSScriptRoot ('Logs\preview-' + [guid]::NewGuid().ToString('N') + '.json')
-    & $PSCommandPath -Mode $target -KeepDays $KeepDays -MaxFiles $MaxFiles -MaxMB $MaxMB -ProfilePath $ProfilePath -ReportPath $menuReport
+    & $PSCommandPath -Mode $target -KeepDays $KeepDays -MaxFiles $MaxFiles -MaxMB $MaxMB -MaxScan $MaxScan -ProfilePath $ProfilePath -ReportPath $menuReport
     $preview = [IO.File]::ReadAllText($menuReport) | ConvertFrom-Json
     $canApply = ($choice -eq '2' -and $preview.Candidates.Count -gt 0) -or ($choice -eq '3' -and $preview.Status -eq 'Preview')
     if ($canApply) {
         if ($choice -eq '2') { Write-Host '执行后将永久删除本批过期临时图片。' }
         else { Write-Host '内存释放只作一次临时缓解，可能短暂变慢。' }
         if ((Read-Host '核对上方预览后，输入 YES 执行') -ceq 'YES') {
-            & $PSCommandPath -Mode $target -Apply -KeepDays $KeepDays -MaxFiles $MaxFiles -MaxMB $MaxMB -ProfilePath $ProfilePath
+            & $PSCommandPath -Mode $target -Apply -KeepDays $KeepDays -MaxFiles $MaxFiles -MaxMB $MaxMB -MaxScan $MaxScan -ProfilePath $ProfilePath
         }
     }
     $null = Read-Host '按回车结束'; return
@@ -196,7 +205,7 @@ if ([string]::IsNullOrWhiteSpace($ReportPath)) {
 $ReportPath = [IO.Path]::GetFullPath($ReportPath)
 $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($ReportPath))
 $null = New-Item -ItemType File -Path $ReportPath # Fail before modifying files if a report already exists.
-$report = [ordered]@{Version='1.0';Mode=$Mode;Apply=[bool]$Apply;Status='Started';ReportPath=$ReportPath}
+$report = [ordered]@{Version='1.1';Mode=$Mode;Apply=[bool]$Apply;Status='Started';ReportPath=$ReportPath}
 try {
     $report.Before = Get-State
     Write-Host ("内存可用 {0} / {1} MB；系统盘 {2} 可用 {3} GB" -f $report.Before.AvailableMB,$report.Before.TotalMB,$report.Before.SystemDisk,$report.Before.DiskFreeGB)
@@ -222,9 +231,10 @@ try {
     } else {
         $root = Join-Path ([IO.Path]::GetFullPath($ProfilePath)) 'AppData\Local\Temp'
         $roots = @(Get-TempRoots $root); $cutoff=[datetime]::UtcNow.AddDays(-$KeepDays)
-        $batch = Find-Batch $roots $cutoff $MaxFiles ($MaxMB * 1MB)
-        $report.Scope=@{Roots=$roots;KeepDays=$KeepDays;MaxFiles=$MaxFiles;MaxMB=$MaxMB}
-        $report.Candidates=@{Count=$batch.Files.Count;Bytes=$batch.Bytes;LimitReached=$batch.LimitReached;Scanned=$batch.Scanned;Examples=@($batch.Files|Select-Object -First 5)}
+        $batch = Find-Batch $roots $cutoff $MaxFiles ($MaxMB * 1MB) $MaxScan
+        $report.Scope=@{Roots=$roots;KeepDays=$KeepDays;MaxFiles=$MaxFiles;MaxMB=$MaxMB;MaxScan=$MaxScan}
+        $report.Candidates=@{Count=$batch.Files.Count;Bytes=$batch.Bytes;LimitReached=$batch.LimitReached;Scanned=$batch.Scanned;
+            ScanLimitReached=$batch.ScanLimitReached;ScanErrors=$batch.ScanErrors;Examples=@($batch.Files|Select-Object -First 5)}
         Write-Host ("本批候选：{0} 个旧临时图片，共 {1:N1} MB；保留最近 {2} 天。" -f $batch.Files.Count,($batch.Bytes/1MB),$KeepDays)
         if ($Mode -eq 'CleanTemp' -and $Apply) { $report.Cleanup=Remove-Batch $batch.Files $roots $cutoff }
         else { $report.Status='Preview'; $report.Message='仅预览，没有删除。候选数量是本批上限范围，不是全部缓存总量。' }

@@ -3,9 +3,11 @@
 import argparse
 import base64
 import getpass
+import gzip
 import hashlib
 import ipaddress
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -13,11 +15,13 @@ from datetime import datetime, timezone
 import uuid
 import warnings
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 MODES = {"check": "Check", "clean": "CleanTemp", "memory": "TrimMemory", "self-test": "SelfTest"}
 
 
 def host_value(value):
+    if "%" in value:
+        raise argparse.ArgumentTypeError("不支持带区域标识的 IPv6 地址")
     try:
         return str(ipaddress.ip_address(value))
     except ValueError:
@@ -26,7 +30,7 @@ def host_value(value):
     if (len(value) > 253 or not value or re.fullmatch(r"[\d.]+", value)
             or any(not re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?", x) for x in labels)):
         raise argparse.ArgumentTypeError("请输入单个 IP 或主机名，不要带 http://、端口或路径")
-    return value
+    return value.lower()
 
 
 def bounded(low, high):
@@ -54,7 +58,10 @@ def parser():
     for name, help_text in (("check", "检查资源和旧图片"), ("clean", "清理旧临时图片"),
                             ("memory", "尝试一次临时释放内存"), ("self-test", "只操作专用测试文件")):
         sub = commands.add_parser(name, help=help_text, description=help_text)
-        sub.add_argument("--host", required=True, type=host_value, help="服务器 IP 或主机名")
+        target = sub.add_mutually_exclusive_group(required=True)
+        target.add_argument("--host", type=host_value, help="服务器 IP 或主机名")
+        if name == "check":
+            target.add_argument("--hosts-file", type=Path, help="逐行列出服务器，只批量检查；使用同一账号密码")
         sub.add_argument("--user", default="administrator", help=r"登录账号，也可使用 DOMAIN\user")
         sub.add_argument("--https", action="store_true", help="使用 HTTPS，并验证服务器证书")
         sub.add_argument("--port", type=bounded(1, 65535), help="默认 HTTP 5985 / HTTPS 5986")
@@ -65,6 +72,7 @@ def parser():
             sub.add_argument("--keep-days", type=bounded(7, 3650), default=30, help="保留最近天数，默认 30")
             sub.add_argument("--max-files", type=bounded(1, 50000), default=10000, help="每批文件上限，默认 10000")
             sub.add_argument("--max-mb", type=bounded(1, 10240), default=512, help="每批 MiB 上限，默认 512")
+            sub.add_argument("--max-scan", type=bounded(1, 5000000), default=200000, help="最多检查多少个文件，默认 200000")
         if name in ("clean", "memory"):
             sub.add_argument("--apply", action="store_true", help="实际执行；不加此参数只预览")
     return p
@@ -80,8 +88,20 @@ def endpoint(args):
     return f"{'https' if args.https else 'http'}://{host}:{args.port or (5986 if args.https else 5985)}/wsman"
 
 
+def save_bytes(path, value):
+    temporary = path.with_name(path.name + ".tmp-" + uuid.uuid4().hex)
+    try:
+        with temporary.open("xb") as stream:
+            stream.write(value)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def save_json(path, value):
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
+    save_bytes(path, json.dumps(value, ensure_ascii=False, indent=2).encode("utf-8"))
 
 
 def invoke_ps(session, source):
@@ -98,12 +118,19 @@ def invoke_ps(session, source):
 
 def upload(session, stage, payload):
     script = ps_string(stage + r"\WeCom-Maintenance.ps1")
+    packed = ps_string(stage + r"\payload.gz")
+    compressed = gzip.compress(payload, mtime=0)
     # Small chunks also work with the Windows command-line length limit.
-    invoke_ps(session, f"$f=[IO.File]::Open({script},'CreateNew','Write','None');$f.Dispose()")
-    for offset in range(0, len(payload), 1100):
-        data = base64.b64encode(payload[offset:offset + 1100]).decode("ascii")
-        invoke_ps(session, f"$f=[IO.File]::Open({script},'Append','Write','None');try{{$b=[Convert]::FromBase64String('{data}');$f.Write($b,0,$b.Length)}}finally{{$f.Dispose()}}")
-    actual = invoke_ps(session, f"(Get-FileHash -LiteralPath {script} -Algorithm SHA256).Hash").decode("ascii")
+    invoke_ps(session, f"$f=[IO.File]::Open({packed},'CreateNew','Write','None');$f.Dispose()")
+    for offset in range(0, len(compressed), 1100):
+        data = base64.b64encode(compressed[offset:offset + 1100]).decode("ascii")
+        invoke_ps(session, f"$f=[IO.File]::Open({packed},'Append','Write','None');try{{$b=[Convert]::FromBase64String('{data}');$f.Write($b,0,$b.Length)}}finally{{$f.Dispose()}}")
+    unpack = (f"$inputFile=[IO.File]::OpenRead({packed});$outputFile=$null;$gzip=$null;try{{"
+              "$gzip=New-Object IO.Compression.GzipStream($inputFile,[IO.Compression.CompressionMode]::Decompress);"
+              f"$outputFile=[IO.File]::Open({script},'CreateNew','Write','None');$gzip.CopyTo($outputFile)"
+              "}finally{if($outputFile){$outputFile.Dispose()};if($gzip){$gzip.Dispose()};$inputFile.Dispose()};"
+              f"(Get-FileHash -LiteralPath {script} -Algorithm SHA256).Hash")
+    actual = invoke_ps(session, unpack).decode("ascii")
     if actual.lower() != hashlib.sha256(payload).hexdigest():
         raise RuntimeError("服务器脚本校验失败，未执行清理")
 
@@ -114,13 +141,30 @@ def action_source(args, stage):
     console = ps_string(stage + r"\console.txt")
     options = f"-Mode {MODES[args.command]} -ReportPath {report}"
     if args.command in ("check", "clean"):
-        options += f" -KeepDays {args.keep_days} -MaxFiles {args.max_files} -MaxMB {args.max_mb}"
+        options += f" -KeepDays {args.keep_days} -MaxFiles {args.max_files} -MaxMB {args.max_mb} -MaxScan {args.max_scan}"
         if args.profile:
             options += " -ProfilePath " + ps_string(args.profile)
     if getattr(args, "apply", False):
         options += " -Apply"
     # The engine writes structured errors in report.json even when it throws.
     return f"try{{& {script} {options} *> {console}}}catch{{}};[Convert]::ToBase64String([IO.File]::ReadAllBytes({report}))"
+
+
+def resource_alerts(report):
+    state = report.get("After") or report.get("Before") or {}
+    alerts = []
+    if state.get("DiskFreeGB", 2) < 2:
+        alerts.append("系统盘不足 2 GiB，磁盘空间仍紧张")
+    if state.get("AvailableMB", 256) < max(256, state.get("TotalMB", 0) * 0.15):
+        alerts.append("可用 RAM 偏低；清理磁盘不等于释放运行内存")
+    if state.get("CommitPercent", 0) >= 85:
+        alerts.append("已提交内存达到 85%，工作集压缩不能释放这些分配")
+    candidates = report.get("Candidates", {})
+    if candidates.get("ScanLimitReached"):
+        alerts.append("已达扫描数量上限，后续文件未检查；零候选不代表没有旧图片。可提高 --max-scan")
+    if candidates.get("ScanErrors"):
+        alerts.append(f"有 {candidates['ScanErrors']} 个文件未能检查，扫描统计不完整")
+    return alerts
 
 
 def summarize(report):
@@ -133,6 +177,7 @@ def summarize(report):
     if "Candidates" in report:
         c = report["Candidates"]
         print(f"本批候选: {c['Count']} 个，{c['Bytes'] / 1048576:.2f} MiB（不是全部缓存总量）")
+        print(f"已检查文件: {c.get('Scanned', '未知')} 个")
     if "Cleanup" in report:
         c = report["Cleanup"]
         print(f"实际删除: {c['DeletedCount']} 个，{c['DeletedBytes'] / 1048576:.2f} MiB；跳过 {c['SkippedCount']} 个")
@@ -142,35 +187,25 @@ def summarize(report):
     for key in ("Message", "Error"):
         if report.get(key):
             print(report[key])
+    for alert in resource_alerts(report):
+        print("提醒: " + alert)
 
 
 def remove_staging(session, stage):
-    # Only our three known files; never recurse into an unknown directory.
+    # Only our known files; never recurse into an unknown directory.
     source = (f"$root={ps_string(stage)};$d=New-Object IO.DirectoryInfo($root);"
               "while($null -ne $d){if(!$d.Exists -or ($d.Attributes -band [IO.FileAttributes]::ReparsePoint)){throw 'Unsafe staging path'};$d=$d.Parent};"
-              "foreach($name in @('WeCom-Maintenance.ps1','console.txt','report.json')){[IO.File]::Delete((Join-Path $root $name))};"
+              "foreach($name in @('WeCom-Maintenance.ps1','payload.gz','console.txt','report.json')){[IO.File]::Delete((Join-Path $root $name))};"
               "[IO.Directory]::Delete($root,$false)")
     invoke_ps(session, source)
 
 
-def main(argv=None):
-    p = parser()
-    args = p.parse_args(argv)
-    if args.ca_bundle and (not args.https or not args.ca_bundle.is_file()):
-        p.error("--ca-bundle 需要 --https，且文件必须存在")
-    if not args.user.strip():
-        p.error("账号不能为空")
-    try:
-        import winrm
-    except ImportError:
-        print("缺少依赖；请先在工具目录执行 python -m pip install .", file=sys.stderr)
-        return 2
-
+def run_one(args, password):
+    import winrm
     run_id = uuid.uuid4().hex
     run_dir = args.report_dir.resolve() / (datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ-") + run_id[:12])
     meta = {"Version": VERSION, "Endpoint": endpoint(args), "Command": args.command,
             "Apply": getattr(args, "apply", False), "Phase": "Preparing", "RunId": run_id}
-    password = ""
     stage = None
     action_started = False
     report_received = False
@@ -181,11 +216,6 @@ def main(argv=None):
         print(f"目标: {args.host}；操作: {args.command}；" + ("实际执行" if meta["Apply"] else "预览/检查"), flush=True)
         if args.command == "clean" and meta["Apply"]:
             print(f"将永久删除本批 {args.keep_days} 天以前的合格临时图片，上限 {args.max_mb} MiB / {args.max_files} 个。", flush=True)
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", getpass.GetPassWarning)
-            password = getpass.getpass("Server password (hidden): ")
-        if not password:
-            raise ValueError("密码不能为空")
         session = winrm.Session(endpoint(args), auth=(args.user, password), transport="ntlm",
                                 message_encryption="always", server_cert_validation="validate",
                                 ca_trust_path=str(args.ca_bundle.resolve()) if args.ca_bundle else None,
@@ -211,7 +241,7 @@ def main(argv=None):
         if (report.get("Mode") != MODES[args.command] or report.get("Apply") != meta["Apply"]
                 or report.get("Status") not in ("Completed", "Preview", "Skipped", "PartialFailure", "Error")):
             raise ValueError("服务器报告不完整")
-        (run_dir / "report.json").write_bytes(raw)
+        save_bytes(run_dir / "report.json", raw)
         report_received = True
         meta.update(Phase="Finished", Status=report["Status"])
         save_json(run_dir / "run.json", meta)
@@ -227,7 +257,7 @@ def main(argv=None):
             save_json(run_dir / "run.json", meta)
         else:
             print(f"服务器留档: {stage}")
-        return 1 if report["Status"] in ("Error", "PartialFailure") else 0
+        return (1 if report["Status"] in ("Error", "PartialFailure") else 0), run_dir
     except (Exception, KeyboardInterrupt) as exc:
         message = "用户中断" if isinstance(exc, KeyboardInterrupt) else str(exc)
         if password:
@@ -248,9 +278,91 @@ def main(argv=None):
         print(f"本地记录: {run_dir}", file=sys.stderr)
         if stage:
             print(f"服务器留档: {stage}", file=sys.stderr)
-        return 3 if action_started and not report_received else 1
+        if isinstance(exc, KeyboardInterrupt):
+            raise
+        return (3 if action_started and not report_received else 1), run_dir
     finally:
         # Preserve remote evidence after uncertain outcomes; no automatic reruns.
         if session is not None and session.protocol.transport.session is not None:
             session.protocol.transport.session.close()
 
+def read_hosts(path):
+    if path.stat().st_size > 256 * 1024:
+        raise ValueError("服务器清单不能超过 256 KiB")
+    hosts = []
+    for number, line in enumerate(path.read_text(encoding="utf-8-sig").splitlines(), 1):
+        value = line.split("#", 1)[0].strip()
+        if not value:
+            continue
+        try:
+            host = host_value(value)
+        except argparse.ArgumentTypeError:
+            raise ValueError(f"清单第 {number} 行不是有效的 IP 或主机名") from None
+        if host not in hosts:
+            hosts.append(host)
+        if len(hosts) > 500:
+            raise ValueError("每份清单最多 500 台服务器，请分组检查")
+    if not hosts:
+        raise ValueError("服务器清单为空")
+    return hosts
+
+
+def main(argv=None):
+    p = parser()
+    args = p.parse_args(argv)
+    if args.ca_bundle and (not args.https or not args.ca_bundle.is_file()):
+        p.error("--ca-bundle 需要 --https，且文件必须存在")
+    if not args.user.strip():
+        p.error("账号不能为空")
+    try:
+        import winrm  # Check the dependency before asking for credentials.
+    except ImportError:
+        print("缺少依赖；请先在工具目录执行 python -m pip install .", file=sys.stderr)
+        return 2
+    fleet = getattr(args, "hosts_file", None)
+    try:
+        hosts = read_hosts(fleet) if fleet else [args.host]
+    except (OSError, ValueError) as exc:
+        p.error(str(exc))
+    print("目标服务器: " + ", ".join(hosts), flush=True)
+    if fleet:
+        print(f"将使用同一账号密码逐台检查 {len(hosts)} 台；不执行批量清理。", flush=True)
+    results = []
+    summary = None
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", getpass.GetPassWarning)
+            password = getpass.getpass("Server password (hidden): ")
+        if not password:
+            raise ValueError("密码不能为空")
+        if fleet:
+            args.report_dir = args.report_dir.resolve() / ("fleet-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ-") + uuid.uuid4().hex[:12])
+            args.report_dir.mkdir(parents=True, exist_ok=False)
+            summary = args.report_dir / "summary.json"
+            save_json(summary, {"Total": len(hosts), "Complete": False, "Results": results})
+        for host in hosts:
+            args.host = host
+            code, run_dir = run_one(args, password)
+            if not fleet:
+                return code
+            row = {"Host": host, "ExitCode": code, "RunDirectory": str(run_dir), "Status": "Unknown" if code == 3 else "Failed"}
+            report_path = run_dir / "report.json"
+            if report_path.is_file():
+                report = json.loads(report_path.read_text(encoding="utf-8-sig"))
+                state = report.get("After") or report.get("Before") or {}
+                row.update(Status=report["Status"], DiskFreeGB=state.get("DiskFreeGB"),
+                           AvailableMB=state.get("AvailableMB"), CommitPercent=state.get("CommitPercent"),
+                           Alerts=resource_alerts(report))
+            results.append(row)
+            save_json(summary, {"Total": len(hosts), "Complete": len(results) == len(hosts), "Results": results})
+        print(f"检查完成: {len(results)} 台，失败或结果未知: {sum(row['ExitCode'] != 0 for row in results)} 台")
+        return max(row["ExitCode"] for row in results)
+    except KeyboardInterrupt:
+        print("已中止；未检查的服务器不会继续连接。", file=sys.stderr)
+        return 130
+    except (OSError, ValueError, getpass.GetPassWarning) as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+    finally:
+        if summary:
+            print(f"批量汇总: {summary}")
