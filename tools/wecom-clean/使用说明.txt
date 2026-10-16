@@ -1,4 +1,4 @@
-企业微信服务器清理 CLI 1.1.0
+企业微信服务器清理 CLI 1.2.0
 
 把整个压缩包提供给其他管理员即可。工具不内置你们的服务器地址或密码。
 在自己的电脑输入服务器 IP，通过已有的 WinRM 连接执行；目标服务器不需要安装 Python。
@@ -9,11 +9,11 @@
 操作电脑：Windows、macOS 或 Linux，已安装 Python 3.9 或更高版本。
 解压后，在本文件夹打开终端。Windows 执行：
 
-  py -m pip install .\wecom_clean_cli-1.1.0-py3-none-any.whl
+  py -m pip install .\wecom_clean_cli-1.2.0-py3-none-any.whl
 
 macOS / Linux 执行：
 
-  python3 -m pip install ./wecom_clean_cli-1.1.0-py3-none-any.whl
+  python3 -m pip install ./wecom_clean_cli-1.2.0-py3-none-any.whl
 
 首次安装需要联网获取 pywinrm 及其依赖。如果系统要求使用虚拟环境，请先创建并激活虚拟环境再安装。
 从源码安装也可以：python -m pip install .
@@ -55,6 +55,21 @@ Complete 表示是否处理完整份清单，单台成功与否须查看每行 E
 
   wecom-clean clean --host SERVER_IP --keep-days 60 --max-mb 100 --max-files 2000
   wecom-clean clean --host SERVER_IP --keep-days 60 --max-mb 100 --max-files 2000 --apply
+
+清理大量积压：一条命令分批处理，保留最近 30 天，每批最多 256 MiB / 5000 个，
+最多 10 批，累计最多 2 GiB：
+
+  wecom-clean clean --host SERVER_IP --keep-days 30 --max-mb 256 --max-files 5000 --max-batches 10 --max-total-mb 2048
+  wecom-clean clean --host SERVER_IP --keep-days 30 --max-mb 256 --max-files 5000 --max-batches 10 --max-total-mb 2048 --apply
+
+第一条仅预览首批，不会重复预览同一批并虚增可释放总量。第二条实际执行。
+--max-batches 范围 1–20，默认 1；多批必须提供 --max-total-mb，范围 1–10240 MiB。
+达到总量或批次数上限、处理完扫描范围、没有进展、执行失败或结果未知时停止。
+剩余额度不足 1 MiB 时提前停止。清理汇总在 cleanup-.../summary.json，逐批明细各自保存。
+Completed 只表示本次命令完成，请查看 StopReason；不代表所有旧文件都已清空。
+遇到单个图片超过剩余额度会继续寻找能放进当前批次的图片，不再直接结束整批。
+超过单批上限的大文件仍保留，可调整 --max-mb；扫描上限和保留期仍生效。
+确认一周前的临时图片不再被发单任务引用后，可改为 --keep-days 7；不支持少于 7 天。
 
 --apply 本身就是执行指令，不再弹出确认；文件永久删除，不经过回收站，也不自动备份。
 预览与执行会分别重新检查，后台业务仍在变化，因此两次候选文件可能不同。
@@ -100,7 +115,7 @@ clean 仅检查用户 AppData\Local\Temp 根目录及直属数字会话子目录
 仅处理 GUID 随机文件名的 JPG / JPEG / PNG / GIF / WebP；创建和修改时间都必须早于保留期。
 跳过只读、目录链接、被占用或检查后大小/时间变化的文件，不递归扫描其他目录。
 不专门处理企业微信聊天数据库、登录资料、发单素材目录、DLL、浏览器配置或分页文件。
-最少保留 7 天；批次上限可调，最多 50000 个 / 10240 MiB。工具不自动循环清理积压。
+最少保留 7 天；单批上限可调，最多 50000 个 / 10240 MiB。默认只清理一批，多批需显式指定上限。
 默认最多检查 200000 个文件；可用 --max-scan 调整，范围 1–5000000。
 达到扫描上限后会明确提示后续文件未检查；零候选不等于没有旧图片，可按需提高上限。
 扫描时文件变化造成的读取失败单独计数并跳过，不再因单个文件中断整批扫描。
@@ -115,8 +130,7 @@ clean 仅检查用户 AppData\Local\Temp 根目录及直属数字会话子目录
 可用 --report-dir 指定另一个本地目录。报告包含服务器与文件路径，请按运维资料保管。
 
 每次先上传到服务器独立的临时目录，校验 SHA256，再执行。
-1.1.0 改为压缩上传并在服务器解压后校验；当前脚本上传内容约减少 66%。
-上传阶段从相同脚本不压缩时的 17 次远程调用降到 7 次，不代表清理速度同比提升。
+使用压缩上传并在服务器解压后校验。连续清理的每批独立连接、上传、执行和留档，密码只在本次命令内存中复用。
 本地报告先完整写入临时文件并同步，再替换目标，降低写入中断导致旧记录损坏的风险。
 正常完成并保存本地报告后，只移除本次脚本、压缩包、控制台日志和远程报告，以及空的专用目录。
 check / 预览也会产生这些工具临时文件和本地报告，但不会删除候选业务图片。

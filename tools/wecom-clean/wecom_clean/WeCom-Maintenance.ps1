@@ -61,18 +61,20 @@ function Find-Batch([string[]]$Roots, [datetime]$Cutoff, [int]$FileLimit, [long]
     $bytes = 0L; $scanned = 0; $limited = $false; $scanLimited = $false; $scanErrors = 0
     # ponytail: bounded batches keep RAM use small; rerun to handle a large backlog.
     :scan foreach ($root in $Roots) {
-        foreach ($file in (New-Object IO.DirectoryInfo($root)).EnumerateFiles()) {
+        $iterator = (New-Object IO.DirectoryInfo($root)).EnumerateFiles().GetEnumerator()
+        try { while ($iterator.MoveNext()) {
+            $file = $iterator.Current
             if ($scanned -ge $ScanLimit) { $scanLimited = $true; break scan }
             $scanned++
             try {
-                if (!(Test-OldImage $file $Cutoff) -or $file.Length -gt $ByteLimit) { continue }
-                if ($bytes + $file.Length -gt $ByteLimit) { $limited = $true; break scan }
+                if (!(Test-OldImage $file $Cutoff)) { continue }
+                if ($bytes + $file.Length -gt $ByteLimit) { $limited = $true; continue }
                 $row = [pscustomobject]@{Path=$file.FullName;Length=$file.Length;
                     CreatedTicks=$file.CreationTimeUtc.Ticks;WrittenTicks=$file.LastWriteTimeUtc.Ticks}
             } catch { $scanErrors++; continue } # A changing file must not abort the entire scan.
             $selected.Add($row); $bytes += $row.Length
             if ($selected.Count -ge $FileLimit -or $bytes -ge $ByteLimit) { $limited = $true; break scan }
-        }
+        } } finally { $iterator.Dispose() }
     }
     [pscustomobject]@{Files=$selected.ToArray();Bytes=$bytes;Scanned=$scanned;LimitReached=$limited;
         ScanLimitReached=$scanLimited;ScanErrors=$scanErrors}
@@ -150,6 +152,15 @@ function Invoke-SelfTest {
         if ($scanLimited.Scanned -ne 1 -or !$scanLimited.ScanLimitReached) { throw 'SelfTest: scan cap failed' }
         $noneOld = Find-Batch $roots ([datetime]::UtcNow.AddYears(-1)) 100 1MB 1
         if ($noneOld.Files.Count -ne 0 -or $noneOld.Scanned -ne 1 -or !$noneOld.ScanLimitReached) { throw 'SelfTest: empty scan cap failed' }
+        $firstRoot=Join-Path $root 'first';$largeRoot=Join-Path $root 'large';$smallRoot=Join-Path $root 'small'
+        foreach($fixtureRoot in @($firstRoot,$largeRoot,$smallRoot)){$null=[IO.Directory]::CreateDirectory($fixtureRoot)}
+        foreach($fixture in @(@{Root=$firstRoot;Size=512},@{Root=$largeRoot;Size=1024},@{Root=$smallRoot;Size=512})) {
+            $fixturePath=Join-Path $fixture.Root ([guid]::NewGuid().ToString()+'.jpg')
+            [IO.File]::WriteAllBytes($fixturePath,(New-Object byte[] $fixture.Size))
+            [IO.File]::SetCreationTimeUtc($fixturePath,$old);[IO.File]::SetLastWriteTimeUtc($fixturePath,$old)
+        }
+        $fill=Find-Batch @($firstRoot,$largeRoot,$smallRoot) $cutoff 100 1024
+        if($fill.Files.Count -ne 2 -or $fill.Bytes -ne 1024 -or !$fill.LimitReached) {throw 'SelfTest: oversized file prevented later candidates'}
         $sub = Join-Path $root 'protected'; $null=[IO.Directory]::CreateDirectory($sub)
         $outside = Join-Path $sub ([guid]::NewGuid().ToString()+'.jpg')
         [IO.File]::WriteAllBytes($outside,(New-Object byte[] 1024))
@@ -205,7 +216,7 @@ if ([string]::IsNullOrWhiteSpace($ReportPath)) {
 $ReportPath = [IO.Path]::GetFullPath($ReportPath)
 $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($ReportPath))
 $null = New-Item -ItemType File -Path $ReportPath # Fail before modifying files if a report already exists.
-$report = [ordered]@{Version='1.1';Mode=$Mode;Apply=[bool]$Apply;Status='Started';ReportPath=$ReportPath}
+$report = [ordered]@{Version='1.2';Mode=$Mode;Apply=[bool]$Apply;Status='Started';ReportPath=$ReportPath}
 try {
     $report.Before = Get-State
     Write-Host ("内存可用 {0} / {1} MB；系统盘 {2} 可用 {3} GB" -f $report.Before.AvailableMB,$report.Before.TotalMB,$report.Before.SystemDisk,$report.Before.DiskFreeGB)

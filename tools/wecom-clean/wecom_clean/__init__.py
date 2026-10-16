@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 import uuid
 import warnings
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 MODES = {"check": "Check", "clean": "CleanTemp", "memory": "TrimMemory", "self-test": "SelfTest"}
 
 
@@ -75,6 +75,9 @@ def parser():
             sub.add_argument("--max-scan", type=bounded(1, 5000000), default=200000, help="最多检查多少个文件，默认 200000")
         if name in ("clean", "memory"):
             sub.add_argument("--apply", action="store_true", help="实际执行；不加此参数只预览")
+        if name == "clean":
+            sub.add_argument("--max-batches", type=bounded(1, 20), default=1, help="连续清理批次上限，默认 1；预览只看首批")
+            sub.add_argument("--max-total-mb", type=bounded(1, 10240), help="本次所有批次累计删除 MiB 上限；多批清理时必填")
     return p
 
 
@@ -307,6 +310,72 @@ def read_hosts(path):
     return hosts
 
 
+def run_cleanup_batches(args, password):
+    """Each batch exits its remote process and durably saves its own deletion details."""
+    root = args.report_dir.resolve() / ("cleanup-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ-") + uuid.uuid4().hex[:12])
+    root.mkdir(parents=True, exist_ok=False)
+    path = root / "summary.json"
+    total_limit = args.max_total_mb * 1048576
+    summary = {"Host": args.host, "Apply": args.apply, "KeepDays": args.keep_days,
+               "MaxBatches": args.max_batches, "MaxTotalMB": args.max_total_mb,
+               "DeletedCount": 0, "DeletedBytes": 0, "SkippedCount": 0,
+               "Status": "Running", "StopReason": None, "Batches": []}
+    save_json(path, summary)  # A writable local record is required before the first operation.
+    print(f"连续清理上限: {args.max_batches} 批 / 总计 {args.max_total_mb} MiB；保留最近 {args.keep_days} 天", flush=True)
+    code = 0
+    try:
+        for number in range(1, args.max_batches + 1):
+            remaining_mb = (total_limit - summary["DeletedBytes"]) // 1048576
+            if remaining_mb < 1:
+                summary["StopReason"] = "TotalLimit"
+                break
+            batch_args = argparse.Namespace(**vars(args))
+            batch_args.report_dir = root
+            batch_args.max_mb = min(args.max_mb, remaining_mb)
+            print(f"第 {number}/{args.max_batches} 批，当前批次上限 {batch_args.max_mb} MiB", flush=True)
+            code, run_dir = run_one(batch_args, password)
+            summary["Batches"].append({"Number": number, "ExitCode": code, "RunDirectory": str(run_dir)})
+            report_path = run_dir / "report.json"
+            report = json.loads(report_path.read_text(encoding="utf-8-sig")) if report_path.is_file() else {}
+            cleanup = report.get("Cleanup", {})
+            summary["DeletedCount"] += cleanup.get("DeletedCount", 0)
+            summary["DeletedBytes"] += cleanup.get("DeletedBytes", 0)
+            summary["SkippedCount"] += cleanup.get("SkippedCount", 0)
+            if code:
+                summary.update(Status="OutcomeUnknown" if code == 3 else "Failed", StopReason="BatchFailed")
+                break  # Never rerun an uncertain or failed operation.
+            if not args.apply:
+                summary.update(Status="Preview", StopReason="FirstBatchPreviewOnly")
+                break  # Repeating a preview would count the same files repeatedly.
+            cleanup = report["Cleanup"]
+            candidates = report["Candidates"]
+            if cleanup["DeletedCount"] == 0:
+                summary["StopReason"] = "NoProgress" if candidates["Count"] else "NoCandidatesInScan"
+            elif not candidates.get("LimitReached") and not candidates.get("ScanLimitReached"):
+                summary["StopReason"] = "ScopeFinished" if not cleanup["SkippedCount"] else "RemainingSkipped"
+            save_json(path, summary)
+            if summary["StopReason"]:
+                break
+        if summary["Status"] == "Running":
+            summary.update(Status="Completed", StopReason=summary["StopReason"] or "BatchLimit")
+        return code
+    except KeyboardInterrupt:
+        summary.update(Status="Interrupted", StopReason="UserInterrupted")
+        raise
+    except Exception:
+        summary.update(Status="Stopped", StopReason="LocalRecordError")
+        raise
+    finally:
+        save_json(path, summary)
+        reasons = {"TotalLimit": "达到累计容量上限", "BatchLimit": "达到批次数上限",
+                   "ScopeFinished": "本次扫描范围的候选已处理", "RemainingSkipped": "剩余文件被占用或发生变化，已跳过",
+                   "NoProgress": "本批没有实际删除，停止重复扫描", "NoCandidatesInScan": "本次扫描未找到符合当前批次上限的候选",
+                   "FirstBatchPreviewOnly": "仅预览首批，没有清理", "BatchFailed": "某批失败或结果未知，后续已停止",
+                   "UserInterrupted": "用户中止", "LocalRecordError": "本地记录异常，后续已停止"}
+        print(f"累计确认删除: {summary['DeletedCount']} 个 / {summary['DeletedBytes'] / 1048576:.2f} MiB；停止原因: {reasons.get(summary['StopReason'], summary['StopReason'])}")
+        print(f"清理汇总: {path}")
+
+
 def main(argv=None):
     p = parser()
     args = p.parse_args(argv)
@@ -314,6 +383,8 @@ def main(argv=None):
         p.error("--ca-bundle 需要 --https，且文件必须存在")
     if not args.user.strip():
         p.error("账号不能为空")
+    if args.command == "clean" and args.max_batches > 1 and args.max_total_mb is None:
+        p.error("连续清理必须同时指定 --max-total-mb，明确累计删除上限")
     try:
         import winrm  # Check the dependency before asking for credentials.
     except ImportError:
@@ -335,6 +406,8 @@ def main(argv=None):
             password = getpass.getpass("Server password (hidden): ")
         if not password:
             raise ValueError("密码不能为空")
+        if args.command == "clean" and args.max_total_mb is not None:
+            return run_cleanup_batches(args, password)
         if fleet:
             args.report_dir = args.report_dir.resolve() / ("fleet-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ-") + uuid.uuid4().hex[:12])
             args.report_dir.mkdir(parents=True, exist_ok=False)

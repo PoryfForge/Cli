@@ -174,6 +174,48 @@ def main():
                 pass
         assert json.loads(saved.read_text()) == {"complete": True}
         assert not list(Path(tmp).glob("durable.json.tmp-*"))
+
+        # Multi-batch cleanup: hard total budget, one preview, no progress / error stops.
+        for scenario in ("budget", "preview", "locked", "unknown", "partial_error"):
+            attempted = []
+            def clean_one(args, password):
+                attempted.append(args.max_mb)
+                run = args.report_dir / str(len(attempted))
+                run.mkdir()
+                if scenario == "unknown" and len(attempted) == 2:
+                    return 3, run
+                count = 0 if scenario in ("preview", "locked") else 1
+                report = {"Status": "Preview" if scenario == "preview" else "Completed",
+                          "Candidates": {"Count": 50, "LimitReached": True, "ScanLimitReached": False}}
+                if scenario != "preview":
+                    report["Cleanup"] = {"DeletedCount": count, "DeletedBytes": count * args.max_mb * 1048576,
+                                         "SkippedCount": 50 if scenario == "locked" else 0}
+                cli.save_json(run / "report.json", report)
+                return (1 if scenario == "partial_error" else 0), run
+            args = p.parse_args(["clean", "--host", "192.0.2.10", "--max-mb", "3", "--max-total-mb", "5", "--max-batches", "4",
+                                 "--report-dir", str(Path(tmp) / scenario)] + ([] if scenario == "preview" else ["--apply"]))
+            with patch.object(cli, "run_one", clean_one), contextlib.redirect_stdout(io.StringIO()):
+                code = cli.run_cleanup_batches(args, "example-password")
+            summary = json.loads(next((Path(tmp) / scenario).glob("*/summary.json")).read_text())
+            assert "example-password" not in json.dumps(summary)
+            if scenario == "budget":
+                assert attempted == [3, 2] and code == 0
+                assert summary["DeletedBytes"] == 5 * 1048576 and summary["StopReason"] == "TotalLimit"
+            elif scenario == "unknown":
+                assert attempted == [3, 2] and code == 3
+                assert summary["DeletedBytes"] == 3 * 1048576 and summary["Status"] == "OutcomeUnknown"
+            elif scenario == "partial_error":
+                assert len(attempted) == 1 and code == 1 and summary["DeletedBytes"] == 3 * 1048576
+            else:
+                assert len(attempted) == 1 and code == 0 and summary["DeletedBytes"] == 0
+                assert summary["StopReason"] == ("FirstBatchPreviewOnly" if scenario == "preview" else "NoProgress")
+        with patch.object(cli.getpass, "getpass") as prompt, contextlib.redirect_stderr(io.StringIO()):
+            try:
+                cli.main(["clean", "--host", "192.0.2.10", "--max-batches", "2"])
+                raise AssertionError("Missing total cleanup budget accepted")
+            except SystemExit as exc:
+                assert exc.code == 2
+        prompt.assert_not_called()
     print("PASS: preview, input validation, gzip/hash, scan cap, atomic reports, batch isolation, no password logs, no mutation retry")
 
 

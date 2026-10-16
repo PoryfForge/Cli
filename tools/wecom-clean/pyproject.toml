@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wecom-clean-cli"
-version = "1.1.0"
+version = "1.2.0"
 description = "Preview and clean old temporary images on Windows WeCom servers"
 requires-python = ">=3.9"
 dependencies = ["pywinrm==0.5.0"]
